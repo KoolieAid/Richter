@@ -1,0 +1,99 @@
+com/koolie/bot/richter/util/BotConfigManager.java
+ com.koolie.bot.richter.util.BotConfigManager
+com/koolie/bot/richter/commands/Donate.java
+ com.koolie.bot.richter.commands.Donate
+com/koolie/bot/richter/commands/Help.java
+ com.koolie.bot.richter.commands.Help
+com/koolie/bot/richter/objects/spotify/SpotifyPlaylist.java
+ com.koolie.bot.richter.objects.spotify.SpotifyPlaylist
+com/koolie/bot/richter/commands/Activity.java
+ com.koolie.bot.richter.commands.Activity
+com/koolie/bot/richter/commands/LockChannel.java
+ com.koolie.bot.richter.commands.LockChannel
+ com.koolie.bot.richter.commands.LockChannel$LockChannelAdapter
+com/koolie/bot/richter/SourceManagers/SpotifySourceManager.java
+ com.koolie.bot.richter.SourceManagers.SpotifySourceManager
+com/koolie/bot/richter/commands/Eval.java
+ com.koolie.bot.richter.commands.Eval
+com/koolie/bot/richter/threading/ThreadUtil.java
+ com.koolie.bot.richter.threading.ThreadUtil
+com/koolie/bot/richter/commands/music/Disconnect.java
+ com.koolie.bot.richter.commands.music.Disconnect
+com/koolie/bot/richter/GuildConfigManager.java
+ com.koolie.bot.richter.GuildConfigManager
+com/koolie/bot/richter/commands/Command.java
+ com.koolie.bot.richter.commands.Command
+ com.koolie.bot.richter.commands.Command$commandType
+com/koolie/bot/richter/commands/Team.java
+ com.koolie.bot.richter.commands.Team
+com/koolie/bot/richter/commands/Invite.java
+ com.koolie.bot.richter.commands.Invite
+com/koolie/bot/richter/commands/ConcertMode.java
+ com.koolie.bot.richter.commands.ConcertMode
+ com.koolie.bot.richter.commands.ConcertMode$ConcertModeAdapter
+com/koolie/bot/richter/commands/Nick.java
+ com.koolie.bot.richter.commands.Nick
+com/koolie/bot/richter/commands/music/RepeatMode.java
+ com.koolie.bot.richter.commands.music.RepeatMode
+com/koolie/bot/richter/commands/Reason.java
+ com.koolie.bot.richter.commands.Reason
+com/koolie/bot/richter/objects/guild/GuildConfig.java
+ com.koolie.bot.richter.objects.guild.GuildConfig
+com/koolie/bot/richter/objects/spotify/SpotifyTrack.java
+ com.koolie.bot.richter.objects.spotify.SpotifyTrack
+com/koolie/bot/richter/commands/Upgrade.java
+ com.koolie.bot.richter.commands.Upgrade
+com/koolie/bot/richter/MusicUtil/AudioPlayerSendHandler.java
+ com.koolie.bot.richter.MusicUtil.AudioPlayerSendHandler
+com/koolie/bot/richter/commands/Downgrade.java
+ com.koolie.bot.richter.commands.Downgrade
+com/koolie/bot/richter/commands/music/NowPlaying.java
+ com.koolie.bot.richter.commands.music.NowPlaying
+com/koolie/bot/richter/commands/Prefix.java
+ com.koolie.bot.richter.commands.Prefix
+com/koolie/bot/richter/commands/music/Volume.java
+ com.koolie.bot.richter.commands.music.Volume
+com/koolie/bot/richter/commands/Stats.java
+ com.koolie.bot.richter.commands.Stats
+com/koolie/bot/richter/commands/music/Pause.java
+ com.koolie.bot.richter.commands.music.Pause
+com/koolie/bot/richter/commands/music/filters/Rotate.java
+ com.koolie.bot.richter.commands.music.filters.Rotate
+com/koolie/bot/richter/commands/music/Resume.java
+ com.koolie.bot.richter.commands.music.Resume
+com/koolie/bot/richter/commands/music/LyricsCommand.java
+ com.koolie.bot.richter.commands.music.LyricsCommand
+com/koolie/bot/richter/commands/music/filters/Karaoke.java
+ com.koolie.bot.richter.commands.music.filters.Karaoke
+com/koolie/bot/richter/MusicUtil/GMManager.java
+ com.koolie.bot.richter.MusicUtil.GMManager
+com/koolie/bot/richter/MusicUtil/MusicManagerFactory.java
+ com.koolie.bot.richter.MusicUtil.MusicManagerFactory
+ com.koolie.bot.richter.MusicUtil.MusicManagerFactory$1
+com/koolie/bot/richter/commands/music/Shuffle.java
+ com.koolie.bot.richter.commands.music.Shuffle
+com/koolie/bot/richter/commands/music/PlayNext.java
+ com.koolie.bot.richter.commands.music.PlayNext
+com/koolie/bot/richter/commands/music/Play.java
+ com.koolie.bot.richter.commands.music.Play
+com/koolie/bot/richter/commands/music/Stop.java
+ com.koolie.bot.richter.commands.music.Stop
+com/koolie/bot/richter/commands/music/Repeat.java
+ com.koolie.bot.richter.commands.music.Repeat
+com/koolie/bot/richter/MusicUtil/AudioPlayerEventListener.java
+ com.koolie.bot.richter.MusicUtil.AudioPlayerEventListener
+ com.koolie.bot.richter.MusicUtil.AudioPlayerEventListener$LeaveChannel
+com/koolie/bot/richter/Richter.java
+ com.koolie.bot.richter.Richter
+com/koolie/bot/richter/commands/music/Clear.java
+ com.koolie.bot.richter.commands.music.Clear
+com/koolie/bot/richter/commands/Shutdown.java
+ com.koolie.bot.richter.commands.Shutdown
+com/koolie/bot/richter/commands/music/Skip.java
+ com.koolie.bot.richter.commands.music.Skip
+com/koolie/bot/richter/commands/music/Queue.java
+ com.koolie.bot.richter.commands.music.Queue
+com/koolie/bot/richter/commands/music/RemoveQueue.java
+ com.koolie.bot.richter.commands.music.RemoveQueue
+com/koolie/bot/richter/EventHandler.java
+ com.koolie.bot.richter.EventHandler
