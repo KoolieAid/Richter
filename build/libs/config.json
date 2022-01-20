@@ -1,7 +1,0 @@
-{
-    "discord_token": "MzY3OTk5NDQ2NjA2MTUxNjgw.Wd9UMQ.7HvGKIXB_n6rZNehN9ovchRGnes",
-    "spotify_client_id": "408e11ad63984b988fa1c8d74277d59f",
-    "spotify_client_secret": "2d8f85de594640d38d6d8150674b0875",
-    "sentry_dsn": "https://2574011e87e147558a4320995b98cb37@o1048758.ingest.sentry.io/6149414",
-	"default_prefix": "-"
-}
