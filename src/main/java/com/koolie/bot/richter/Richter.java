@@ -8,11 +8,9 @@ import io.sentry.Sentry;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
-import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
+import net.dv8tion.jda.api.interactions.commands.build.*;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -61,6 +59,7 @@ public class Richter {
                 Activity.playing("with your mom"),
                 Activity.playing("Sex Offender Simulator"),
                 Activity.competing("the Ultimate showdown of Ultimate destiny"),
+                Activity.playing("Push the P"),
         };
 
 //        ThreadUtil.getScheduler().scheduleAtFixedRate(() -> jda.getPresence().setActivity(activities[new Random().nextInt(activities.length)]),
@@ -82,11 +81,19 @@ public class Richter {
     }
 
     public static void setUpSlash() {
-        CommandData cmData1 = new CommandData("upgrade", "Gives the mentioned user the everyone role");
-        cmData1.addOption(OptionType.USER, "target", "Gives the target the everyone role", true);
+        CommandData cmData = Commands.slash("upgrade", "Gives the mentioned user the everyone role")
+                .addOption(OptionType.USER, "target", "The user to give the everyone role to");
 
-        CommandData cmData = new CommandData("downgrade", "Removes the everyone role from specified user");
-        cmData.addOption(OptionType.USER, "target", "Gives the target the everyone role", true);
+
+//        CommandData cmData1 = new CommandData("upgrade", "Gives the mentioned user the everyone role");
+//        cmData1.addOption(OptionType.USER, "target", "Gives the target the everyone role", true);
+
+
+        CommandData cmData2 = Commands.slash("downgrade", "Removes the everyone role from specified user")
+                .addOption(OptionType.USER, "target", "The user to remove the everyone role from", true);
+
+//        CommandData cmData = new CommandData("downgrade", "Removes the everyone role from specified user");
+//        cmData.addOption(OptionType.USER, "target", "Gives the target the everyone role", true);
 
         //jda.getGuildById("759999287270047745").upsertCommand(cmData).queue();
         //jda.getGuildById("759999287270047745").upsertCommand(cmData1).queue();
@@ -100,7 +107,8 @@ public class Richter {
 //        subcommandGroupData.addSubcommands(subcommandData);
 //        cmData3.addSubcommandGroups(subcommandGroupData);
 
-        CommandData activitiesData = new CommandData("activity", "Creates a Discord Game Activity");
+//        CommandData activitiesData = new CommandData("activity", "Creates a Discord Game Activity");
+
 
         OptionData optionData = new OptionData(OptionType.STRING, "game", "The game that you want to play.", true);
         optionData.addChoice("Youtube Together", "880218394199220334");
@@ -114,9 +122,12 @@ public class Richter {
         optionData.addChoice("Wordsnack", "879863976006127627");
         optionData.addChoice("Lettertile", "879863686565621790");
 
-        activitiesData.addOptions(optionData);
-        shardManager.getShardById(0).upsertCommand(activitiesData).queue();
+//        activitiesData.addOptions(optionData);
+        CommandData activitiesData = Commands.slash("activity", "Creates a Discord Game Activity").addOptions(optionData);
+
+//        shardManager.getShardById(0).upsertCommand(activitiesData).queue();
 //        shardManager.getGuildById("759999287270047745").upsertCommand(activitiesData).queue();
+        shardManager.getGuildById("931181353507123242").upsertCommand(Commands.context(Command.Type.MESSAGE, "testing")).queue();
     }
 
 }

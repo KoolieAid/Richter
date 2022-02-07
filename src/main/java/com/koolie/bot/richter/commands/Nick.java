@@ -1,7 +1,7 @@
 package com.koolie.bot.richter.commands;
 
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
 
@@ -50,7 +50,7 @@ public class Nick extends Command {
     }
 
     @Override
-    public void slash(SlashCommandEvent event) {
+    public void slash(SlashCommandInteractionEvent event) {
 
     }
 }

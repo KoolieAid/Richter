@@ -19,10 +19,14 @@ import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +50,7 @@ public class EventHandler extends ListenerAdapter {
     }
 
     @Override
-    public void onSlashCommand(@NotNull SlashCommandEvent event) {
+    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         if (!event.isFromGuild()) {
             event.reply("This command can only be used in a server.").setEphemeral(true).queue();
             return;
@@ -176,6 +180,28 @@ public class EventHandler extends ListenerAdapter {
         JDA jda = event.getJDA();
         int guildCount = jda.getGuilds().size();
         log.info(jda.getShardInfo() + " is now listening to " + guildCount + " guilds");
+
+        event.getJDA().upsertCommand(Commands.context(net.dv8tion.jda.api.interactions.commands.Command.Type.MESSAGE, "Add to queue")).queue();
+//        event.getJDA().getGuildById("931181353507123242")
+//                ("testing")
+//                .queue(command -> {
+//                    event.getJDA().getGuildById("931181353507123242").deleteCommandById(command.getIdLong()).queue();
+//                });
+        Commands.slash("play", "Plays music for you")
+                .addOption(OptionType.STRING, "query", "The song that you're looking for", true, true);
+    }
+
+    @Override
+    public void onCommandAutoCompleteInteraction(@NotNull CommandAutoCompleteInteractionEvent event) {
+
+    }
+
+    @Override
+    public void onMessageContextInteraction(@NotNull MessageContextInteractionEvent event) {
+        log.debug(event.getInteraction().getName());
+        if (event.getInteraction().getName().equals("Add to queue")) {
+            commandHashMap.get("play").onContext(event);
+        }
     }
 
     @Override

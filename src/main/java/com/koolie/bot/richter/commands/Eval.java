@@ -1,14 +1,10 @@
 package com.koolie.bot.richter.commands;
 
-import groovy.util.GroovyScriptEngine;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import javax.script.*;
-import java.awt.*;
 
 public class Eval extends Command {
     private ScriptEngine engine;

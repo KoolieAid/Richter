@@ -6,9 +6,7 @@ import com.koolie.bot.richter.commands.Command;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Random;
 
 public class Shuffle extends Command {

@@ -3,8 +3,9 @@ package com.koolie.bot.richter.commands.music;
 import com.koolie.bot.richter.MusicUtil.GMManager;
 import com.koolie.bot.richter.MusicUtil.MusicManagerFactory;
 import com.koolie.bot.richter.commands.Command;
+import com.koolie.bot.richter.objects.Context;
 import net.dv8tion.jda.api.entities.AudioChannel;
-import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 
@@ -51,7 +52,7 @@ public class Play extends Command {
             query = query.substring("direct:".length());
         }
 
-        MusicManagerFactory.loadToGuild(event.getMessage(), query);
+        MusicManagerFactory.loadToGuild(new Context(event.getMessage()), query);
 
         GMManager gmManager = MusicManagerFactory.getGuildMusicManager(event.getGuild());
         if (gmManager.audioPlayer.isPaused()) {
@@ -67,4 +68,47 @@ public class Play extends Command {
         event.getGuild().getAudioManager().setSelfDeafened(true);
     }
 
+    @Override
+    public void onContext(MessageContextInteractionEvent event) {
+        AudioChannel vChannel = event.getMember().getVoiceState().getChannel();
+        if (vChannel == null) {
+            event.getInteraction().reply("Bro. You are not in a voice channel").queue();
+            return;
+        }
+
+        event.getChannel().sendTyping().queue();
+
+        String query = event.getInteraction().getTarget().getContentRaw();
+
+        try {
+            URL url = new URL(query);
+            if (!url.getHost().equalsIgnoreCase("open.spotify.com")) throw new MalformedURLException();
+
+        } catch (MalformedURLException e) {
+            if (!query.matches("^((?:https?:)?\\/\\/)?((?:www|m)\\.)?((?:youtube\\.com|youtu.be))(\\/(?:[\\w\\-]+\\?v=|embed\\/|v\\/)?)([\\w\\-]+)(\\S+)?$")
+                    && !query.startsWith("direct:")) {
+                query = "ytsearch:" + query;
+            }
+        }
+
+        if (query.startsWith("direct:")) {
+            query = query.substring("direct:".length());
+        }
+
+
+        MusicManagerFactory.loadToGuild(new Context(event.getInteraction()), query);
+
+        GMManager gmManager = MusicManagerFactory.getGuildMusicManager(event.getGuild());
+        if (gmManager.audioPlayer.isPaused()) {
+            gmManager.audioPlayer.setPaused(false);
+        }
+        try {
+            event.getGuild().getAudioManager().openAudioConnection(vChannel);
+        } catch (InsufficientPermissionException e) {
+            event.getInteraction().getTarget().reply("I can't seem to connect to that channel").queue();
+            gmManager.eventListener.queue.clear();
+            gmManager.eventListener.nextTrack();
+        }
+        event.getGuild().getAudioManager().setSelfDeafened(true);
+    }
 }

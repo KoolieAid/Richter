@@ -1,28 +1,32 @@
 package com.koolie.bot.richter.commands.music;
 
-import com.jagrosh.jlyrics.Lyrics;
-import com.jagrosh.jlyrics.LyricsClient;
 import com.koolie.bot.richter.MusicUtil.GMManager;
 import com.koolie.bot.richter.MusicUtil.MusicManagerFactory;
 import com.koolie.bot.richter.commands.Command;
 import com.koolie.bot.richter.threading.ThreadUtil;
+import com.koolie.bot.richter.util.BotConfigManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import io.sentry.Sentry;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.jmusixmatch.MusixMatch;
+import org.jmusixmatch.MusixMatchException;
+import org.jmusixmatch.entity.lyrics.Lyrics;
+import org.jmusixmatch.entity.track.Track;
+import org.jmusixmatch.entity.track.TrackData;
 
 import java.awt.*;
 import java.util.concurrent.CompletableFuture;
 
 public class LyricsCommand extends Command {
-    private final LyricsClient lyricsClient;
+    private final MusixMatch client;
 
     public LyricsCommand() {
         setName("Lyrics");
         setDescription("Gets the lyrics of the current playing song");
         setCommandType(commandType.Music);
 
-        lyricsClient = new LyricsClient("Genius", ThreadUtil.getThreadExecutor());
+        client = new MusixMatch(BotConfigManager.getMusixmatchApiKey());
     }
 
     @Override
@@ -45,31 +49,41 @@ public class LyricsCommand extends Command {
         }
 
         //event.getMessage().reply("Info:\nIdentifier: " + track.getIdentifier() + "\nAuthor: " + track.getInfo().author + "\nTitle: " + track.getInfo().title).queue();
-        CompletableFuture<Lyrics> lyricsFuture = lyricsClient.getLyrics(query);
+        TrackData trackData;
+        try {
+            trackData = client.getMatchingTrack(track.getInfo().title, track.getInfo().author).getTrack();
+        } catch (MusixMatchException e) {
+            event.getMessage().replyEmbeds(new EmbedBuilder()
+                    .setDescription("I could not find the track in the database.")
+                    .build()).queue();
+            return;
+        }
         //event.getMessage().reply("Used: " + "TWO DOOR CINEMA CLUB | UNDERCOVER MARTYN".replaceAll("[^a-zA-Z0-9\\s]", "")).queue();
 
-        Lyrics lyrics;
-        try {
-            lyrics = lyricsFuture.join();
-        } catch (Exception e) {
-            Sentry.captureException(e, "Lyrics join");
-            event.getMessage().reply("Could not find lyrics for the song").queue();
+        if (trackData.getHasLyrics() == 0) {
+            event.getMessage().replyEmbeds(new EmbedBuilder()
+                    .setDescription("Looks like the track has no lyrics.")
+                    .build()).queue();
             return;
         }
 
-        if (lyrics == null) {
-            event.getMessage().reply("Could not find lyrics for `" + query + "`").queue();
+        Lyrics lyrics;
+        try {
+            lyrics = client.getLyrics(trackData.getTrackId());
+        } catch (MusixMatchException e) {
+            event.getMessage().replyEmbeds(new EmbedBuilder()
+                    .setDescription("I had trouble finding the lyrics.")
+                    .build()).queue();
             return;
         }
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setColor(Color.RED);
 
-        assert lyrics != null;
-        embedBuilder.setTitle(lyrics.getTitle());
-        embedBuilder.appendDescription(lyrics.getAuthor()).appendDescription("\n\n");
-        embedBuilder.appendDescription(lyrics.getContent());
-        embedBuilder.setFooter("Lyrics provided by: " + lyrics.getSource());
+        embedBuilder.setTitle(trackData.getTrackName());
+        embedBuilder.appendDescription(trackData.getArtistName()).appendDescription("\n\n");
+        embedBuilder.appendDescription(lyrics.getLyricsBody());
+        embedBuilder.setFooter(lyrics.getLyricsCopyright());
         event.getMessage().replyEmbeds(embedBuilder.build()).queue();
     }
 }
