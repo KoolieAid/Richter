@@ -8,7 +8,7 @@ mainClassName = 'com.koolie.bot.richter.Richter'
 
 group 'com.koolie.bot'
 version '1.0'
-def jdaVersion = '5.0.0-alpha.4'
+def jdaVersion = '5.0.0-alpha.5'
 
 sourceCompatibility = targetCompatibility = 15
 
@@ -33,9 +33,9 @@ dependencies {
     //Uses Native audio system
     implementation 'com.sedmelluq:jda-nas:1.1.0'
     //Sentry
-    implementation 'io.sentry:sentry:5.5.1'
+    implementation 'io.sentry:sentry:5.6.0'
     //Lyrics
-    implementation 'com.jagrosh:JLyrics:0.4'
+    implementation 'com.sachinhandiekar:jMusixMatch:1.1.4'
     //Music Filters
     implementation 'com.github.natanbc:lavadsp:0.7.7'
     //Eval

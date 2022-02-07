@@ -2,6 +2,7 @@ package com.koolie.bot.richter.commands;
 
 import com.koolie.bot.richter.MusicUtil.MusicManagerFactory;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDAInfo;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.awt.*;
@@ -28,6 +29,7 @@ public class Stats extends Command {
         eb.addField("Threads", threads + "", true);
 
         eb.addField("Active Music Players", MusicManagerFactory.getActivePlayers() + "", true);
+        eb.addField("JDA Version", String.format("%s.%s.%s-%s", JDAInfo.VERSION_MAJOR, JDAInfo.VERSION_MINOR, JDAInfo.VERSION_MINOR, JDAInfo.VERSION_CLASSIFIER), true);
 
         event.getMessage().replyEmbeds(eb.build()).queue();
     }

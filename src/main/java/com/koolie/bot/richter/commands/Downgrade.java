@@ -4,7 +4,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.Iterator;
@@ -51,7 +51,7 @@ public class Downgrade extends Command {
     }
 
     @Override
-    public void slash(SlashCommandEvent event) {
+    public void slash(SlashCommandInteractionEvent event) {
         if (!event.getMember().getRoles().contains(event.getGuild().getRoleById(roleId))) {
             event.reply("You don't have the role yourself.").setEphemeral(true).queue();
             return;

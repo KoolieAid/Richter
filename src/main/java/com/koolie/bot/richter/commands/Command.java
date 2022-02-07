@@ -1,6 +1,7 @@
 package com.koolie.bot.richter.commands;
 
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import javax.annotation.Nonnull;
@@ -44,7 +45,11 @@ public abstract class Command {
 
     public abstract void execute(MessageReceivedEvent event);
 
-    public void slash(SlashCommandEvent event) {
+    public void slash(SlashCommandInteractionEvent event) {
+        event.reply("Seems like the developer is not finished with this one yet.").setEphemeral(true).queue();
+    }
+
+    public void onContext(MessageContextInteractionEvent event) {
         event.reply("Seems like the developer is not finished with this one yet.").setEphemeral(true).queue();
     }
 

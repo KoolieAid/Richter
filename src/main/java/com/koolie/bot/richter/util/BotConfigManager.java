@@ -2,7 +2,6 @@ package com.koolie.bot.richter.util;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -14,6 +13,7 @@ public class BotConfigManager {
     private static String spotifyClientSecret;
     private static String sentryDsn;
     private static String prefix;
+    private static String musixmatchApiKey;
 
     public static void loadJSON() throws FileNotFoundException {
         JsonElement element = JsonParser.parseReader(new FileReader(System.getProperty("user.dir") + "/config.json"));
@@ -22,6 +22,7 @@ public class BotConfigManager {
         spotifyClientSecret = element.getAsJsonObject().get("spotify_client_secret").getAsString();
         sentryDsn = element.getAsJsonObject().get("sentry_dsn").getAsString();
         prefix = element.getAsJsonObject().get("default_prefix").getAsString();
+        musixmatchApiKey = element.getAsJsonObject().get("musixmatch_api_key").getAsString();
     }
 
     public static String getToken() {
@@ -42,5 +43,9 @@ public class BotConfigManager {
 
     public static String getPrefix() {
         return prefix;
+    }
+
+    public static String getMusixmatchApiKey() {
+        return musixmatchApiKey;
     }
 }

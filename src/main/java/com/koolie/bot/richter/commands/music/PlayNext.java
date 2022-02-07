@@ -3,6 +3,7 @@ package com.koolie.bot.richter.commands.music;
 import com.koolie.bot.richter.MusicUtil.GMManager;
 import com.koolie.bot.richter.MusicUtil.MusicManagerFactory;
 import com.koolie.bot.richter.commands.Command;
+import com.koolie.bot.richter.objects.Context;
 import net.dv8tion.jda.api.entities.AudioChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
@@ -50,7 +51,7 @@ public class PlayNext extends Command {
             query = query.substring("direct:".length());
         }
 
-        MusicManagerFactory.loadToGuild(event.getMessage(), query, true);
+        MusicManagerFactory.loadToGuild(new Context(event.getMessage()), query, true);
 
         GMManager gmManager = MusicManagerFactory.getGuildMusicManager(event.getGuild());
         if (gmManager.audioPlayer.isPaused()) {

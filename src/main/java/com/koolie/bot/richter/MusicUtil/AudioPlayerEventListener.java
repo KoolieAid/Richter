@@ -67,7 +67,7 @@ public class AudioPlayerEventListener extends AudioEventAdapter {
         embedBuilder.setDescription(track.getInfo().title);
         embedBuilder.setColor(Color.BLUE);
 
-        sendMessageToChannel(embedBuilder.build());
+        sendMessageToChannel(embedBuilder.build(), true);
 
         //if leave is scheduled, cancel it
         cancelLeave();
@@ -133,6 +133,7 @@ public class AudioPlayerEventListener extends AudioEventAdapter {
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
+        deleteMessage();
         if (mode == RepeatMode.Single) {
             audioPlayer.startTrack(track.makeClone(), false);
             return;
@@ -179,14 +180,12 @@ public class AudioPlayerEventListener extends AudioEventAdapter {
     }
 
     public void sendMessageToChannel(String body) {
-        deleteMessage();
         jda.getTextChannelById(channelId).sendMessage(body).queue((message) -> {
             expiringMessageId = message.getIdLong();
         });
     }
 
     public void sendMessageToChannel(MessageEmbed embed) {
-        deleteMessage();
         jda.getTextChannelById(channelId).sendMessageEmbeds(embed).queue((message) -> {
             expiringMessageId = message.getIdLong();
         });

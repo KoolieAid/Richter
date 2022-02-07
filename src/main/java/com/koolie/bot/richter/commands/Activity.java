@@ -1,10 +1,9 @@
 package com.koolie.bot.richter.commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.AudioChannel;
 import net.dv8tion.jda.api.entities.StageChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class Activity extends Command {
@@ -20,7 +19,7 @@ public class Activity extends Command {
     }
 
     @Override
-    public void slash(SlashCommandEvent event) {
+    public void slash(SlashCommandInteractionEvent event) {
         if (event.getMember().getVoiceState().getChannel() == null) {
             event.reply("You must be in a voice channel to use this command.").queue();
             return;

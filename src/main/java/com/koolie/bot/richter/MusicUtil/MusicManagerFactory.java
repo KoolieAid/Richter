@@ -1,6 +1,7 @@
 package com.koolie.bot.richter.MusicUtil;
 
 import com.koolie.bot.richter.SourceManagers.SpotifySourceManager;
+import com.koolie.bot.richter.objects.Context;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -53,11 +54,11 @@ public class MusicManagerFactory {
         audioPlayerManager.getConfiguration().setFilterHotSwapEnabled(true);
     }
 
-    public static void loadToGuild(Message message, String trackIdentifier) {
+    public static void loadToGuild(Context message, String trackIdentifier) {
         loadToGuild(message, trackIdentifier, false);
     }
 
-    public static void loadToGuild(Message message, String trackIdentifier, boolean isFront){
+    public static void loadToGuild(Context message, String trackIdentifier, boolean isFront){
         GMManager gManager = getGuildMusicManager(message.getGuild());
 
         audioPlayerManager.loadItemOrdered(gManager, trackIdentifier, new AudioLoadResultHandler() {
