@@ -27,3 +27,5 @@ config.json
 .gradle/*
 .idea/*
 build/*
+*.bin
+*.lock
