@@ -1,36 +1,64 @@
 package com.koolie.bot.richter.commands.music;
 
-import com.koolie.bot.richter.MusicUtil.GMManager;
-import com.koolie.bot.richter.MusicUtil.MusicManagerFactory;
-import com.koolie.bot.richter.commands.Command;
+import com.koolie.bot.richter.MusicUtil.MusicManager;
+import com.koolie.bot.richter.commands.ContextCommand;
+import com.koolie.bot.richter.commands.TextCommand;
 import com.koolie.bot.richter.objects.Context;
 import net.dv8tion.jda.api.entities.AudioChannel;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class Play extends Command {
-    public Play() {
-        setName("Play");
-        setDescription("Plays music");
-        setCommandType(commandType.Music);
+public class Play implements TextCommand, ContextCommand {
+    public Play() {}
+
+    @Override
+    public @NotNull String getName() {
+        return "Play";
     }
 
     @Override
-    public void execute(MessageReceivedEvent event) {
-        AudioChannel vChannel = event.getMember().getVoiceState().getChannel();
+    public @NotNull String getDescription() {
+        return "Plays music";
+    }
+
+    @Override
+    public @NotNull CommandType getCommandType() {
+        return CommandType.Music;
+    }
+
+    @Override
+    public @NotNull String getEffectiveName() {
+        return "Add to queue";
+    }
+
+    @Override
+    public String getOperator() {
+        return "play";
+    }
+
+    @Override
+    public String[] getAliases() {
+        return new String[]{"p"};
+    }
+
+    @Override
+    public void execute(Message message) {
+        AudioChannel vChannel = message.getMember().getVoiceState().getChannel();
         if (vChannel == null) {
-            event.getMessage().reply("Bro. You are not in a voice channel").queue();
+            message.reply("Bro. You are not in a voice channel").queue();
             return;
         }
 
-        event.getChannel().sendTyping().queue();
-        String[] args = event.getMessage().getContentRaw().split(" ", 2);
+        message.getChannel().sendTyping().queue();
+        String[] args = message.getContentRaw().split(" ", 2);
         if (args.length == 1) {
-            event.getMessage().reply("Bruh wheres your query???").queue();
+            message.reply("Bruh wheres your query???").queue();
             return;
         }
 
@@ -52,27 +80,27 @@ public class Play extends Command {
             query = query.substring("direct:".length());
         }
 
-        MusicManagerFactory.loadToGuild(new Context(event.getMessage()), query);
+        MusicManager.loadToGuild(new Context(message), query);
 
-        GMManager gmManager = MusicManagerFactory.getGuildMusicManager(event.getGuild());
-        if (gmManager.audioPlayer.isPaused()) {
-            gmManager.audioPlayer.setPaused(false);
+        MusicManager musicManager = MusicManager.of(message.getGuild());
+        if (musicManager.audioPlayer.isPaused()) {
+            musicManager.audioPlayer.setPaused(false);
         }
         try {
-            event.getGuild().getAudioManager().openAudioConnection(vChannel);
+            message.getGuild().getAudioManager().openAudioConnection(vChannel);
         } catch (InsufficientPermissionException e) {
-            event.getMessage().reply("I can't seem to connect to that channel").queue();
-            gmManager.eventListener.queue.clear();
-            gmManager.eventListener.nextTrack();
+            message.reply("I can't seem to connect to that channel").queue();
+            musicManager.eventListener.queue.clear();
+            musicManager.eventListener.nextTrack();
         }
-        event.getGuild().getAudioManager().setSelfDeafened(true);
+        message.getGuild().getAudioManager().setSelfDeafened(true);
     }
 
     @Override
     public void onContext(MessageContextInteractionEvent event) {
         AudioChannel vChannel = event.getMember().getVoiceState().getChannel();
         if (vChannel == null) {
-            event.getInteraction().reply("Bro. You are not in a voice channel").queue();
+            event.getInteraction().reply("Bro. You are not in a voice channel").setEphemeral(true).queue();
             return;
         }
 
@@ -96,18 +124,18 @@ public class Play extends Command {
         }
 
 
-        MusicManagerFactory.loadToGuild(new Context(event.getInteraction()), query);
+        MusicManager.loadToGuild(new Context(event.getInteraction()), query);
 
-        GMManager gmManager = MusicManagerFactory.getGuildMusicManager(event.getGuild());
-        if (gmManager.audioPlayer.isPaused()) {
-            gmManager.audioPlayer.setPaused(false);
+        MusicManager musicManager = MusicManager.of(event.getGuild());
+        if (musicManager.audioPlayer.isPaused()) {
+            musicManager.audioPlayer.setPaused(false);
         }
         try {
             event.getGuild().getAudioManager().openAudioConnection(vChannel);
         } catch (InsufficientPermissionException e) {
             event.getInteraction().getTarget().reply("I can't seem to connect to that channel").queue();
-            gmManager.eventListener.queue.clear();
-            gmManager.eventListener.nextTrack();
+            musicManager.eventListener.queue.clear();
+            musicManager.eventListener.nextTrack();
         }
         event.getGuild().getAudioManager().setSelfDeafened(true);
     }

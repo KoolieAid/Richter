@@ -1,35 +1,64 @@
 package com.koolie.bot.richter.commands.music;
 
-import com.koolie.bot.richter.MusicUtil.GMManager;
-import com.koolie.bot.richter.MusicUtil.MusicManagerFactory;
+import com.koolie.bot.richter.MusicUtil.MusicManager;
 import com.koolie.bot.richter.commands.Command;
+import com.koolie.bot.richter.commands.TextCommand;
 import com.koolie.bot.richter.objects.Context;
 import net.dv8tion.jda.api.entities.AudioChannel;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class PlayNext extends Command {
-    public PlayNext() {
-        setName("playnext");
-        setDescription("Adds a song to the front of the queue");
-        setCommandType(commandType.Music);
+public class PlayNext implements TextCommand {
+    public PlayNext() {}
+
+    @NotNull
+    @Override
+    public String getName() {
+        return "playnext";
+    }
+
+    @NotNull
+    @Override
+    public String getDescription() {
+        return "Adds a song to the front of the queue";
+    }
+
+    @NotNull
+    @Override
+    public Command.CommandType getCommandType() {
+        return CommandType.Music;
+    }
+
+    @NotNull
+    @Override
+    public String getOperator() {
+        return "playnext";
+    }
+
+    @Nullable
+    @Override
+    public String[] getAliases() {
+        return new String[] { "pn", "addnext" };
     }
 
     @Override
-    public void execute(MessageReceivedEvent event) {
-        AudioChannel vChannel = event.getMember().getVoiceState().getChannel();
+    public void execute(Message message) {
+        AudioChannel vChannel = message.getMember().getVoiceState().getChannel();
         if (vChannel == null) {
-            event.getMessage().reply("You are not in a voice channel you dimwit").queue();
+            message.reply("You are not in a voice channel you dimwit").queue();
             return;
         }
 
-        event.getChannel().sendTyping().queue();
-        String[] args = event.getMessage().getContentRaw().split(" ", 2);
+        message.getChannel().sendTyping().queue();
+        String[] args = message.getContentRaw().split(" ", 2);
         if (args.length == 1) {
-            event.getMessage().reply("Bruh wheres your query???").queue();
+            message.reply("Bruh wheres your query???").queue();
             return;
         }
 
@@ -51,19 +80,19 @@ public class PlayNext extends Command {
             query = query.substring("direct:".length());
         }
 
-        MusicManagerFactory.loadToGuild(new Context(event.getMessage()), query, true);
+        MusicManager.loadToGuild(new Context(message), query, true);
 
-        GMManager gmManager = MusicManagerFactory.getGuildMusicManager(event.getGuild());
-        if (gmManager.audioPlayer.isPaused()) {
-            gmManager.audioPlayer.setPaused(false);
+        MusicManager musicManager = MusicManager.of(message.getGuild());
+        if (musicManager.audioPlayer.isPaused()) {
+            musicManager.audioPlayer.setPaused(false);
         }
         try {
-            event.getGuild().getAudioManager().openAudioConnection(vChannel);
+            message.getGuild().getAudioManager().openAudioConnection(vChannel);
         } catch (InsufficientPermissionException e) {
-            event.getMessage().reply("I can't seem to connect to that channel").queue();
-            gmManager.eventListener.queue.clear();
-            gmManager.eventListener.nextTrack();
+            message.reply("I can't seem to connect to that channel").queue();
+            musicManager.eventListener.queue.clear();
+            musicManager.eventListener.nextTrack();
         }
-        event.getGuild().getAudioManager().setSelfDeafened(true);
+        message.getGuild().getAudioManager().setSelfDeafened(true);
     }
 }

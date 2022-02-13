@@ -1,40 +1,67 @@
 package com.koolie.bot.richter.commands.music;
 
-import com.koolie.bot.richter.MusicUtil.GMManager;
-import com.koolie.bot.richter.MusicUtil.MusicManagerFactory;
-import com.koolie.bot.richter.commands.Command;
+import com.koolie.bot.richter.MusicUtil.MusicManager;
+import com.koolie.bot.richter.commands.TextCommand;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.entities.Message;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class Skip extends Command {
-    public Skip() {
-        setName("Skip");
-        setDescription("Skips the playing song");
-        setCommandType(commandType.Music);
+public class Skip implements TextCommand {
+    public Skip() {}
+
+    @NotNull
+    @Override
+    public String getName() {
+        return "Skip";
+    }
+
+    @NotNull
+    @Override
+    public String getDescription() {
+        return "Skips the playing song";
+    }
+
+    @NotNull
+    @Override
+    public CommandType getCommandType() {
+        return CommandType.Music;
+    }
+
+    @NotNull
+    @Override
+    public String getOperator() {
+        return "skip";
+    }
+
+    @Nullable
+    @Override
+    public String[] getAliases() {
+        return new String[] { "next", "n" };
     }
 
     @Override
-    public void execute(MessageReceivedEvent event) {
-        if (!event.getGuild().getAudioManager().isConnected()) {
-            event.getMessage().reply("I'm not in a channel bro").queue();
+    public void execute(Message message) {
+        if (!message.getGuild().getAudioManager().isConnected()) {
+            message.reply("I'm not in a channel bro").queue();
             return;
         }
 
-        if (event.getMessage().getContentRaw().split(" ").length > 1) {
+        if (message.getContentRaw().split(" ").length > 1) {
             try {
-                Integer.parseInt(event.getMessage().getContentRaw().split(" ")[1]);
+                Integer.parseInt(message.getContentRaw().split(" ")[1]);
             } catch (NumberFormatException e) {
-                event.getMessage().reply("Seems like you're trying to skip a certain song. :thinking: How about trying `removequeue` or `rq` perhaps? \uD83E\uDDD0").queue();
+                message.reply("Seems like you're trying to skip a certain song. :thinking: How about trying `removequeue` or `rq` perhaps? \uD83E\uDDD0").queue();
                 return;
             }
-            event.getMessage().reply("Seems like you're trying to skip a certain song. :thinking: How about trying `removequeue` or `rq` perhaps? \uD83E\uDDD0").queue();
+            message.reply("Seems like you're trying to skip a certain song. :thinking: How about trying `removequeue` or `rq` perhaps? \uD83E\uDDD0").queue();
             return;
         }
 
-        GMManager gManager = MusicManagerFactory.getGuildMusicManager(event.getGuild());
+        MusicManager gManager = MusicManager.of(message.getGuild());
         AudioTrack skippedTrack = gManager.audioPlayer.getPlayingTrack();
         if (skippedTrack == null) {
-            event.getMessage().reply("There's nothing to skip").queue();
+            message.reply("There's nothing to skip").queue();
             return;
         }
 
@@ -43,6 +70,6 @@ public class Skip extends Command {
         } else {
             gManager.eventListener.nextTrack();
         }
-        event.getMessage().addReaction("\uD83D\uDC4C").queue();
+        message.addReaction("\uD83D\uDC4C").queue();
     }
 }

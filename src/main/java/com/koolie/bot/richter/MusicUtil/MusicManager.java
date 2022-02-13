@@ -3,6 +3,7 @@ package com.koolie.bot.richter.MusicUtil;
 import com.koolie.bot.richter.SourceManagers.SpotifySourceManager;
 import com.koolie.bot.richter.objects.Context;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
@@ -12,7 +13,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import io.sentry.Sentry;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -21,21 +21,50 @@ import java.util.concurrent.TimeUnit;
 /**
  * Handles the Guild Music Managers of guilds
  */
-public class MusicManagerFactory {
+public class MusicManager {
     private static final AudioPlayerManager audioPlayerManager = new DefaultAudioPlayerManager();
-    public static HashMap<Long, GMManager> guildManagerMap = new HashMap<>();
+    public static HashMap<Long, MusicManager> guildManagerMap = new HashMap<>();
 
-    private MusicManagerFactory() {}
+    public AudioPlayer audioPlayer;
+    public AudioPlayerEventListener eventListener;
+
+    /**
+     * Allocates audio player and Event Listener for the guild
+     *
+     * @param playerManager AudioPlayerManager to create a player and link a new scheduler for it
+     */
+    public MusicManager(AudioPlayerManager playerManager) {
+        audioPlayer = playerManager.createPlayer();
+
+        // Links the two, inside them has a variable of the opposite
+        eventListener = new AudioPlayerEventListener(audioPlayer);
+        audioPlayer.addListener(eventListener);
+
+        audioPlayer.setVolume(20);
+    }
+
+    /**
+     * Wrapper for audio player
+     *
+     * @return Returns a wrapped *JDA* AudioSendHandler with a LavaPlayer audio player
+     */
+    public AudioPlayerSendHandler getSendHandler() {
+        return new AudioPlayerSendHandler(audioPlayer);
+    }
+
+    public boolean isPlaying() {
+        return audioPlayer.getPlayingTrack() != null;
+    }
 
     /**
      * @param guild Guild object to get AudioManager and ID
      * @return The Specific Music Manager for that guild
      */
-    public static GMManager getGuildMusicManager(Guild guild) {
-        GMManager musicManager = guildManagerMap.get(guild.getIdLong());
+    public static MusicManager of(Guild guild) {
+        MusicManager musicManager = guildManagerMap.get(guild.getIdLong());
 
         if (musicManager == null) {
-            musicManager = new GMManager(audioPlayerManager);
+            musicManager = new MusicManager(audioPlayerManager);
             musicManager.eventListener.setJda(guild.getJDA());
             guildManagerMap.put(guild.getIdLong(), musicManager);
         }
@@ -59,7 +88,7 @@ public class MusicManagerFactory {
     }
 
     public static void loadToGuild(Context message, String trackIdentifier, boolean isFront){
-        GMManager gManager = getGuildMusicManager(message.getGuild());
+        MusicManager gManager = of(message.getGuild());
 
         audioPlayerManager.loadItemOrdered(gManager, trackIdentifier, new AudioLoadResultHandler() {
             @Override
@@ -140,7 +169,7 @@ public class MusicManagerFactory {
     }
 
     public static void onLeave(Guild guild) {
-        GMManager manager = getGuildMusicManager(guild);
+        MusicManager manager = of(guild);
 
         manager.eventListener.setRepeatOff();
         manager.eventListener.queue.clear();
@@ -156,16 +185,16 @@ public class MusicManagerFactory {
     }
 
     public static void timerLeave(Guild guild) {
-        GMManager manager = getGuildMusicManager(guild);
+        MusicManager manager = of(guild);
         manager.eventListener.scheduleLeave(5, TimeUnit.MINUTES);
     }
 
     public static boolean isLeaving(Guild guild) {
-        return getGuildMusicManager(guild).eventListener.isLeaving();
+        return of(guild).eventListener.isLeaving();
     }
 
     public static void cancelLeave(Guild guild) {
-        getGuildMusicManager(guild).eventListener.cancelLeave();
+        of(guild).eventListener.cancelLeave();
     }
 
     public static int getActivePlayers(){

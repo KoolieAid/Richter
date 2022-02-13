@@ -1,11 +1,10 @@
 package com.koolie.bot.richter;
 
-import com.koolie.bot.richter.MusicUtil.MusicManagerFactory;
+import com.koolie.bot.richter.MusicUtil.MusicManager;
 import com.koolie.bot.richter.threading.ThreadUtil;
 import com.koolie.bot.richter.util.BotConfigManager;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import io.sentry.Sentry;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.interactions.commands.Command;
@@ -14,7 +13,6 @@ import net.dv8tion.jda.api.interactions.commands.build.*;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
-import org.w3c.dom.UserDataHandler;
 
 import javax.security.auth.login.LoginException;
 import java.io.FileNotFoundException;
@@ -44,7 +42,7 @@ public class Richter {
 
         setOptions();
 //        setUpSlash();
-        MusicManagerFactory.loadSources();
+        MusicManager.loadSources();
     }
 
     public static void setOptions() {

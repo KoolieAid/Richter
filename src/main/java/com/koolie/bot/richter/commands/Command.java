@@ -1,59 +1,19 @@
 package com.koolie.bot.richter.commands;
 
-import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-public abstract class Command {
-    @Nonnull
-    private String name;
-    @Nonnull
-    private String description;
-
-    @Nullable
-    private commandType cType = commandType.Other;
+public interface Command {
 
     @Nonnull
-    public String getName() {
-        return name;
-    }
-
-    public void setName(@Nonnull String name) {
-        this.name = name;
-    }
+    String getName();
 
     @Nonnull
-    public String getDescription() {
-        return description;
-    }
+    String getDescription();
 
-    public void setDescription(@Nonnull String description) {
-        this.description = description;
-    }
+    @Nonnull
+    default CommandType getCommandType() { return CommandType.Other; }
 
-    @Nullable
-    public commandType getCommandType() {
-        return cType;
-    }
-
-    public void setCommandType(@Nullable commandType cType) {
-        this.cType = cType;
-    }
-
-    public abstract void execute(MessageReceivedEvent event);
-
-    public void slash(SlashCommandInteractionEvent event) {
-        event.reply("Seems like the developer is not finished with this one yet.").setEphemeral(true).queue();
-    }
-
-    public void onContext(MessageContextInteractionEvent event) {
-        event.reply("Seems like the developer is not finished with this one yet.").setEphemeral(true).queue();
-    }
-
-    public enum commandType {
+    enum CommandType {
         General, Music, Power, Other
     }
 }

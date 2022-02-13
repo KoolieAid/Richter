@@ -10,33 +10,56 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class ConcertMode extends Command {
+public class ConcertMode implements TextCommand {
 
     private final HashMap<Long, ConcertModeAdapter> adapters;
 
     public ConcertMode() {
-        setName("Concert Mode");
-        setDescription("Makes the author the only one who can sing/talk in a channel");
-        setCommandType(commandType.General);
-
         adapters = new HashMap<>();
     }
 
     @Override
-    public void execute(MessageReceivedEvent event) {
-        if (!event.getMember().hasPermission(Permission.MANAGE_SERVER)) {
-            event.getMessage().reply("You don't have the permissions to do that").queue();
+    public String getName() {
+        return "Concert Mode";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Makes the author the only one who can sing/talk in a channel";
+    }
+
+    @Override
+    public CommandType getCommandType() {
+        return CommandType.General;
+    }
+
+    @NotNull
+    @Override
+    public String getOperator() {
+        return "concertMode";
+    }
+
+    @Nullable
+    @Override
+    public String[] getAliases() {
+        return new String[] { "concertmode", "cm" };
+    }
+
+    @Override
+    public void execute(Message message) {
+        if (!message.getMember().hasPermission(Permission.MANAGE_SERVER)) {
+            message.reply("You don't have the permissions to do that").queue();
             return;
         }
-        Message message = event.getMessage();
         String[] args = message.getContentRaw().split(" ");
 
         if (args.length == 1) {
-            ConcertModeAdapter adapter = adapters.get(event.getGuild().getIdLong());
+            ConcertModeAdapter adapter = adapters.get(message.getGuild().getIdLong());
             if (adapter == null) {
                 message.reply("Concert Mode is currently disabled. To enable, type `concertMode enable`. Be careful as this command mutes everyone in your voice channel except you.").queue();
                 return;

@@ -1,29 +1,52 @@
 package com.koolie.bot.richter.commands;
 
 import com.koolie.bot.richter.EventHandler;
+import com.koolie.bot.richter.objects.Ignored;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.jetbrains.annotations.NotNull;
 
-public class Prefix extends Command {
-    public Prefix() {
-        this.setName("Prefix");
-        this.setDescription("Changes the prefix of the bot");
-        this.setCommandType(commandType.General);
+@Ignored
+public class Prefix implements TextCommand {
+    public Prefix() {}
+
+    @NotNull
+    @Override
+    public String getName() {
+        return "Prefix";
     }
 
+    @NotNull
     @Override
-    public void execute(MessageReceivedEvent event) {
+    public String getDescription() {
+        return "Changes the prefix of the bot";
+    }
+
+    @NotNull
+    @Override
+    public CommandType getCommandType() {
+        return CommandType.General;
+    }
+
+    @NotNull
+    @Override
+    public String getOperator() {
+        return "prefix";
+    }
+
+    //who the fuck used threads
+    @Override
+    public void execute(Message event) {
         event.getChannel().sendTyping().queue();
         new Thread(() -> {
-            Message message = event.getMessage();
-            String[] args = event.getMessage().getContentRaw().split(" ");
+            String[] args = event.getContentRaw().split(" ");
             if (args.length == 1) {
-                message.reply("No prefix provided").queue();
+                event.reply("No prefix provided").queue();
                 return;
             }
 
             EventHandler.prefix = args[1];
-            message.reply("Prefix changed to " + EventHandler.prefix).queue();
+            event.reply("Prefix changed to " + EventHandler.prefix).queue();
         }).start();
     }
 }

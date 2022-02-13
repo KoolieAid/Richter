@@ -1,56 +1,73 @@
 package com.koolie.bot.richter.commands;
 
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
+import org.jetbrains.annotations.NotNull;
 
-public class Nick extends Command {
-    public Nick() {
-        setName("Nickname");
-        setDescription("Changes the nickname of the mentioned user");
-        setCommandType(commandType.General);
+public class Nick implements TextCommand {
+    public Nick() {}
+
+    @NotNull
+    @Override
+    public String getOperator() {
+        return "nick";
     }
 
     @Override
-    public void execute(MessageReceivedEvent event) {
-        String[] args = event.getMessage().getContentRaw().split(" ", 3);
+    public void execute(Message event) {
+        String[] args = event.getContentRaw().split(" ", 3);
 
-        if (event.getMessage().getMentionedMembers().size() == 0) {
-            event.getMessage().reply("Please include a user").queue();
+        if (event.getMentionedMembers().size() == 0) {
+            event.reply("Please include a user").queue();
             return;
         }
 
-        if (event.getMessage().getMentionedMembers().get(0).isOwner()) {
-            event.getMessage().reply("The mentioned user is the owner of the server, means I can't change their nickname").queue();
+        if (event.getMentionedMembers().get(0).isOwner()) {
+            event.reply("The mentioned user is the owner of the server, means I can't change their nickname").queue();
             return;
         }
 
-        Member mentionedMember = event.getMessage().getMentionedMembers().get(0);
-        String oldNick = event.getMessage().getMentionedMembers().get(0).getEffectiveName();
+        Member mentionedMember = event.getMentionedMembers().get(0);
+        String oldNick = event.getMentionedMembers().get(0).getEffectiveName();
 
         if (!event.getGuild().getMember(event.getJDA().getSelfUser()).canInteract(mentionedMember)) {
-            event.getMessage().reply("I can't modify their nickname, because of role positions").queue();
+            event.reply("I can't modify their nickname, because of role positions").queue();
             return;
         }
 
         try {
             if (args.length == 2) {
-                mentionedMember.modifyNickname(null).queue((e) -> event.getMessage().reply("Nickname has been reset").queue(),
-                        (f) -> event.getMessage().reply("Something went wrong while changing their nickname. Error: " + f.getMessage()).queue());
+                mentionedMember.modifyNickname(null).queue((e) -> event.reply("Nickname has been reset").queue(),
+                        (f) -> event.reply("Something went wrong while changing their nickname. Error: " + f.getMessage()).queue());
                 return;
             }
 
-            mentionedMember.modifyNickname(args[2]).queue((s) -> event.getMessage().reply("Nickname changed from " + oldNick).queue(),
-                    (e) -> event.getMessage().reply(e.getMessage()).queue());
+            mentionedMember.modifyNickname(args[2]).queue((s) -> event.reply("Nickname changed from " + oldNick).queue(),
+                    (e) -> event.reply(e.getMessage()).queue());
         } catch (HierarchyException e) {
-            event.getMessage().reply("The person's position is higher than mine in the server").queue();
+            event.reply("The person's position is higher than mine in the server").queue();
         }
 
     }
 
+    @NotNull
     @Override
-    public void slash(SlashCommandInteractionEvent event) {
+    public String getName() {
+        return "Nick";
+    }
 
+    @NotNull
+    @Override
+    public String getDescription() {
+        return "Changes the nickname of the mentioned user";
+    }
+
+    @NotNull
+    @Override
+    public CommandType getCommandType() {
+        return CommandType.General;
     }
 }

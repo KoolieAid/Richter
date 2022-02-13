@@ -1,36 +1,64 @@
 package com.koolie.bot.richter.commands.music;
 
-import com.koolie.bot.richter.MusicUtil.GMManager;
-import com.koolie.bot.richter.MusicUtil.MusicManagerFactory;
-import com.koolie.bot.richter.commands.Command;
+import com.koolie.bot.richter.MusicUtil.MusicManager;
+import com.koolie.bot.richter.commands.TextCommand;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.time.Duration;
 
-public class NowPlaying extends Command {
+public class NowPlaying implements TextCommand {
     private final String line = "▬";
     private final String now = ":radio_button:";
     private final int totalSize = 20;
 
-    public NowPlaying() {
-        setName("Now Playing");
-        setDescription("Shows the currently playing song");
-        setCommandType(commandType.Music);
+    public NowPlaying() {}
+
+    @NotNull
+    @Override
+    public String getName() {
+        return "Now Playing";
+    }
+
+    @NotNull
+    @Override
+    public String getDescription() {
+        return "Shows the currently playing song";
+    }
+
+    @NotNull
+    @Override
+    public CommandType getCommandType() {
+        return CommandType.Music;
+    }
+
+    @NotNull
+    @Override
+    public String getOperator() {
+        return "nowplaying";
+    }
+
+    @Nullable
+    @Override
+    public String[] getAliases() {
+        return new String[] { "np" };
     }
 
     @Override
-    public void execute(MessageReceivedEvent event) {
-        if (!event.getGuild().getAudioManager().isConnected()) {
-            event.getMessage().reply("I'm not in a channel bro").queue();
+    public void execute(Message message) {
+        if (!message.getGuild().getAudioManager().isConnected()) {
+            message.reply("I'm not in a channel bro").queue();
             return;
         }
-        GMManager gManager = MusicManagerFactory.getGuildMusicManager(event.getGuild());
+        MusicManager gManager = MusicManager.of(message.getGuild());
         AudioTrack track = gManager.audioPlayer.getPlayingTrack();
         if (track == null) {
-            event.getMessage().reply("There's nothing playing").queue();
+            message.reply("There's nothing playing").queue();
             return;
         }
 
@@ -72,6 +100,6 @@ public class NowPlaying extends Command {
         eb.setThumbnail("http://img.youtube.com/vi/" + track.getIdentifier() + "/maxresdefault.jpg");
         eb.setTitle(track.getInfo().title, track.getInfo().uri).setColor(Color.RED);
         eb.setDescription(progressBar + "\t**[" + positionString + "/" + durationString + "]**");
-        event.getMessage().replyEmbeds(eb.build()).queue();
+        message.replyEmbeds(eb.build()).queue();
     }
 }

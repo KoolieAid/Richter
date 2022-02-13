@@ -1,10 +1,12 @@
 package com.koolie.bot.richter.commands;
 
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
-public class Reason extends Command {
+public class Reason implements TextCommand {
     private final static String[] intro = {
             "Sorry I can't come",
             "Please forgive my absence",
@@ -45,16 +47,36 @@ public class Reason extends Command {
     private final Random random;
 
     public Reason() {
-        this.setName("Reason");
-        this.setDescription("Gives a very convincing reason");
-        this.setCommandType(commandType.Other);
-
         random = new Random();
     }
 
+    @NotNull
     @Override
-    public void execute(MessageReceivedEvent event) {
-        event.getMessage().reply(intro[random.nextInt(intro.length)] + " " +
+    public String getOperator() {
+        return "reason";
+    }
+
+    @NotNull
+    @Override
+    public String getName() {
+        return "Reason";
+    }
+
+    @NotNull
+    @Override
+    public String getDescription() {
+        return "Gives a very convincing reason";
+    }
+
+    @NotNull
+    @Override
+    public CommandType getCommandType() {
+        return CommandType.Other;
+    }
+
+    @Override
+    public void execute(Message message) {
+        message.reply(intro[random.nextInt(intro.length)] + " " +
                 scapeGoat[random.nextInt(intro.length)] + " " +
                 delay[random.nextInt(delay.length)]).queue();
     }

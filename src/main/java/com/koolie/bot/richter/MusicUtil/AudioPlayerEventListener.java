@@ -13,7 +13,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.slf4j.LoggerFactory;
 
@@ -234,7 +233,7 @@ public class AudioPlayerEventListener extends AudioEventAdapter {
 
         @Override
         public void run() {
-            Queue<AudioTrack> q = MusicManagerFactory.getGuildMusicManager(jda.getTextChannelById(channelId).getGuild()).eventListener.queue;
+            Queue<AudioTrack> q = MusicManager.of(jda.getTextChannelById(channelId).getGuild()).eventListener.queue;
             q.clear();
             jda.getTextChannelById(channelId).getGuild().getAudioManager().closeAudioConnection();
         }

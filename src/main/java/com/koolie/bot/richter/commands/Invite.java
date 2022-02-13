@@ -1,17 +1,39 @@
 package com.koolie.bot.richter.commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.jetbrains.annotations.NotNull;
 
-public class Invite extends Command {
-    public Invite() {
-        setName("invite");
-        setDescription("Sends a link to invite me. ;)");
-        setCommandType(commandType.General);
+public class Invite implements TextCommand {
+    public Invite() {}
+
+    @NotNull
+    @Override
+    public String getName() {
+        return "invite";
+    }
+
+    @NotNull
+    @Override
+    public String getDescription() {
+        return "Sends a link to invite me. ;)";
+    }
+
+    @NotNull
+    @Override
+    public Command.CommandType getCommandType() {
+        return CommandType.General;
+    }
+
+    @NotNull
+    @Override
+    public String getOperator() {
+        return "invite";
     }
 
     @Override
-    public void execute(MessageReceivedEvent event) {
+    public void execute(Message message) {
         EmbedBuilder ebuilder = new EmbedBuilder()
                 .setDescription("""
                         How to invite me:
@@ -20,6 +42,6 @@ public class Invite extends Command {
                         3. ???
                         4. Profit
                         """);
-        event.getMessage().replyEmbeds(ebuilder.build()).queue();
+        message.replyEmbeds(ebuilder.build()).queue();
     }
 }

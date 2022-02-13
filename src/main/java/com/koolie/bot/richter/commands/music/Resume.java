@@ -1,33 +1,51 @@
 package com.koolie.bot.richter.commands.music;
 
-import com.koolie.bot.richter.MusicUtil.GMManager;
-import com.koolie.bot.richter.MusicUtil.MusicManagerFactory;
-import com.koolie.bot.richter.commands.Command;
+import com.koolie.bot.richter.MusicUtil.MusicManager;
+import com.koolie.bot.richter.commands.TextCommand;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.jetbrains.annotations.NotNull;
 
-public class Resume extends Command {
-    public Resume() {
-        setName("Pause");
-        setDescription("Pauses the music duh");
-        setCommandType(commandType.Music);
+public class Resume implements TextCommand {
+    public Resume() {}
+
+    @Override
+    public String getName() {
+        return "Pause";
     }
 
     @Override
-    public void execute(MessageReceivedEvent event) {
-        if (!event.getGuild().getAudioManager().isConnected()) {
-            event.getMessage().reply("I'm not in a channel bro").queue();
+    public String getDescription() {
+        return "Pauses the music duh";
+    }
+
+    @Override
+    public CommandType getCommandType() {
+        return CommandType.Music;
+    }
+
+    @NotNull
+    @Override
+    public String getOperator() {
+        return "resume";
+    }
+
+    @Override
+    public void execute(Message message) {
+        if (!message.getGuild().getAudioManager().isConnected()) {
+            message.reply("I'm not in a channel bro").queue();
             return;
         }
 
-        GMManager gManager = MusicManagerFactory.getGuildMusicManager(event.getGuild());
+        MusicManager gManager = MusicManager.of(message.getGuild());
         AudioTrack track = gManager.audioPlayer.getPlayingTrack();
         if (track == null) {
-            event.getMessage().reply("Nothing is playing").queue();
+            message.reply("Nothing is playing").queue();
             return;
         }
         gManager.audioPlayer.setPaused(false);
 
-        event.getMessage().reply(track.getInfo().title + " has been resumed").queue();
+        message.reply(track.getInfo().title + " has been resumed").queue();
     }
 }

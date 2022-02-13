@@ -1,29 +1,50 @@
 package com.koolie.bot.richter.commands.music;
 
-import com.koolie.bot.richter.MusicUtil.GMManager;
-import com.koolie.bot.richter.MusicUtil.MusicManagerFactory;
-import com.koolie.bot.richter.commands.Command;
+import com.koolie.bot.richter.MusicUtil.MusicManager;
+import com.koolie.bot.richter.commands.TextCommand;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 import java.util.Random;
 
-public class Shuffle extends Command {
-    public Shuffle() {
-        setName("Shuffle");
-        setDescription("Shuffles the queue");
-        setCommandType(commandType.Music);
+public class Shuffle implements TextCommand {
+    public Shuffle() {}
+
+    @NotNull
+    @Override
+    public String getName() {
+        return "Shuffle";
+    }
+
+    @NotNull
+    @Override
+    public String getDescription() {
+        return "Shuffles the queue";
+    }
+
+    @NotNull
+    @Override
+    public CommandType getCommandType() {
+        return CommandType.Music;
+    }
+
+    @NotNull
+    @Override
+    public String getOperator() {
+        return "shuffle";
     }
 
     @Override
-    public void execute(MessageReceivedEvent event) {
-        if (!event.getGuild().getAudioManager().isConnected()) {
-            event.getMessage().reply("I'm not in a channel bro").queue();
+    public void execute(Message message) {
+        if (!message.getGuild().getAudioManager().isConnected()) {
+            message.reply("I'm not in a channel bro").queue();
             return;
         }
 
-        GMManager gManager = MusicManagerFactory.getGuildMusicManager(event.getGuild());
+        MusicManager gManager = MusicManager.of(message.getGuild());
         Random random = new Random();
 
         LinkedList<AudioTrack> newQueue = new LinkedList<>();
@@ -37,7 +58,7 @@ public class Shuffle extends Command {
         gManager.eventListener.queue.clear();
         gManager.eventListener.queue = newQueue;
 
-        event.getMessage().reply("Shuffled the queue").queue();
+        message.reply("Shuffled the queue").queue();
 
     }
 }
