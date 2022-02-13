@@ -3,11 +3,11 @@ package com.koolie.bot.richter.commands.music;
 import com.koolie.bot.richter.MusicUtil.MusicManager;
 import com.koolie.bot.richter.commands.TextCommand;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class Clear implements TextCommand {
-    public Clear() {}
+    public Clear() {
+    }
 
     @NotNull
     @Override

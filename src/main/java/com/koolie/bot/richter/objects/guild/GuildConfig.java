@@ -3,14 +3,13 @@ package com.koolie.bot.richter.objects.guild;
 import java.util.HashMap;
 
 public class GuildConfig {
+    private static final HashMap<Long, GuildConfig> guildConfigs = new HashMap<>();
     private final Long guildId;
     private String prefix;
     private String concertModeChannelId;
     private Long concertModeMCId;
     private String lockChannelId;
     private Long[] lockChannelMembers;
-
-    private static final HashMap<Long, GuildConfig> guildConfigs = new HashMap<>();
     //put static methods use database, abstract it so I don't have to deal with shit later on
 
     public GuildConfig(Long id) {
@@ -27,7 +26,7 @@ public class GuildConfig {
         return config;
     }
 
-    public String getPrefix(){
+    public String getPrefix() {
         return prefix;
     }
 

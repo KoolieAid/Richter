@@ -4,14 +4,14 @@ import com.koolie.bot.richter.MusicUtil.MusicManager;
 import com.koolie.bot.richter.commands.TextCommand;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 import java.util.Random;
 
 public class Shuffle implements TextCommand {
-    public Shuffle() {}
+    public Shuffle() {
+    }
 
     @NotNull
     @Override

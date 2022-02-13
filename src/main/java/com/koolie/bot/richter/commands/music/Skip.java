@@ -37,7 +37,7 @@ public class Skip implements TextCommand {
     @Nullable
     @Override
     public String[] getAliases() {
-        return new String[] { "next", "n" };
+        return new String[]{"next", "n"};
     }
 
     @Override

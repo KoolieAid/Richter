@@ -1,14 +1,14 @@
 package com.koolie.bot.richter.commands;
 
+import com.koolie.bot.richter.objects.Ignored;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+@Ignored
 public class Eval implements TextCommand {
     static String imports = """
             import net.dv8tion.jda.api.JDA;

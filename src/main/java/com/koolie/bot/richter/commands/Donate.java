@@ -1,12 +1,11 @@
 package com.koolie.bot.richter.commands;
 
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class Donate implements TextCommand {
-    public Donate() {}
+    public Donate() {
+    }
 
     @NotNull
     @Override

@@ -53,7 +53,9 @@ public class EventHandler extends ListenerAdapter {
         return textCommands;
     }
 
-    public static HashMap<String, String> getAliases() { return aliases; }
+    public static HashMap<String, String> getAliases() {
+        return aliases;
+    }
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
@@ -209,7 +211,7 @@ public class EventHandler extends ListenerAdapter {
             contextCommands.get(event.getInteraction().getName()).onContext(event);
         } catch (InsufficientPermissionException e) {
             event.getInteraction().reply("Seems like I don't have the necessary permission for that!\n"
-                    + "I needed `" + e.getPermission().getName() + "`").queue();
+                    + "I needed `" + e.getPermission().getName() + "`").setEphemeral(true).queue();
         } catch (Exception e) {
             log.error("Exception in executing context command", e);
             Sentry.captureException(e, event.getTarget().getContentRaw());

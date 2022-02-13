@@ -24,23 +24,21 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class AudioPlayerEventListener extends AudioEventAdapter {
-    Long expiringMessageId;
-
     private final AudioPlayer audioPlayer;
     public Deque<AudioTrack> queue;
-
+    Long expiringMessageId;
     private Long channelId;
     private ScheduledFuture<?> leaveSchedule;
     private RepeatMode mode;
     private JDA jda;
 
-    public void setJda(JDA jda) {
-        this.jda = jda;
-    }
-
     public AudioPlayerEventListener(AudioPlayer player) {
         this.audioPlayer = player;
         queue = new LinkedList<>();
+    }
+
+    public void setJda(JDA jda) {
+        this.jda = jda;
     }
 
     public void setRepeatSingle() {
@@ -128,7 +126,8 @@ public class AudioPlayerEventListener extends AudioEventAdapter {
     }
 
     @Override
-    public void onPlayerPause(AudioPlayer player) {}
+    public void onPlayerPause(AudioPlayer player) {
+    }
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
@@ -219,7 +218,7 @@ public class AudioPlayerEventListener extends AudioEventAdapter {
         LoggerFactory.getLogger("Schedule Leave").debug("Leave scheduled");
     }
 
-    public boolean isLeaving(){
+    public boolean isLeaving() {
         return leaveSchedule != null;
     }
 

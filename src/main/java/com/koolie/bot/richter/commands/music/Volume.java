@@ -3,12 +3,12 @@ package com.koolie.bot.richter.commands.music;
 import com.koolie.bot.richter.MusicUtil.MusicManager;
 import com.koolie.bot.richter.commands.TextCommand;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class Volume implements TextCommand {
-    public Volume() {}
+    public Volume() {
+    }
 
     @NotNull
     @Override
@@ -37,7 +37,7 @@ public class Volume implements TextCommand {
     @Nullable
     @Override
     public String[] getAliases() {
-        return new String[] {"vol"};
+        return new String[]{"vol"};
     }
 
     @Override

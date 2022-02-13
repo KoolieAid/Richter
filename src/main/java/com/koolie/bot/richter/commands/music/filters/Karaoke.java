@@ -4,13 +4,13 @@ import com.github.natanbc.lavadsp.karaoke.KaraokePcmAudioFilter;
 import com.koolie.bot.richter.MusicUtil.MusicManager;
 import com.koolie.bot.richter.commands.TextCommand;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 
 public class Karaoke implements TextCommand {
-    public Karaoke() {}
+    public Karaoke() {
+    }
 
     @NotNull
     @Override

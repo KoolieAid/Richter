@@ -6,7 +6,6 @@ import com.koolie.bot.richter.commands.TextCommand;
 import com.koolie.bot.richter.objects.Context;
 import net.dv8tion.jda.api.entities.AudioChannel;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,7 +43,7 @@ public class PlayNext implements TextCommand {
     @Nullable
     @Override
     public String[] getAliases() {
-        return new String[] { "pn", "addnext" };
+        return new String[]{"pn", "addnext"};
     }
 
     @Override

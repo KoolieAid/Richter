@@ -5,7 +5,6 @@ import com.koolie.bot.richter.commands.TextCommand;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +45,7 @@ public class NowPlaying implements TextCommand {
     @Nullable
     @Override
     public String[] getAliases() {
-        return new String[] { "np" };
+        return new String[]{"np"};
     }
 
     @Override

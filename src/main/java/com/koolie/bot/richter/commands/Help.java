@@ -4,11 +4,9 @@ import com.koolie.bot.richter.EventHandler;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.lang.reflect.Field;
 import java.util.HashMap;
 
 public class Help implements TextCommand {
@@ -76,11 +74,18 @@ public class Help implements TextCommand {
 
     private MessageEmbed getSpecific(String cmd) {
         HashMap<String, TextCommand> map = EventHandler.getCommands();
-        if (!map.containsKey(cmd)) {
+        HashMap<String, String> aliasesMap = EventHandler.getAliases();
+        if (!map.containsKey(cmd) && !aliasesMap.containsKey(cmd)) {
             return new EmbedBuilder().setColor(Color.RED).setTitle("Command not found").build();
         }
-        TextCommand command = map.get(cmd);
+        if (map.get(cmd) != null && aliasesMap.get(cmd) == null) {
+            return getBody(map.get(cmd));
+        }
 
+        return getBody(map.get(aliasesMap.get(cmd)));
+    }
+
+    private MessageEmbed getBody(TextCommand command) {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setColor(Color.BLUE)
                 .setTitle(command.getName())

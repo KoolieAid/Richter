@@ -2,11 +2,11 @@ package com.koolie.bot.richter.commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class Invite implements TextCommand {
-    public Invite() {}
+    public Invite() {
+    }
 
     @NotNull
     @Override

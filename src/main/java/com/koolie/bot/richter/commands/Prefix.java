@@ -3,12 +3,12 @@ package com.koolie.bot.richter.commands;
 import com.koolie.bot.richter.EventHandler;
 import com.koolie.bot.richter.objects.Ignored;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
 @Ignored
 public class Prefix implements TextCommand {
-    public Prefix() {}
+    public Prefix() {
+    }
 
     @NotNull
     @Override

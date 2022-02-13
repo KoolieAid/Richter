@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-public class Execute implements ContextCommand{
+public class Execute implements ContextCommand {
     @NotNull
     @Override
     public String getName() {
@@ -47,7 +47,7 @@ public class Execute implements ContextCommand{
             return;
         }
 
-        if (!event.getUser().equals(event.getTarget().getAuthor())){
+        if (!event.getUser().equals(event.getTarget().getAuthor())) {
             event.getInteraction().reply("You can't execute commands from other users").setEphemeral(true).queue();
             return;
         }
@@ -59,7 +59,7 @@ public class Execute implements ContextCommand{
         }
         String command = args[0].replaceFirst(BotConfigManager.getPrefix(), "");
 
-        if(!map.containsKey(command) && !alias.containsKey(command)) {
+        if (!map.containsKey(command) && !alias.containsKey(command)) {
             event.getInteraction().reply("Command not found").setEphemeral(true).queue();
             return;
         }
@@ -73,8 +73,10 @@ public class Execute implements ContextCommand{
             map.get(alias.get(command)).execute(event.getTarget());
             event.getInteraction().reply("Command executed").setEphemeral(true).queue();
         } catch (InsufficientPermissionException e) {
-            event.getTarget().reply("Seems like I don't have the necessary permission for that!\n"
-                    + "I needed `" + e.getPermission().getName() + "`").queue();
+            event.getInteraction().reply("Seems like I don't have the necessary permission for that!\n"
+                    + "I needed `" + e.getPermission().getName() + "`").setEphemeral(true).queue();
+        } catch (NullPointerException e) {
+            event.getInteraction().reply("Message is too old for me to read").setEphemeral(true).queue();
         } catch (Exception e) {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(e).append("\n");

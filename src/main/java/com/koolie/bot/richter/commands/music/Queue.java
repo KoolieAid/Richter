@@ -5,7 +5,6 @@ import com.koolie.bot.richter.commands.TextCommand;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,7 +41,7 @@ public class Queue implements TextCommand {
     @Nullable
     @Override
     public String[] getAliases() {
-        return new String[] {"q"};
+        return new String[]{"q"};
     }
 
     @Override
