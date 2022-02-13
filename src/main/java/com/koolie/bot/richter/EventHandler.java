@@ -1,7 +1,10 @@
 package com.koolie.bot.richter;
 
 import com.koolie.bot.richter.MusicUtil.MusicManager;
-import com.koolie.bot.richter.commands.*;
+import com.koolie.bot.richter.commands.Command;
+import com.koolie.bot.richter.commands.ContextCommand;
+import com.koolie.bot.richter.commands.SlashCommand;
+import com.koolie.bot.richter.commands.TextCommand;
 import com.koolie.bot.richter.objects.Ignored;
 import com.koolie.bot.richter.threading.ThreadUtil;
 import com.koolie.bot.richter.util.BotConfigManager;
@@ -43,13 +46,14 @@ public class EventHandler extends ListenerAdapter {
     private boolean jdaReady = false;
 
     public EventHandler() {
-//        populateCommandHashMap();
         generateCommands();
     }
 
     public static HashMap<String, TextCommand> getCommands() {
         return textCommands;
     }
+
+    public static HashMap<String, String> getAliases() { return aliases; }
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
@@ -186,12 +190,9 @@ public class EventHandler extends ListenerAdapter {
         int guildCount = jda.getGuilds().size();
         log.info(jda.getShardInfo() + " is now listening to " + guildCount + " guilds");
 
-        event.getJDA().upsertCommand(Commands.context(net.dv8tion.jda.api.interactions.commands.Command.Type.MESSAGE, "Add to queue")).queue();
-//        event.getJDA().getGuildById("931181353507123242")
-//                ("testing")
-//                .queue(command -> {
-//                    event.getJDA().getGuildById("931181353507123242").deleteCommandById(command.getIdLong()).queue();
-//                });
+//        event.getJDA().upsertCommand(Commands.context(net.dv8tion.jda.api.interactions.commands.Command.Type.MESSAGE, "Add to queue")).queue();
+//        event.getJDA()
+//                .upsertCommand(Commands.context(net.dv8tion.jda.api.interactions.commands.Command.Type.MESSAGE, "Execute")).queue();
         Commands.slash("play", "Plays music for you")
                 .addOption(OptionType.STRING, "query", "The song that you're looking for", true, true);
     }
@@ -206,9 +207,18 @@ public class EventHandler extends ListenerAdapter {
 //        log.debug(event.getInteraction().getName());
         try {
             contextCommands.get(event.getInteraction().getName()).onContext(event);
+        } catch (InsufficientPermissionException e) {
+            event.getInteraction().reply("Seems like I don't have the necessary permission for that!\n"
+                    + "I needed `" + e.getPermission().getName() + "`").queue();
         } catch (Exception e) {
-            log.error("Exception in executing command", e);
-            event.getInteraction().reply("```" + e + "```").setEphemeral(true).queue();
+            log.error("Exception in executing context command", e);
+            Sentry.captureException(e, event.getTarget().getContentRaw());
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(e).append("\n");
+            for (int i = 0; i < 5; i++) {
+                stringBuilder.append(e.getStackTrace()[i]).append("\n");
+            }
+            event.getInteraction().reply("```" + stringBuilder + "```").setEphemeral(true).queue();
         }
     }
 
@@ -222,8 +232,6 @@ public class EventHandler extends ListenerAdapter {
      */
 
     private void generateCommands() {
-        System.getProperty("user.dir");
-
         ScanResult result = new ClassGraph()
                 .acceptPackages("com.koolie.bot.richter.commands")
                 .enableAnnotationInfo()
