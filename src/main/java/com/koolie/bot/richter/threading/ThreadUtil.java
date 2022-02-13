@@ -5,10 +5,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 public class ThreadUtil {
-    private ThreadUtil() {}
-
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
     private static final ExecutorService threadExecutor = Executors.newCachedThreadPool();
+    private ThreadUtil() {
+    }
 
     public static ScheduledExecutorService getScheduler() {
         return scheduler;

@@ -1,13 +1,13 @@
 package com.koolie.bot.richter.commands;
 
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
 import static com.koolie.bot.richter.Richter.shardManager;
 
 public class Shutdown implements TextCommand {
-    public Shutdown() {}
+    public Shutdown() {
+    }
 
     @NotNull
     @Override

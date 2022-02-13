@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceGuildMuteEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,7 +46,7 @@ public class ConcertMode implements TextCommand {
     @Nullable
     @Override
     public String[] getAliases() {
-        return new String[] { "concertmode", "cm" };
+        return new String[]{"concertmode", "cm"};
     }
 
     @Override

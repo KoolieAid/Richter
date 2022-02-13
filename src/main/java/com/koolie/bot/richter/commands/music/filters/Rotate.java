@@ -4,7 +4,6 @@ import com.github.natanbc.lavadsp.rotation.RotationPcmAudioFilter;
 import com.koolie.bot.richter.MusicUtil.MusicManager;
 import com.koolie.bot.richter.commands.TextCommand;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,7 +39,7 @@ public class Rotate implements TextCommand {
     @Nullable
     @Override
     public String[] getAliases() {
-        return new String[] { "rotate"};
+        return new String[]{"rotate"};
     }
 
     @Override

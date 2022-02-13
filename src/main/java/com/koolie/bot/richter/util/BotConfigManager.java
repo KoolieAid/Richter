@@ -7,13 +7,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 public class BotConfigManager {
-    private BotConfigManager() {}
     private static String token;
     private static String spotifyClientId;
     private static String spotifyClientSecret;
     private static String sentryDsn;
     private static String prefix;
     private static String musixmatchApiKey;
+    private BotConfigManager() {}
 
     public static void loadJSON() throws FileNotFoundException {
         JsonElement element = JsonParser.parseReader(new FileReader(System.getProperty("user.dir") + "/config.json"));

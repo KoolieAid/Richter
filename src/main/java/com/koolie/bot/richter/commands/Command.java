@@ -14,7 +14,9 @@ public interface Command {
     String getDescription();
 
     @Nonnull
-    default CommandType getCommandType() { return CommandType.Other; }
+    default CommandType getCommandType() {
+        return CommandType.Other;
+    }
 
     @Ignored
     enum CommandType {

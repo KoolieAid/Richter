@@ -5,7 +5,6 @@ import com.koolie.bot.richter.commands.Command;
 import com.koolie.bot.richter.commands.TextCommand;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Deque;
@@ -14,7 +13,8 @@ import java.util.List;
 import java.util.Queue;
 
 public class RemoveQueue implements TextCommand {
-    public RemoveQueue() {}
+    public RemoveQueue() {
+    }
 
     @NotNull
     @Override

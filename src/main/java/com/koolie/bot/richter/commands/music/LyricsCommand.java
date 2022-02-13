@@ -2,11 +2,11 @@ package com.koolie.bot.richter.commands.music;
 
 import com.koolie.bot.richter.MusicUtil.MusicManager;
 import com.koolie.bot.richter.commands.TextCommand;
+import com.koolie.bot.richter.objects.Ignored;
 import com.koolie.bot.richter.util.BotConfigManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jmusixmatch.MusixMatch;
 import org.jmusixmatch.MusixMatchException;
@@ -16,6 +16,7 @@ import org.jmusixmatch.entity.track.TrackData;
 
 import java.awt.*;
 
+@Ignored
 public class LyricsCommand implements TextCommand {
     private final MusixMatch client;
 

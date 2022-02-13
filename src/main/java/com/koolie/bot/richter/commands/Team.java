@@ -4,7 +4,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -110,13 +109,13 @@ public class Team implements TextCommand {
 
     @NotNull
     @Override
-    public  String getOperator() {
+    public String getOperator() {
         return "team";
     }
 
     @Nullable
     @Override
     public String[] getAliases() {
-        return new String[] {"teams"};
+        return new String[]{"teams"};
     }
 }

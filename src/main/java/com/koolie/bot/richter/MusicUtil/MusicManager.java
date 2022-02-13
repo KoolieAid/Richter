@@ -44,19 +44,6 @@ public class MusicManager {
     }
 
     /**
-     * Wrapper for audio player
-     *
-     * @return Returns a wrapped *JDA* AudioSendHandler with a LavaPlayer audio player
-     */
-    public AudioPlayerSendHandler getSendHandler() {
-        return new AudioPlayerSendHandler(audioPlayer);
-    }
-
-    public boolean isPlaying() {
-        return audioPlayer.getPlayingTrack() != null;
-    }
-
-    /**
      * @param guild Guild object to get AudioManager and ID
      * @return The Specific Music Manager for that guild
      */
@@ -75,7 +62,7 @@ public class MusicManager {
         return musicManager;
     }
 
-    public static void loadSources(){
+    public static void loadSources() {
         audioPlayerManager.registerSourceManager(new SpotifySourceManager());
         AudioSourceManagers.registerRemoteSources(audioPlayerManager);
         AudioSourceManagers.registerLocalSource(audioPlayerManager);
@@ -87,7 +74,7 @@ public class MusicManager {
         loadToGuild(message, trackIdentifier, false);
     }
 
-    public static void loadToGuild(Context message, String trackIdentifier, boolean isFront){
+    public static void loadToGuild(Context message, String trackIdentifier, boolean isFront) {
         MusicManager gManager = of(message.getGuild());
 
         audioPlayerManager.loadItemOrdered(gManager, trackIdentifier, new AudioLoadResultHandler() {
@@ -130,7 +117,7 @@ public class MusicManager {
 
 //                message.reply(playlist.getTracks().size() + " songs have been added from: " + playlist.getName()).queue();
 
-                eb.setDescription(playlist.getTracks().size() + " songs have been added from: `"+ playlist.getName() + "`").setFooter(message.getAuthor().getName()).setColor(Color.CYAN);
+                eb.setDescription(playlist.getTracks().size() + " songs have been added from: `" + playlist.getName() + "`").setFooter(message.getAuthor().getName()).setColor(Color.CYAN);
                 message.replyEmbeds(eb.build()).queue();
 
                 for (AudioTrack track : playlist.getTracks()) {
@@ -197,8 +184,21 @@ public class MusicManager {
         of(guild).eventListener.cancelLeave();
     }
 
-    public static int getActivePlayers(){
+    public static int getActivePlayers() {
         return guildManagerMap.size();
+    }
+
+    /**
+     * Wrapper for audio player
+     *
+     * @return Returns a wrapped *JDA* AudioSendHandler with a LavaPlayer audio player
+     */
+    public AudioPlayerSendHandler getSendHandler() {
+        return new AudioPlayerSendHandler(audioPlayer);
+    }
+
+    public boolean isPlaying() {
+        return audioPlayer.getPlayingTrack() != null;
     }
 
 }

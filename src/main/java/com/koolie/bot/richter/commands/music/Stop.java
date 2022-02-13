@@ -4,13 +4,13 @@ import com.koolie.bot.richter.MusicUtil.MusicManager;
 import com.koolie.bot.richter.commands.TextCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
 public class Stop implements TextCommand {
-    public Stop() {}
+    public Stop() {
+    }
 
     @NotNull
     @Override

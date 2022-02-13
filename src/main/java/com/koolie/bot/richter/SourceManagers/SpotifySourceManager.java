@@ -2,7 +2,6 @@ package com.koolie.bot.richter.SourceManagers;
 
 import com.koolie.bot.richter.objects.spotify.SpotifyPlaylist;
 import com.koolie.bot.richter.objects.spotify.SpotifyTrack;
-import com.koolie.bot.richter.threading.ThreadUtil;
 import com.koolie.bot.richter.util.BotConfigManager;
 import com.neovisionaries.i18n.CountryCode;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
@@ -11,7 +10,6 @@ import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.track.*;
 import io.sentry.ITransaction;
 import io.sentry.Sentry;
-import jdk.jshell.SourceCodeAnalysis;
 import org.apache.hc.core5.http.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +20,6 @@ import se.michaelthelin.spotify.model_objects.specification.*;
 import se.michaelthelin.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
 import se.michaelthelin.spotify.requests.data.albums.GetAlbumRequest;
 import se.michaelthelin.spotify.requests.data.albums.GetAlbumsTracksRequest;
-import se.michaelthelin.spotify.requests.data.artists.GetArtistRequest;
 import se.michaelthelin.spotify.requests.data.artists.GetArtistsTopTracksRequest;
 import se.michaelthelin.spotify.requests.data.playlists.GetPlaylistRequest;
 import se.michaelthelin.spotify.requests.data.playlists.GetPlaylistsItemsRequest;
@@ -73,11 +70,17 @@ public class SpotifySourceManager implements AudioSourceManager {
         timeSinceLastRefresh = System.currentTimeMillis();
     }
 
+    public static AudioTrack convertToYoutube(SpotifyTrack track) {
+        AudioPlaylist searchList = (AudioPlaylist) ytSourceManager.loadItem(null, new AudioReference("ytmsearch:" + track.getInfo().title + " " + track.getInfo().author, null));
+
+        return searchList.getTracks().get(0);
+    }
+
     @Override
     public AudioItem loadItem(AudioPlayerManager manager, AudioReference reference) {
         if (reference.identifier.startsWith("ytsearch:") || reference.identifier.startsWith("scsearch:")) return null;
 
-        try{
+        try {
             URL url = new URL(reference.identifier);
             if (!url.getHost().equals("open.spotify.com")) return null;
         } catch (MalformedURLException e) {
@@ -126,7 +129,7 @@ public class SpotifySourceManager implements AudioSourceManager {
             return null;
         }
         //Immediately put the first page into the playlist
-        for (PlaylistTrack track : page.getItems()){
+        for (PlaylistTrack track : page.getItems()) {
             if (track.getTrack() == null) continue;
             String trackName = track.getTrack().getName();
             String firstArtistName = ((Track) track.getTrack()).getArtists()[0].getName();
@@ -201,7 +204,7 @@ public class SpotifySourceManager implements AudioSourceManager {
         return new SpotifyTrack(track.getName(), track.getArtists()[0].getName());
     }
 
-    private SpotifyPlaylist getSpotifyAlbum(String albumId){
+    private SpotifyPlaylist getSpotifyAlbum(String albumId) {
         refreshAccess();
         GetAlbumRequest albumRequest = api.getAlbum(albumId).build();
         CompletableFuture<Album> albumObject = albumRequest.executeAsync();
@@ -210,13 +213,13 @@ public class SpotifySourceManager implements AudioSourceManager {
 
         GetAlbumsTracksRequest albumTracksRequest = api.getAlbumsTracks(albumId).build();
         Paging<TrackSimplified> tracks;
-        try{
+        try {
             tracks = albumTracksRequest.execute();
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             return null;
         }
 
-        for (TrackSimplified track : tracks.getItems()){
+        for (TrackSimplified track : tracks.getItems()) {
             if (track == null) continue;
             playlist.addTrack(new SpotifyTrack(track.getName(), track.getArtists()[0].getName()));
         }
@@ -245,7 +248,7 @@ public class SpotifySourceManager implements AudioSourceManager {
         return playlist;
     }
 
-    private SpotifyPlaylist getArtist(String artistId){
+    private SpotifyPlaylist getArtist(String artistId) {
         refreshAccess();
         CompletableFuture<Artist> artistFuture = api.getArtist(artistId).build().executeAsync();
         GetArtistsTopTracksRequest artistTopTracksRequest = api.getArtistsTopTracks(artistId, CountryCode.PH).build();
@@ -259,19 +262,13 @@ public class SpotifySourceManager implements AudioSourceManager {
             return null;
         }
 
-        for (Track track : tracks){
+        for (Track track : tracks) {
             playlist.addTrack(new SpotifyTrack(track.getName(), track.getArtists()[0].getName()));
         }
 
         playlist.name = artistFuture.join().getName();
         return playlist;
 
-    }
-
-    public static AudioTrack convertToYoutube(SpotifyTrack track){
-        AudioPlaylist searchList = (AudioPlaylist) ytSourceManager.loadItem(null, new AudioReference("ytmsearch:" + track.getInfo().title + " " + track.getInfo().author, null));
-
-        return searchList.getTracks().get(0);
     }
 
     @Override

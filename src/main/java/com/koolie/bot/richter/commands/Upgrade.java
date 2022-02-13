@@ -5,7 +5,6 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
@@ -14,7 +13,8 @@ public class Upgrade implements TextCommand, SlashCommand {
 
     private final String roleId = "760002551461707806";
 
-    public Upgrade() {}
+    public Upgrade() {
+    }
 
     @NotNull
     @Override

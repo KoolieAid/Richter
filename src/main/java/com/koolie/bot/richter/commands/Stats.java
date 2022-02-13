@@ -4,7 +4,6 @@ import com.koolie.bot.richter.MusicUtil.MusicManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDAInfo;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,7 +11,8 @@ import java.awt.*;
 import java.lang.management.ManagementFactory;
 
 public class Stats implements TextCommand {
-    public Stats() {}
+    public Stats() {
+    }
 
     @NotNull
     @Override
@@ -35,7 +35,7 @@ public class Stats implements TextCommand {
     @Nullable
     @Override
     public String[] getAliases() {
-        return new String[] { "stat" };
+        return new String[]{"stat"};
     }
 
     @Override

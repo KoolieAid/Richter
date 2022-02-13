@@ -7,7 +7,6 @@ import com.koolie.bot.richter.objects.Context;
 import net.dv8tion.jda.api.entities.AudioChannel;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +14,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class Play implements TextCommand, ContextCommand {
-    public Play() {}
+    public Play() {
+    }
 
     @Override
     public @NotNull String getName() {

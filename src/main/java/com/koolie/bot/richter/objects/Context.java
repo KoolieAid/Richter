@@ -8,12 +8,12 @@ public class Context {
     Message message;
     MessageContextInteraction contextMessage;
 
-    public Context (Message message) {
+    public Context(Message message) {
         this.message = message;
         contextMessage = null;
     }
 
-    public Context (MessageContextInteraction contextMessage) {
+    public Context(MessageContextInteraction contextMessage) {
         this.contextMessage = contextMessage;
         message = null;
     }
