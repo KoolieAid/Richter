@@ -1,7 +1,10 @@
 package com.koolie.bot.richter.commands;
 
+import com.koolie.bot.richter.objects.Ignored;
+
 import javax.annotation.Nonnull;
 
+@Ignored
 public interface Command {
 
     @Nonnull
@@ -13,6 +16,7 @@ public interface Command {
     @Nonnull
     default CommandType getCommandType() { return CommandType.Other; }
 
+    @Ignored
     enum CommandType {
         General, Music, Power, Other
     }
