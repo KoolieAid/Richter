@@ -2,40 +2,40 @@ package com.koolie.bot.richter.commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
-public class Team extends Command {
+public class Team implements TextCommand {
     private final static String[] maps = {
             "Ascent", "Split", "Bind", "Haven", "Breeze", "Icebox", "Fracture"
     };
     private final Random random;
 
     public Team() {
-        setName("Team");
-        setDescription("Scramble teams for games");
-        setCommandType(commandType.Other);
         random = new Random();
     }
 
     @Override
-    public void execute(MessageReceivedEvent event) {
-        LinkedList<Member> mentionedMembers = new LinkedList<>(event.getMessage().getMentionedMembers());
+    public void execute(Message message) {
+        LinkedList<Member> mentionedMembers = new LinkedList<>(message.getMentionedMembers());
 
         if (mentionedMembers.size() < 2) {
-            event.getChannel().sendMessage("You need at least 2 people to make a team!").queue();
+            message.getChannel().sendMessage("You need at least 2 people to make a team!").queue();
             return;
         }
 
         ArrayList<Member> team1 = new ArrayList<>();
         ArrayList<Member> team2 = new ArrayList<>();
 
-        int cap = event.getMessage().getMentionedMembers().size();
+        int cap = message.getMentionedMembers().size();
 
         Member extra = null;
 
@@ -70,7 +70,7 @@ public class Team extends Command {
         EmbedBuilder eBuilder = new EmbedBuilder();
         eBuilder.setAuthor("Valorant Teams", null, "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.publish0x.com%2Fprod%2Ffs%2Fimages%2F6ac0ff5feb2e723eaa18dace82b96ab9aca5ed93038ad2d739f3d58132cc3bed.png&f=1&nofb=1");
         eBuilder.setTitle("Team Scramble");
-        eBuilder.setFooter("Requested by: " + event.getAuthor().getName(), event.getAuthor().getAvatarUrl());
+        eBuilder.setFooter("Requested by: " + message.getAuthor().getName(), message.getAuthor().getAvatarUrl());
 
         StringBuilder stringBuilder = eBuilder.getDescriptionBuilder();
 
@@ -87,7 +87,36 @@ public class Team extends Command {
         eBuilder.setColor(Color.RED);
         MessageEmbed embed = eBuilder.build();
 
-        event.getMessage().replyEmbeds(embed).queue();
+        message.replyEmbeds(embed).queue();
+    }
 
+    @NotNull
+    @Override
+    public String getName() {
+        return "Team";
+    }
+
+    @NotNull
+    @Override
+    public String getDescription() {
+        return "Scramble teams for games";
+    }
+
+    @NotNull
+    @Override
+    public CommandType getCommandType() {
+        return CommandType.Other;
+    }
+
+    @NotNull
+    @Override
+    public  String getOperator() {
+        return "team";
+    }
+
+    @Nullable
+    @Override
+    public String[] getAliases() {
+        return new String[] {"teams"};
     }
 }

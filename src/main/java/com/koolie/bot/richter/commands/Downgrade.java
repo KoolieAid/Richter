@@ -6,39 +6,66 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 
-public class Downgrade extends Command {
+public class Downgrade implements TextCommand, SlashCommand {
 
     private final String roleId = "760002551461707806";
 
-    public Downgrade() {
-        this.setName("Downgrade");
-        this.setDescription("Removes the everyone role from specified user");
-        this.setCommandType(commandType.Power);
+    public Downgrade() {}
+
+    @NotNull
+    @Override
+    public String getName() {
+        return "Downgrade";
+    }
+
+    @NotNull
+    @Override
+    public String getDescription() {
+        return "Removes the everyone role from specified user";
+    }
+
+    @NotNull
+    @Override
+    public CommandType getCommandType() {
+        return CommandType.Power;
+    }
+
+    @NotNull
+    @Override
+    public String getOperator() {
+        return "downgrade";
+    }
+
+    @NotNull
+    @Override
+    public String getEffectiveCommand() {
+        return "downgrade";
     }
 
     @Override
-    public void execute(MessageReceivedEvent event) {
+    public void execute(Message event) {
         if (!event.getGuild().getId().equals("759999287270047745")) {
-            event.getMessage().reply("This command is only for a private server").queue();
+            event.reply("This command is only for a private server").queue();
             return;
         }
-        Message message = event.getMessage();
-        Guild guild = message.getGuild();
+        Guild guild = event.getGuild();
 
-        if (message.getMentionedMembers().size() == 0) {
-            message.reply("No user specified").queue();
-            return;
-        }
-
-        if (!message.getMember().getRoles().contains(guild.getRoleById(roleId))) {
-            message.reply("You don't have the role yourself").queue();
+        if (event.getMentionedMembers().size() == 0) {
+            event.reply("No user specified").queue();
             return;
         }
 
-        Iterator iterator = message.getMentionedMembers().iterator();
+        if (!event.getMember().getRoles().contains(guild.getRoleById(roleId))) {
+            event.reply("You don't have the role yourself").queue();
+            return;
+        }
+
+        Iterator iterator = event.getMentionedMembers().iterator();
 
         Role roleObj = guild.getRoleById(roleId);
 
@@ -47,11 +74,11 @@ public class Downgrade extends Command {
             guild.removeRoleFromMember(member, roleObj).queue();
         }
 
-        message.reply("User(s) have been downgraded").queue();
+        event.reply("User(s) have been downgraded").queue();
     }
 
     @Override
-    public void slash(SlashCommandInteractionEvent event) {
+    public void onSlash(SlashCommandInteractionEvent event) {
         if (!event.getMember().getRoles().contains(event.getGuild().getRoleById(roleId))) {
             event.reply("You don't have the role yourself.").setEphemeral(true).queue();
             return;

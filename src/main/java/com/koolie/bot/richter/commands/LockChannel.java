@@ -8,29 +8,55 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class LockChannel extends Command {
+public class LockChannel implements TextCommand {
     private final HashMap<Long, LockChannelAdapter> adapters;
 
     public LockChannel() {
-        setName("Lock Channel");
-        setDescription("Locks the people already inside the channel. No one goes out, no one comes in.");
-        setCommandType(commandType.Power);
-
         adapters = new HashMap<>();
     }
 
+    @NotNull
     @Override
-    public void execute(MessageReceivedEvent event) {
+    public String getName() {
+        return "Lock Channel";
+    }
+
+    @NotNull
+    @Override
+    public String getDescription() {
+        return "Locks the people already inside the channel. No one goes out, no one comes in.";
+    }
+
+    @NotNull
+    @Override
+    public CommandType getCommandType() {
+        return CommandType.Power;
+    }
+
+    @NotNull
+    @Override
+    public String getOperator() {
+        return "lockChannel";
+    }
+
+    @Nullable
+    @Override
+    public String[] getAliases() {
+        return new String[] { "lock", "lc" };
+    }
+
+    @Override
+    public void execute(Message event) {
         if (!event.getMember().hasPermission(Permission.MANAGE_SERVER)) {
-            event.getMessage().reply("You don't have the permissions to do that").queue();
+            event.reply("You don't have the permissions to do that").queue();
             return;
         }
-        Message message = event.getMessage();
-        String[] args = message.getContentRaw().split(" ");
+        String[] args = event.getContentRaw().split(" ");
         Member member = event.getMember();
 
         if (args.length != 1) {
@@ -38,11 +64,11 @@ public class LockChannel extends Command {
                 LockChannelAdapter adapter = adapters.get(event.getGuild().getIdLong());
 
                 if (adapter == null) {
-                    message.reply("No channel is locked").queue();
+                    event.reply("No channel is locked").queue();
                     return;
                 }
 
-                message.reply(event.getJDA().getVoiceChannelById(adapter.getChannelId()).getName() + " is locked.").queue();
+                event.reply(event.getJDA().getVoiceChannelById(adapter.getChannelId()).getName() + " is locked.").queue();
                 return;
             }
         }
@@ -51,18 +77,18 @@ public class LockChannel extends Command {
         LockChannelAdapter adapter = adapters.get(event.getGuild().getIdLong());
         //If enabled
         if (adapter != null) {
-            if (!adapter.getLockedMembers().contains(message.getAuthor().getIdLong())) {
-                message.reply("You are not permitted to do this command").queue();
+            if (!adapter.getLockedMembers().contains(event.getAuthor().getIdLong())) {
+                event.reply("You are not permitted to do this command").queue();
                 return;
             }
 
-            message.reply("Channel " + event.getJDA().getVoiceChannelById(adapter.getChannelId()).getName() + " is __unlocked__").queue();
+            event.reply("Channel " + event.getJDA().getVoiceChannelById(adapter.getChannelId()).getName() + " is __unlocked__").queue();
             event.getJDA().removeEventListener(adapter);
             adapters.remove(event.getGuild().getIdLong());
 
         } else { //If disabled
             if (member.getVoiceState().getChannel() == null) {
-                message.reply("You are not in a channel").queue();
+                event.reply("You are not in a channel").queue();
                 return;
             }
 
@@ -75,7 +101,7 @@ public class LockChannel extends Command {
             event.getJDA().addEventListener(adapterToAttach);
             adapters.put(event.getGuild().getIdLong(), adapterToAttach);
 
-            message.reply("Channel " + event.getJDA().getVoiceChannelById(channelID).getName() + " __locked__").queue();
+            event.reply("Channel " + event.getJDA().getVoiceChannelById(channelID).getName() + " __locked__").queue();
         }
     }
 

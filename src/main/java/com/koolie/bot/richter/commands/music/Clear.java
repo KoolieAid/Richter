@@ -1,30 +1,51 @@
 package com.koolie.bot.richter.commands.music;
 
-import com.koolie.bot.richter.MusicUtil.GMManager;
-import com.koolie.bot.richter.MusicUtil.MusicManagerFactory;
-import com.koolie.bot.richter.commands.Command;
+import com.koolie.bot.richter.MusicUtil.MusicManager;
+import com.koolie.bot.richter.commands.TextCommand;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.jetbrains.annotations.NotNull;
 
-public class Clear extends Command {
-    public Clear() {
-        setName("Clear");
-        setDescription("Clears the queue, doesn't stop the currently playing track");
-        setCommandType(commandType.Music);
+public class Clear implements TextCommand {
+    public Clear() {}
+
+    @NotNull
+    @Override
+    public String getName() {
+        return "Clear";
+    }
+
+    @NotNull
+    @Override
+    public String getDescription() {
+        return "Clears the queue, doesn't stop the currently playing track";
+    }
+
+    @NotNull
+    @Override
+    public CommandType getCommandType() {
+        return CommandType.Music;
+    }
+
+    @NotNull
+    @Override
+    public String getOperator() {
+        return "clear";
     }
 
     @Override
-    public void execute(MessageReceivedEvent event) {
-        if (!event.getGuild().getAudioManager().isConnected()) {
-            event.getMessage().reply("Seems like I already disconnected").queue();
+    public void execute(Message message) {
+        if (!message.getGuild().getAudioManager().isConnected()) {
+            message.reply("Seems like I already disconnected").queue();
             return;
         }
 
-        GMManager gManager = MusicManagerFactory.getGuildMusicManager(event.getGuild());
+        MusicManager gManager = MusicManager.of(message.getGuild());
         if (gManager.eventListener.getCurrentMode() == RepeatMode.Queue) {
             gManager.eventListener.setRepeatOff();
         }
         gManager.eventListener.queue.clear();
 
-        event.getMessage().reply("Cleared the queue").queue();
+        message.reply("Cleared the queue").queue();
     }
 }

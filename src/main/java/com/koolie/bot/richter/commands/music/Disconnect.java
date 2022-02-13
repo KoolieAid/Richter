@@ -1,24 +1,53 @@
 package com.koolie.bot.richter.commands.music;
 
 import com.koolie.bot.richter.commands.Command;
+import com.koolie.bot.richter.commands.TextCommand;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.jetbrains.annotations.NotNull;
 
-public class Disconnect extends Command {
+public class Disconnect implements TextCommand {
     public Disconnect() {
-        setName("Disconnect");
-        setDescription("Disconnects from the voice channel");
-        setCommandType(commandType.Music);
+    }
+
+    @NotNull
+    @Override
+    public String getName() {
+        return "Disconnect";
+    }
+
+    @NotNull
+    @Override
+    public String getDescription() {
+        return "Disconnects from the voice channel";
     }
 
     @Override
-    public void execute(MessageReceivedEvent event) {
+    public String[] getAliases() {
+        return new String[]{"dc", "leave"};
+    }
 
-        if (!event.getGuild().getAudioManager().isConnected()) {
-            event.getMessage().reply("Seems like I already disconnected").queue();
+    @NotNull
+    @Override
+    public Command.CommandType getCommandType() {
+        return CommandType.Music;
+    }
+
+    @NotNull
+    @Override
+    public String getOperator() {
+        return "disconnect";
+    }
+
+    @Override
+    public void execute(Message message) {
+
+        if (!message.getGuild().getAudioManager().isConnected()) {
+            message.reply("Seems like I already disconnected").queue();
             return;
         }
 
-        event.getGuild().getAudioManager().closeAudioConnection();
-        event.getMessage().reply("Disconnected from channel").queue();
+        message.getGuild().getAudioManager().closeAudioConnection();
+        message.reply("Disconnected from channel").queue();
     }
 }

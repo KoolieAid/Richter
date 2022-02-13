@@ -4,28 +4,44 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.StageChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.jetbrains.annotations.NotNull;
 
-public class Activity extends Command {
+public class Activity implements SlashCommand {
     public Activity() {
-        setName("activity");
-        setDescription("Starts a Discord Game Activity");
-        setCommandType(commandType.General);
+    }
+
+    @NotNull
+    @Override
+    public String getName() {
+        return "Activity";
+    }
+
+    @NotNull
+    @Override
+    public String getDescription() {
+        return "Starts a Discord Game Activity";
+    }
+
+    @NotNull
+    @Override
+    public CommandType getCommandType() {
+        return CommandType.General;
+    }
+
+    @NotNull
+    @Override
+    public String getEffectiveCommand() {
+        return "activity";
     }
 
     @Override
-    public void execute(MessageReceivedEvent event) {
-        event.getMessage().reply("Activity command is restricted to slash commands. Use `/activity` instead.").queue();
-    }
-
-    @Override
-    public void slash(SlashCommandInteractionEvent event) {
+    public void onSlash(SlashCommandInteractionEvent event) {
         if (event.getMember().getVoiceState().getChannel() == null) {
             event.reply("You must be in a voice channel to use this command.").queue();
             return;
         }
 
-        if (event.getMember().getVoiceState().getChannel() instanceof StageChannel){
+        if (event.getMember().getVoiceState().getChannel() instanceof StageChannel) {
             event.reply("Stage Channels are not permitted to use activity. This is a Discord limitation.").queue();
             return;
         }

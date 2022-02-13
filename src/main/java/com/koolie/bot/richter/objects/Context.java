@@ -18,19 +18,18 @@ public class Context {
         message = null;
     }
 
-    public void reply(String message) {
+    public RestAction reply(String message) {
         if (this.message != null) {
-            this.message.reply(message).queue();
-            return;
+            return this.message.reply(message);
         }
-        this.contextMessage.reply(message);
+        return this.contextMessage.reply(message).setEphemeral(true);
     }
 
     public RestAction replyEmbeds(MessageEmbed embed) {
         if (this.message != null) {
             return this.message.replyEmbeds(embed);
         }
-        return this.contextMessage.replyEmbeds(embed);
+        return this.contextMessage.replyEmbeds(embed).setEphemeral(true);
     }
 
     public MessageChannel getChannel() {
