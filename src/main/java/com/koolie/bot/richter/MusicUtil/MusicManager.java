@@ -13,9 +13,12 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import io.sentry.Sentry;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.interactions.commands.CommandAutoCompleteInteraction;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -151,6 +154,37 @@ public class MusicManager {
                 }
 
                 Sentry.captureMessage("Failed to load track: " + exception.getMessage() + "\nIdentifier: " + trackIdentifier);
+            }
+        });
+    }
+
+    public static void autoComplete(String identifier, CommandAutoCompleteInteraction interaction) {
+        identifier = "ytsearch:" + identifier;
+        audioPlayerManager.loadItemOrdered(interaction, identifier, new AudioLoadResultHandler() {
+            @Override
+            public void trackLoaded(AudioTrack track) {
+
+            }
+
+            @Override
+            public void playlistLoaded(AudioPlaylist playlist) {
+                List<String> tracks = new ArrayList<>();
+
+                for (AudioTrack track : playlist.getTracks()) {
+                    tracks.add(track.getInfo().title);
+                }
+
+                interaction.replyChoiceStrings(tracks).queue();
+            }
+
+            @Override
+            public void noMatches() {
+
+            }
+
+            @Override
+            public void loadFailed(FriendlyException exception) {
+
             }
         });
     }

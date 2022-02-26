@@ -1,10 +1,7 @@
 package com.koolie.bot.richter;
 
 import com.koolie.bot.richter.MusicUtil.MusicManager;
-import com.koolie.bot.richter.commands.Command;
-import com.koolie.bot.richter.commands.ContextCommand;
-import com.koolie.bot.richter.commands.SlashCommand;
-import com.koolie.bot.richter.commands.TextCommand;
+import com.koolie.bot.richter.commands.*;
 import com.koolie.bot.richter.objects.Ignored;
 import com.koolie.bot.richter.threading.ThreadUtil;
 import com.koolie.bot.richter.util.BotConfigManager;
@@ -42,6 +39,7 @@ public class EventHandler extends ListenerAdapter {
     private static final HashMap<String, String> aliases = new HashMap<>();
     private static final HashMap<String, SlashCommand> slashCommands = new HashMap<>();
     private static final HashMap<String, ContextCommand> contextCommands = new HashMap<>();
+    private final HashMap<String, AutoSlashCommand> autoSlashCommands = new HashMap<>();
     public static String prefix = BotConfigManager.getPrefix();
     private boolean jdaReady = false;
 
@@ -67,6 +65,12 @@ public class EventHandler extends ListenerAdapter {
             event.reply("I'm still starting up, please wait a bit").queue();
             return;
         }
+
+//        if (event.getName().equals("play")){
+//            event.reply(event.getInteraction().getOption("query").getAsString()).queue();
+//            return;
+//        }
+
 //
 //        System.out.println(event.getCommandIdLong());
 //        System.out.println(event.getId());
@@ -197,11 +201,23 @@ public class EventHandler extends ListenerAdapter {
 //                .upsertCommand(Commands.context(net.dv8tion.jda.api.interactions.commands.Command.Type.MESSAGE, "Execute")).queue();
         Commands.slash("play", "Plays music for you")
                 .addOption(OptionType.STRING, "query", "The song that you're looking for", true, true);
+
+        //Play Commmand
+//        event.getJDA().upsertCommand(
+//          Commands.slash("play", "Plays music")
+//                  .addOption(OptionType.STRING, "query", "The song that you're looking for", true, true)
+//        ).queue();
     }
 
     @Override
     public void onCommandAutoCompleteInteraction(@NotNull CommandAutoCompleteInteractionEvent event) {
 
+        try {
+            autoSlashCommands.get(event.getInteraction().getName()).completeOption(event.getInteraction());
+        } catch (Exception e) {
+            Sentry.captureException(e, event.getInteraction().getFocusedOption().getValue());
+            log.error("Exception in auto completing command", e);
+        }
     }
 
     @Override
@@ -237,7 +253,7 @@ public class EventHandler extends ListenerAdapter {
         ScanResult result = new ClassGraph()
                 .acceptPackages("com.koolie.bot.richter.commands")
                 .enableAnnotationInfo()
-                .scan(ThreadUtil.getThreadExecutor(), 3);
+                .scan(ThreadUtil.getThreadExecutor(), 10);
 
         result.getAllStandardClasses()
                 .filter(clazz -> !clazz.hasAnnotation(Ignored.class))
@@ -260,9 +276,14 @@ public class EventHandler extends ListenerAdapter {
                         if (instance instanceof ContextCommand) {
                             contextCommands.put(((ContextCommand) instance).getEffectiveName(), (ContextCommand) instance);
                         }
+                        if (instance instanceof AutoSlashCommand) {
+                            autoSlashCommands.put(((AutoSlashCommand) instance).getEffectiveCommand(), (AutoSlashCommand) instance);
+                        }
                     } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                         log.error("Failed to load command", e);
                     }
                 });
+
+        result.close();
     }
 }
