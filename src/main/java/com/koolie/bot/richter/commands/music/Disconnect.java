@@ -1,6 +1,5 @@
 package com.koolie.bot.richter.commands.music;
 
-import com.koolie.bot.richter.commands.Command;
 import com.koolie.bot.richter.commands.TextCommand;
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +27,7 @@ public class Disconnect implements TextCommand {
 
     @NotNull
     @Override
-    public Command.CommandType getCommandType() {
+    public CommandType getCommandType() {
         return CommandType.Music;
     }
 

@@ -14,6 +14,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.io.IOException;
@@ -48,6 +49,12 @@ public class Genius implements TextCommand {
     @Override
     public String getOperator() {
         return "lyrics";
+    }
+
+    @Nullable
+    @Override
+    public String[] getAliases() {
+        return new String[] {"lyric", "ly"};
     }
 
     @Override

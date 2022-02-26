@@ -134,7 +134,7 @@ public class SpotifySourceManager implements AudioSourceManager {
             String trackName = track.getTrack().getName();
             String firstArtistName = ((Track) track.getTrack()).getArtists()[0].getName();
 
-            playlist.addTrack(new SpotifyTrack(trackName, firstArtistName));
+            playlist.addTrack(new SpotifyTrack(trackName, firstArtistName, track.getTrack().getDurationMs()));
         }
 
         int total = page.getTotal();
@@ -158,7 +158,7 @@ public class SpotifySourceManager implements AudioSourceManager {
                 String trackName = track.getTrack().getName();
                 String firstArtistName = ((Track) track.getTrack()).getArtists()[0].getName();
 
-                playlist.addTrack(new SpotifyTrack(trackName, firstArtistName));
+                playlist.addTrack(new SpotifyTrack(trackName, firstArtistName, track.getTrack().getDurationMs()));
             }
         }
 
@@ -201,7 +201,7 @@ public class SpotifySourceManager implements AudioSourceManager {
             return null;
         }
 
-        return new SpotifyTrack(track.getName(), track.getArtists()[0].getName());
+        return new SpotifyTrack(track.getName(), track.getArtists()[0].getName(), track.getDurationMs());
     }
 
     private SpotifyPlaylist getSpotifyAlbum(String albumId) {
@@ -221,7 +221,7 @@ public class SpotifySourceManager implements AudioSourceManager {
 
         for (TrackSimplified track : tracks.getItems()) {
             if (track == null) continue;
-            playlist.addTrack(new SpotifyTrack(track.getName(), track.getArtists()[0].getName()));
+            playlist.addTrack(new SpotifyTrack(track.getName(), track.getArtists()[0].getName(), track.getDurationMs()));
         }
 
         int total = tracks.getTotal();
@@ -240,7 +240,7 @@ public class SpotifySourceManager implements AudioSourceManager {
             tracks = future.join();
             for (TrackSimplified track : tracks.getItems()) {
                 if (track == null) continue;
-                playlist.addTrack(new SpotifyTrack(track.getName(), track.getArtists()[0].getName()));
+                playlist.addTrack(new SpotifyTrack(track.getName(), track.getArtists()[0].getName(), track.getDurationMs()));
             }
         }
 
@@ -263,7 +263,7 @@ public class SpotifySourceManager implements AudioSourceManager {
         }
 
         for (Track track : tracks) {
-            playlist.addTrack(new SpotifyTrack(track.getName(), track.getArtists()[0].getName()));
+            playlist.addTrack(new SpotifyTrack(track.getName(), track.getArtists()[0].getName(), track.getDurationMs()));
         }
 
         playlist.name = artistFuture.join().getName();

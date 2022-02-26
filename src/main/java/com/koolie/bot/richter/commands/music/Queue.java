@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
+import java.time.Duration;
 import java.util.LinkedList;
 
 public class Queue implements TextCommand {
@@ -62,7 +63,20 @@ public class Queue implements TextCommand {
 
         for (int i = 0; i < 10; i++) {
             if (i == queue.size()) break;
-            stringBuilder.append(i + 1 + ". " + queue.get(i).getInfo().title + "\n");
+
+            Duration fullDuration = Duration.ofMillis(queue.get(i).getDuration());
+            int fullHours = fullDuration.toHoursPart();
+            int fullMinutes = fullDuration.toMinutesPart();
+            int fullSeconds = fullDuration.toSecondsPart();
+
+            String durationString;
+            if (fullHours == 0) {
+                durationString = String.format("%02d:%02d", fullMinutes, fullSeconds);
+            } else {
+                durationString = String.format("%02d:%02d:%02d", fullHours, fullMinutes, fullSeconds);
+            }
+
+            stringBuilder.append(i + 1 + ". " + queue.get(i).getInfo().title + " **[" + durationString + "]**" + "\n");
         }
 
         embedBuilder.setDescription(stringBuilder.toString());

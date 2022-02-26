@@ -116,6 +116,6 @@ public class Team implements TextCommand {
     @Nullable
     @Override
     public String[] getAliases() {
-        return new String[]{"teams"};
+        return new String[]{"teams", "maketeams", "maketeam"};
     }
 }

@@ -23,16 +23,19 @@ public class ConcertMode implements TextCommand {
     }
 
     @Override
+    @NotNull
     public String getName() {
         return "Concert Mode";
     }
 
     @Override
+    @NotNull
     public String getDescription() {
         return "Makes the author the only one who can sing/talk in a channel";
     }
 
     @Override
+    @NotNull
     public CommandType getCommandType() {
         return CommandType.General;
     }

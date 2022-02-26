@@ -9,8 +9,8 @@ import com.sedmelluq.discord.lavaplayer.track.TrackMarker;
 public class SpotifyTrack implements AudioTrack {
     private final AudioTrackInfo trackInfo;
 
-    public SpotifyTrack(String title, String author) {
-        trackInfo = new AudioTrackInfo(title, author, 0, null, false, null);
+    public SpotifyTrack(String title, String author, long length) {
+        trackInfo = new AudioTrackInfo(title, author, length, null, false, null);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class SpotifyTrack implements AudioTrack {
 
     @Override
     public long getDuration() {
-        return 0;
+        return trackInfo.length;
     }
 
     @Override
