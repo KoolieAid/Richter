@@ -8,7 +8,7 @@ mainClassName = 'com.koolie.bot.richter.Richter'
 
 group 'com.koolie.bot'
 version '1.0'
-def jdaVersion = '5.0.0-alpha.5'
+def jdaVersion = '5.0.0-alpha.9'
 
 sourceCompatibility = targetCompatibility = 15
 
@@ -41,7 +41,9 @@ dependencies {
     //Eval
     implementation 'org.codehaus.groovy:groovy:3.0.9'
     //Class graph
-    implementation 'io.github.classgraph:classgraph:4.8.138'
+    implementation 'io.github.classgraph:classgraph:4.8.139'
+    //Database
+    implementation 'org.postgresql:postgresql:42.3.2'
 }
 
 shadowJar.setProperty("archiveFileName", "Richter.jar")
