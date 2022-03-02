@@ -39,7 +39,7 @@ dependencies {
     //Music Filters
     implementation 'com.github.natanbc:lavadsp:0.7.7'
     //Eval
-    implementation 'org.codehaus.groovy:groovy:3.0.9'
+    implementation 'org.codehaus.groovy:groovy-jsr223:3.0.9'
     //Class graph
     implementation 'io.github.classgraph:classgraph:4.8.139'
     //Database

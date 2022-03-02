@@ -44,8 +44,7 @@ public class Help implements TextCommand {
         embedBuilder.setColor(Color.BLUE);
 
         embedBuilder.setTitle("Help Menu");
-        embedBuilder.setDescription("Bot made by Chad Thundercock, originally made for a private server");
-        embedBuilder.setFooter("Try to find the easter egg \uD83D\uDE09");
+        embedBuilder.setDescription("Bot made by Chad Thundercock, originally made for a private server\n**Need more help? Join the support server [here](https://discord.gg/Z2kB8GRBag)**");        embedBuilder.setFooter("Try to find the easter egg \uD83D\uDE09");
 
         embedBuilder.addField("General", getHelpString(CommandType.General), false);
         embedBuilder.addField("Music", getHelpString(CommandType.Music), false);

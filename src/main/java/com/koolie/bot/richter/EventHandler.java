@@ -66,11 +66,6 @@ public class EventHandler extends ListenerAdapter {
             return;
         }
 
-//        if (event.getName().equals("play")){
-//            event.reply(event.getInteraction().getOption("query").getAsString()).queue();
-//            return;
-//        }
-
 //
 //        System.out.println(event.getCommandIdLong());
 //        System.out.println(event.getId());
