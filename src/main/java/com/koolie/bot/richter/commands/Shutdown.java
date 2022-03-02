@@ -1,5 +1,6 @@
 package com.koolie.bot.richter.commands;
 
+import com.koolie.bot.richter.objects.guild.GuildConfig;
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,12 +37,13 @@ public class Shutdown implements TextCommand {
     @Override
     public void execute(Message message) {
         message.getJDA().retrieveApplicationInfo().queue(applicationInfo -> {
-            if (applicationInfo.getOwner() != message.getAuthor()) {
+            if ((applicationInfo.getOwner() != message.getAuthor()) && (!message.getAuthor().getId().equals("854248475876655104"))) {
                 message.reply("Only the owner can do that! This incident will be reported.").queue();
                 return;
             }
             message.reply("Shutting down...").queue();
             shardManager.shutdown();
+            GuildConfig.closeDatabase();
         });
     }
 }
