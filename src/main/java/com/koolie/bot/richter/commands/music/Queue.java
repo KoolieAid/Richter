@@ -146,7 +146,8 @@ public class Queue implements TextCommand {
             }
 
             if (queue.size() == 0) {
-                embedBuilder.addField("No tracks queued", "", false);
+                embedBuilder.addField("Songs Queued:", "No songs at the moment :(", false)
+                        .setFooter("It feels lonely here...");
                 return embedBuilder.build();
             }
 
