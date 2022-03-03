@@ -84,9 +84,10 @@ public class MusicManager {
             @Override
             public void trackLoaded(AudioTrack track) {
                 gManager.eventListener.setChannel(message.getChannel().getIdLong());
-//                message.reply(track.getInfo().title + " queued.").queue();
                 EmbedBuilder eb = new EmbedBuilder();
-                eb.setDescription("Queued: `" + track.getInfo().title + "`").setFooter(message.getAuthor().getName()).setColor(Color.CYAN);
+                eb.setDescription("Queued: `" + track.getInfo().title + "`")
+                        .setFooter(message.getAuthor().getName(), message.getAuthor().getEffectiveAvatarUrl())
+                        .setColor(Color.CYAN);
 
                 message.replyEmbeds(eb.build()).queue();
 
@@ -104,9 +105,10 @@ public class MusicManager {
                 gManager.eventListener.setChannel(message.getChannel().getIdLong());
                 if (playlist.isSearchResult()) {
                     AudioTrack track = playlist.getTracks().get(0);
-//                    message.reply(track.getInfo().title + " added to queue").queue();
 
-                    eb.setDescription("Queued: `" + track.getInfo().title + "`").setFooter(message.getAuthor().getName()).setColor(Color.CYAN);
+                    eb.setDescription("Queued: `" + track.getInfo().title + "`")
+                            .setFooter(message.getAuthor().getName(), message.getAuthor().getEffectiveAvatarUrl())
+                            .setColor(Color.CYAN);
 
                     message.replyEmbeds(eb.build()).queue();
 
@@ -118,9 +120,9 @@ public class MusicManager {
                     return;
                 }
 
-//                message.reply(playlist.getTracks().size() + " songs have been added from: " + playlist.getName()).queue();
-
-                eb.setDescription(playlist.getTracks().size() + " songs have been added from: `" + playlist.getName() + "`").setFooter(message.getAuthor().getName()).setColor(Color.CYAN);
+                eb.setDescription(playlist.getTracks().size() + " songs have been added from: `" + playlist.getName() + "`")
+                        .setFooter(message.getAuthor().getName(), message.getAuthor().getEffectiveAvatarUrl())
+                        .setColor(Color.CYAN);
                 message.replyEmbeds(eb.build()).queue();
 
                 for (AudioTrack track : playlist.getTracks()) {
@@ -131,10 +133,11 @@ public class MusicManager {
             @Override
             public void noMatches() {
                 EmbedBuilder eb = new EmbedBuilder();
-                eb.setDescription("No matches found for: `" + trackIdentifier + "`").setFooter(message.getAuthor().getName()).setColor(Color.RED);
+                eb.setDescription("No matches found for: `" + trackIdentifier + "`")
+                        .setFooter(message.getAuthor().getName(), message.getAuthor().getEffectiveAvatarUrl())
+                        .setColor(Color.RED);
 
                 message.replyEmbeds(eb.build()).queue();
-//                message.reply("No search results for: " + trackIdentifier).queue();
                 if (gManager.eventListener.queue.size() == 0) {
                     gManager.eventListener.scheduleLeave();
                 }
@@ -145,10 +148,11 @@ public class MusicManager {
             @Override
             public void loadFailed(FriendlyException exception) {
                 EmbedBuilder eb = new EmbedBuilder();
-                eb.setDescription("Could not play: `" + trackIdentifier + "`" + "\nReason: " + exception.getMessage()).setFooter(message.getAuthor().getName()).setColor(Color.RED);
+                eb.setDescription("Could not play: `" + trackIdentifier + "`" + "\nReason: " + exception.getMessage())
+                        .setFooter(message.getAuthor().getName(), message.getAuthor().getEffectiveAvatarUrl())
+                        .setColor(Color.RED);
                 message.replyEmbeds(eb.build()).queue();
 
-//                message.reply("I can't seem to load the query because of: " + exception.getMessage()).queue();
                 if (gManager.eventListener.queue.size() == 0) {
                     gManager.eventListener.scheduleLeave();
                 }
@@ -170,8 +174,8 @@ public class MusicManager {
             public void playlistLoaded(AudioPlaylist playlist) {
                 List<String> tracks = new ArrayList<>();
 
-                for (AudioTrack track : playlist.getTracks()) {
-                    tracks.add(track.getInfo().title);
+                for (int i = 0; i < 5; i++) {
+                    tracks.add(playlist.getTracks().get(i).getInfo().title);
                 }
 
                 interaction.replyChoiceStrings(tracks).queue();
@@ -202,7 +206,6 @@ public class MusicManager {
 
         manager.audioPlayer.destroy();
         guildManagerMap.remove(guild.getIdLong(), manager);
-//        guildManagerMap.remove(guild.getIdLong());
     }
 
     public static void timerLeave(Guild guild) {
