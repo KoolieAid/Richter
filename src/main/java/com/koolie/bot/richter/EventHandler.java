@@ -8,6 +8,7 @@ import com.koolie.bot.richter.util.BotConfigManager;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ScanResult;
 import io.sentry.Sentry;
+import io.sentry.SentryLevel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
@@ -142,7 +143,10 @@ public class EventHandler extends ListenerAdapter {
         if (!args[0].startsWith(prefix)) return;
         String cmd = args[0].replaceFirst(prefix, "");
 
-        if (textCommands.get(cmd) == null && aliases.get(cmd) == null) return;
+        if (textCommands.get(cmd) == null && aliases.get(cmd) == null) {
+            Sentry.captureMessage("Suggestion: " + cmd + " by: " + event.getAuthor().getName(), SentryLevel.INFO);
+            return;
+        }
         try {
             if (textCommands.get(cmd) != null && aliases.get(cmd) == null) {
                 textCommands.get(cmd).execute(event.getMessage());
