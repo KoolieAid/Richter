@@ -72,7 +72,13 @@ public class Queue implements TextCommand {
             return;
         }
 
-        QueueMessage queueMessage = new QueueMessage(message.getJDA(), message.getChannel().getIdLong(), manager.audioPlayer, manager.eventListener.queue);
+        int page = 0;
+        try {
+            page = Integer.parseInt(message.getContentRaw().split(" ")[1]) - 1;
+        } catch (Exception ignored) {
+        }
+
+        QueueMessage queueMessage = new QueueMessage(message.getJDA(), message.getChannel().getIdLong(), manager.audioPlayer, manager.eventListener.queue, page);
         message.getJDA().addEventListener(queueMessage);
 
         message.replyEmbeds(queueMessage.makeEmbed())
@@ -83,28 +89,31 @@ public class Queue implements TextCommand {
     //TODO: free memory of when bot disconnects from channel and clears in the hashmap of players
     @Ignored
     private class QueueMessage extends ListenerAdapter {
-        private String messageId; // can't final it since Queue#execute is separate
         private final Deque<AudioTrack> queueReference;
-        private int currentPage = 0;
-        private InteractionHook hook; // can't final bc its null at the start
         private final ActionRow actionRow; // To set all buttons disabled
         private final AudioPlayer audioPlayer; // To get playing track
-        private ScheduledFuture<?> invalidateSchedule = null; // To automatically invalidate the queue
 
         //Both needed in case a user doesn't press a button, thus, no Interaction Hook given
         private final JDA jda;
         private final long channelId;
 
-        public QueueMessage(JDA jda, long channelId, AudioPlayer player, Deque<AudioTrack> queueReference) {
+        private String messageId; // can't final it since Queue#execute is separate
+        private int currentPage = 0;
+        private InteractionHook hook; // can't final bc its null at the start
+        private ScheduledFuture<?> invalidateSchedule = null; // To automatically invalidate the queue
+
+        public QueueMessage(JDA jda, long channelId, AudioPlayer player, Deque<AudioTrack> queueReference, int initialPage) {
             this.jda = jda;
             this.channelId = channelId;
             this.audioPlayer = player;
             this.queueReference = queueReference;
+            this.currentPage = initialPage;
 
             actionRow = ActionRow.of(
                     Button.primary("previous", Emoji.fromUnicode("\u25C0")),
                     Button.primary("next", Emoji.fromUnicode("\u25B6")),
-                    Button.danger("clear", Emoji.fromUnicode("\u2716"))
+                    Button.danger("invalidate", Emoji.fromUnicode("\u2716")),
+                    Button.danger("clear", Emoji.fromUnicode("\uD83D\uDDD1\uFE0F"))
             );
 
             scheduleInvalidation(10, TimeUnit.SECONDS);
@@ -121,11 +130,12 @@ public class Queue implements TextCommand {
                 currentPage++;
             } else if (event.getComponentId().equals("previous")) {
                 currentPage--;
-                if (currentPage < 0) currentPage = 0;
-            } else if (event.getComponentId().equals("clear")) {
+            } else if (event.getComponentId().equals("invalidate")) {
                 invalidate();
                 cancelInvalidation();
                 return;
+            } else if (event.getComponentId().equals("clear")) {
+                queueReference.clear();
             }
 
             scheduleInvalidation(10, TimeUnit.SECONDS);
@@ -153,9 +163,11 @@ public class Queue implements TextCommand {
 
             List<List<AudioTrack>> fullList = ListUtils.partition(queue, 10);
 
-            if (currentPage >= fullList.size()) {
+            if (currentPage >= fullList.size())
+                currentPage = 0;
+
+            if (currentPage < 0)
                 currentPage = fullList.size() - 1;
-            }
 
             List<AudioTrack> page = fullList.get(currentPage);
 
