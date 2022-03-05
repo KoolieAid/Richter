@@ -33,7 +33,7 @@ dependencies {
     //Uses Native audio system
     implementation 'com.sedmelluq:jda-nas:1.1.0'
     //Sentry
-    implementation 'io.sentry:sentry:5.6.0'
+    implementation 'io.sentry:sentry:5.6.2'
     //Lyrics
     implementation 'com.sachinhandiekar:jMusixMatch:1.1.4'
     //Music Filters

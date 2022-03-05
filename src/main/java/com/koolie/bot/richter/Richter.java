@@ -1,6 +1,7 @@
 package com.koolie.bot.richter;
 
 import com.koolie.bot.richter.MusicUtil.MusicManager;
+import com.koolie.bot.richter.objects.guild.GuildConfig;
 import com.koolie.bot.richter.threading.ThreadUtil;
 import com.koolie.bot.richter.util.BotConfigManager;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
@@ -25,6 +26,7 @@ public class Richter {
     public static ShardManager shardManager;
 
     public static void main(String[] args) throws LoginException {
+//        GuildConfig.loadDatabase();
 
         try {
             BotConfigManager.loadJSON();

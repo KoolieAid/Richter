@@ -41,7 +41,7 @@ public class RemoveQueue implements TextCommand {
 
     @Override
     public String[] getAliases() {
-        return new String[]{"rq", "remove"};
+        return new String[]{"rq", "remove", "discard"};
     }
 
     @Override
