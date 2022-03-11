@@ -34,16 +34,14 @@ dependencies {
     implementation 'com.sedmelluq:jda-nas:1.1.0'
     //Sentry
     implementation 'io.sentry:sentry:5.6.2'
-    //Lyrics
-    implementation 'com.sachinhandiekar:jMusixMatch:1.1.4'
     //Music Filters
     implementation 'com.github.natanbc:lavadsp:0.7.7'
     //Eval
     implementation 'org.codehaus.groovy:groovy-jsr223:3.0.9'
     //Class graph
-    implementation 'io.github.classgraph:classgraph:4.8.139'
+    implementation 'io.github.classgraph:classgraph:4.8.140'
     //Database
-    implementation 'org.postgresql:postgresql:42.3.2'
+    implementation 'org.postgresql:postgresql:42.3.3'
 }
 
 shadowJar.setProperty("archiveFileName", "Richter.jar")

@@ -2,6 +2,7 @@ package com.koolie.bot.richter.commands.music;
 
 import com.koolie.bot.richter.MusicUtil.MusicManager;
 import com.koolie.bot.richter.commands.TextCommand;
+import com.koolie.bot.richter.util.MusicUtil;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
@@ -40,6 +41,11 @@ public class Stop implements TextCommand {
     public void execute(Message message) {
         if (!message.getGuild().getAudioManager().isConnected()) {
             message.reply("Seems like I already disconnected").queue();
+            return;
+        }
+
+        if (!MusicUtil.isInSameChannel(message.getMember().getVoiceState().getChannel(), message.getMember(), message.getGuild().getSelfMember())) {
+            message.reply("You must be in the same voice channel as me to use this command.").queue();
             return;
         }
 

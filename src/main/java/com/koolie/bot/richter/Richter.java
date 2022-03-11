@@ -6,6 +6,8 @@ import com.koolie.bot.richter.threading.ThreadUtil;
 import com.koolie.bot.richter.util.BotConfigManager;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import io.sentry.Sentry;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.interactions.commands.Command;
@@ -25,9 +27,7 @@ import java.util.concurrent.TimeUnit;
 public class Richter {
     public static ShardManager shardManager;
 
-    public static void main(String[] args) throws LoginException {
-//        GuildConfig.loadDatabase();
-
+    public Richter() throws LoginException{
         try {
             BotConfigManager.loadJSON();
         } catch (FileNotFoundException e) {
@@ -43,13 +43,22 @@ public class Richter {
                 .setAudioSendFactory(new NativeAudioSendFactory())
                 .build();
 
-
         setOptions();
 //        setUpSlash();
         MusicManager.loadSources();
     }
 
-    public static void setOptions() {
+    public static void main(String[] args) throws LoginException {
+//        GuildConfig.loadDatabase();
+
+        try {
+            new Richter();
+        } catch ( LoginException e ) {
+            System.out.println("Login failed. Please check your token.");
+        }
+    }
+
+    public void setOptions() {
         Activity[] activities = {
                 Activity.playing("Minecraft"),
                 Activity.listening("your moans"),
@@ -82,7 +91,7 @@ public class Richter {
         });
     }
 
-    public static void setUpSlash() {
+    public void setUpSlash() {
         CommandData cmData = Commands.slash("upgrade", "Gives the mentioned user the everyone role")
                 .addOption(OptionType.USER, "target", "The user to give the everyone role to");
 
@@ -124,7 +133,6 @@ public class Richter {
         optionData.addChoice("Wordsnack", "879863976006127627");
         optionData.addChoice("Lettertile", "879863686565621790");
 
-//        activitiesData.addOptions(optionData);
         CommandData activitiesData = Commands.slash("activity", "Creates a Discord Game Activity").addOptions(optionData);
 
 //        shardManager.getShardById(0).upsertCommand(activitiesData).queue();

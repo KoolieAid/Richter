@@ -59,7 +59,7 @@ public class EventHandler extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         if (!event.isFromGuild()) {
-            event.reply("This command can only be used in a server.").setEphemeral(true).queue();
+            event.reply("Woah there! I'm not a Discord mod to respond to you in DMs!").setEphemeral(true).queue();
             return;
         }
         if (!jdaReady) {
@@ -67,9 +67,6 @@ public class EventHandler extends ListenerAdapter {
             return;
         }
 
-//
-//        System.out.println(event.getCommandIdLong());
-//        System.out.println(event.getId());
         if (!slashCommands.containsKey(event.getName())) {
             event.reply("That command is not implemented yet!").setEphemeral(true).queue();
             return;
@@ -221,7 +218,11 @@ public class EventHandler extends ListenerAdapter {
 
     @Override
     public void onMessageContextInteraction(@NotNull MessageContextInteractionEvent event) {
-//        log.debug(event.getInteraction().getName());
+        if (!event.isFromGuild()) {
+            event.reply("Woah there! I'm not a Discord mod to respond to you in DMs!").setEphemeral(true).queue();
+            return;
+        }
+
         try {
             contextCommands.get(event.getInteraction().getName()).onContext(event);
         } catch (InsufficientPermissionException e) {
