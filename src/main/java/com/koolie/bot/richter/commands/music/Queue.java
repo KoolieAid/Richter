@@ -4,6 +4,7 @@ import com.koolie.bot.richter.MusicUtil.MusicManager;
 import com.koolie.bot.richter.commands.TextCommand;
 import com.koolie.bot.richter.objects.Ignored;
 import com.koolie.bot.richter.threading.ThreadUtil;
+import com.koolie.bot.richter.util.MusicUtil;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -22,7 +23,6 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
-import java.time.Duration;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -65,6 +65,11 @@ public class Queue implements TextCommand {
 
     @Override
     public void execute(Message message) {
+        if (!MusicManager.isPresent(message.getGuild())) {
+            message.getChannel().sendMessage("I'm not playing music in the server right now. Play something with `=p`.").queue();
+            return;
+        }
+
         MusicManager manager = MusicManager.of(message.getGuild());
 
         if (manager.eventListener.queue.size() == 0 && manager.audioPlayer.getPlayingTrack() == null) {
@@ -112,8 +117,8 @@ public class Queue implements TextCommand {
             actionRow = ActionRow.of(
                     Button.primary("previous", Emoji.fromUnicode("\u25C0")),
                     Button.primary("next", Emoji.fromUnicode("\u25B6")),
-                    Button.danger("invalidate", Emoji.fromUnicode("\u2716")),
-                    Button.danger("clear", Emoji.fromUnicode("\uD83D\uDDD1\uFE0F"))
+                    Button.danger("invalidate", Emoji.fromUnicode("\u2716"))
+                    //Button.danger("clear", Emoji.fromUnicode("\uD83D\uDDD1\uFE0F"))
             );
 
             scheduleInvalidation(10, TimeUnit.SECONDS);
@@ -136,6 +141,12 @@ public class Queue implements TextCommand {
                 return;
             } else if (event.getComponentId().equals("clear")) {
                 queueReference.clear();
+                event.replyEmbeds(new EmbedBuilder()
+                                .setTitle("Queue cleared")
+                                .setColor(Color.RED)
+                                .build())
+                        .setEphemeral(true)
+                        .queue();
             }
 
             scheduleInvalidation(10, TimeUnit.SECONDS);
@@ -174,18 +185,7 @@ public class Queue implements TextCommand {
             StringBuilder stringBuilder = new StringBuilder();
 
             for (int i = 0; i < page.size(); i++) {
-
-                Duration fullDuration = Duration.ofMillis(page.get(i).getDuration());
-                int fullHours = fullDuration.toHoursPart();
-                int fullMinutes = fullDuration.toMinutesPart();
-                int fullSeconds = fullDuration.toSecondsPart();
-
-                String durationString;
-                if (fullHours == 0) {
-                    durationString = String.format("%02d:%02d", fullMinutes, fullSeconds);
-                } else {
-                    durationString = String.format("%02d:%02d:%02d", fullHours, fullMinutes, fullSeconds);
-                }
+                String durationString = MusicUtil.getReadableMusicTime(page.get(i).getDuration());
 
                 stringBuilder.append(i + 1 + (currentPage * 10) + ". " + page.get(i).getInfo().title + " **[" + durationString + "]**" + "\n");
             }
@@ -201,7 +201,7 @@ public class Queue implements TextCommand {
             this.messageId = messageId;
         }
 
-        public void invalidate() {
+        private void invalidate() {
             if (hook == null) {
                 jda.getTextChannelById(channelId).editMessageComponentsById(messageId, actionRow.asDisabled()).queue();
                 jda.removeEventListener(this);
@@ -218,13 +218,13 @@ public class Queue implements TextCommand {
             return actionRow;
         }
 
-        public void cancelInvalidation() {
+        private void cancelInvalidation() {
             if (invalidateSchedule == null) return;
             invalidateSchedule.cancel(true);
             invalidateSchedule = null;
         }
 
-        public void scheduleInvalidation(int delay, TimeUnit unit) {
+        private void scheduleInvalidation(int delay, TimeUnit unit) {
             if (invalidateSchedule != null) return;
             invalidateSchedule = ThreadUtil.getScheduler().schedule(this::invalidate, delay, unit);
             LoggerFactory.getLogger(getClass()).info("Invalidation scheduled");

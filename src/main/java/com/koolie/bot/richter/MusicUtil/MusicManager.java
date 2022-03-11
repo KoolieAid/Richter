@@ -65,6 +65,10 @@ public class MusicManager {
         return musicManager;
     }
 
+    public static boolean isPresent(Guild guild) {
+        return guildManagerMap.containsKey(guild.getIdLong());
+    }
+
     public static void loadSources() {
         audioPlayerManager.registerSourceManager(new SpotifySourceManager());
         AudioSourceManagers.registerRemoteSources(audioPlayerManager);

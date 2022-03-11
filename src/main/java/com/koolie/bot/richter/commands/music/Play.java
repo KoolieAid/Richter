@@ -5,6 +5,7 @@ import com.koolie.bot.richter.commands.AutoSlashCommand;
 import com.koolie.bot.richter.commands.ContextCommand;
 import com.koolie.bot.richter.commands.TextCommand;
 import com.koolie.bot.richter.objects.Context;
+import com.koolie.bot.richter.util.MusicUtil;
 import net.dv8tion.jda.api.entities.AudioChannel;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
@@ -64,6 +65,12 @@ public class Play implements TextCommand, ContextCommand, AutoSlashCommand {
             return;
         }
 
+        if (!MusicUtil.isInSameChannel(vChannel, message.getMember(), message.getGuild().getSelfMember()) &&
+            MusicManager.isPresent(message.getGuild())) {
+            message.reply("Hey! Have some manners. Other people are using me.\nYou have to join the same voice channel to be able to use this command").queue();
+            return;
+        }
+
         message.getChannel().sendTyping().queue();
         String[] args = message.getContentRaw().split(" ", 2);
         if (args.length == 1) {
@@ -87,8 +94,7 @@ public class Play implements TextCommand, ContextCommand, AutoSlashCommand {
             return;
         }
 
-        String query;
-        query = args[1];
+        String query = args[1];
 
         try {
             URL url = new URL(query);
@@ -126,6 +132,14 @@ public class Play implements TextCommand, ContextCommand, AutoSlashCommand {
         AudioChannel vChannel = event.getMember().getVoiceState().getChannel();
         if (vChannel == null) {
             event.getInteraction().reply("Bro. You are not in a voice channel").setEphemeral(true).queue();
+            return;
+        }
+
+        if (!MusicUtil.isInSameChannel(vChannel, event.getMember(), event.getGuild().getSelfMember()) &&
+                MusicManager.isPresent(event.getGuild())) {
+            event.reply("Hey! Have some manners. Other people are using me.\nYou have to join the same voice channel to be able to use this command")
+                    .setEphemeral(true)
+                    .queue();
             return;
         }
 
@@ -170,6 +184,14 @@ public class Play implements TextCommand, ContextCommand, AutoSlashCommand {
         AudioChannel vChannel = event.getMember().getVoiceState().getChannel();
         if (vChannel == null) {
             event.reply("Bro. You are not in a voice channel").setEphemeral(true).queue();
+            return;
+        }
+
+        if (!MusicUtil.isInSameChannel(vChannel, event.getMember(), event.getGuild().getSelfMember()) &&
+                MusicManager.isPresent(event.getGuild())) {
+            event.reply("Hey! Have some manners. Other people are using me.\nYou have to join the same voice channel to be able to use this command")
+                    .setEphemeral(true)
+                    .queue();
             return;
         }
 

@@ -9,7 +9,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import io.sentry.Sentry;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.hooks.IEventManager;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -20,10 +19,10 @@ import java.awt.*;
 import java.io.IOException;
 
 //@Ignored
-public class Genius implements TextCommand {
+public class Lyrics implements TextCommand {
     private final OkHttpClient client;
 
-    public Genius() {
+    public Lyrics() {
         client = new OkHttpClient();
     }
 
@@ -59,15 +58,20 @@ public class Genius implements TextCommand {
 
     @Override
     public void execute(@NotNull Message message) {
+        if (!MusicManager.isPresent(message.getGuild())) {
+            message.reply("There is no music playing").queue();
+            return;
+        }
+
         MusicManager manager = MusicManager.of(message.getGuild());
         AudioTrack track = manager.audioPlayer.getPlayingTrack();
         message.getChannel().sendTyping().queue();
         String[] args = message.getContentRaw().split(" ", 2);
 
-        if (track == null && args.length < 2) {
-            message.reply("There is no music playing").queue();
-            return;
-        }
+//        if (track == null && args.length < 2) {
+//            message.reply("There is no music playing").queue();
+//            return;
+//        }
 
         String query;
         if (args.length > 1) {

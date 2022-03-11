@@ -2,6 +2,7 @@ package com.koolie.bot.richter.commands.music;
 
 import com.koolie.bot.richter.MusicUtil.MusicManager;
 import com.koolie.bot.richter.commands.TextCommand;
+import com.koolie.bot.richter.util.MusicUtil;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -61,29 +62,8 @@ public class NowPlaying implements TextCommand {
             return;
         }
 
-        Duration fullDuration = Duration.ofMillis(track.getDuration());
-        int fullHours = fullDuration.toHoursPart();
-        int fullMinutes = fullDuration.toMinutesPart();
-        int fullSeconds = fullDuration.toSecondsPart();
-
-        String durationString;
-        if (fullHours == 0) {
-            durationString = String.format("%02d:%02d", fullMinutes, fullSeconds);
-        } else {
-            durationString = String.format("%02d:%02d:%02d", fullHours, fullMinutes, fullSeconds);
-        }
-
-        Duration fullPosition = Duration.ofMillis(track.getPosition());
-        int positionHours = fullPosition.toHoursPart();
-        int positionMinutes = fullPosition.toMinutesPart();
-        int positionSeconds = fullPosition.toSecondsPart();
-
-        String positionString;
-        if (positionHours == 0) {
-            positionString = String.format("%02d:%02d", positionMinutes, positionSeconds);
-        } else {
-            positionString = String.format("%02d:%02d:%02d", positionHours, positionMinutes, positionSeconds);
-        }
+        String durationString = MusicUtil.getReadableMusicTime(track.getDuration());
+        String positionString = MusicUtil.getReadableMusicTime(track.getPosition());
 
         /*
         Builds progress bar

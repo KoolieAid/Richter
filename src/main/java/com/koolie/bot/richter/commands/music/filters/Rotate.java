@@ -3,6 +3,7 @@ package com.koolie.bot.richter.commands.music.filters;
 import com.github.natanbc.lavadsp.rotation.RotationPcmAudioFilter;
 import com.koolie.bot.richter.MusicUtil.MusicManager;
 import com.koolie.bot.richter.commands.TextCommand;
+import com.koolie.bot.richter.util.MusicUtil;
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,7 +22,7 @@ public class Rotate implements TextCommand {
     @NotNull
     @Override
     public String getDescription() {
-        return "Makes the music rotate on your head";
+        return "Makes the music rotate on your head. Usage: `8d enable` or `8d disable`";
     }
 
     @NotNull
@@ -44,15 +45,21 @@ public class Rotate implements TextCommand {
 
     @Override
     public void execute(Message message) {
-        if (!message.getGuild().getAudioManager().isConnected()) {
+        if (!MusicManager.isPresent(message.getGuild())) {
             message.reply("I'm not in a channel bro").queue();
             return;
         }
+
+        if (!MusicUtil.isInSameChannel(message.getMember().getVoiceState().getChannel(), message.getMember(), message.getGuild().getSelfMember())) {
+            message.reply("Hey! Have some manners. Other people are using me.\nYou have to join the same voice channel to be able to use this command").queue();
+            return;
+        }
+
         MusicManager manager = MusicManager.of(message.getGuild());
 
         String[] args = message.getContentRaw().split(" ", 2);
         if (args.length == 1) {
-            message.reply("Missing arguments").queue();
+            message.reply("Missing arguments. Available arguments: enable/disable").queue();
             return;
         }
 
