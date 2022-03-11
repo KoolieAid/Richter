@@ -1,8 +1,8 @@
 package com.koolie.bot.richter.commands.music;
 
 import com.koolie.bot.richter.MusicUtil.MusicManager;
-import com.koolie.bot.richter.commands.Command;
-import com.koolie.bot.richter.commands.TextCommand;
+import com.koolie.bot.richter.commands.Interfaces.Command;
+import com.koolie.bot.richter.commands.Interfaces.TextCommand;
 import com.koolie.bot.richter.util.MusicUtil;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.Message;

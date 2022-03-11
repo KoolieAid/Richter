@@ -1,5 +1,7 @@
 package com.koolie.bot.richter.commands;
 
+import com.koolie.bot.richter.commands.Interfaces.Command;
+import com.koolie.bot.richter.commands.Interfaces.TextCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;

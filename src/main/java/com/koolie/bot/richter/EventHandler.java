@@ -1,7 +1,7 @@
 package com.koolie.bot.richter;
 
 import com.koolie.bot.richter.MusicUtil.MusicManager;
-import com.koolie.bot.richter.commands.*;
+import com.koolie.bot.richter.commands.Interfaces.*;
 import com.koolie.bot.richter.objects.Ignored;
 import com.koolie.bot.richter.threading.ThreadUtil;
 import com.koolie.bot.richter.util.BotConfigManager;

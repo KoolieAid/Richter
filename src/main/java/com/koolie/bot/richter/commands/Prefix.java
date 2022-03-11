@@ -1,6 +1,7 @@
 package com.koolie.bot.richter.commands;
 
 import com.koolie.bot.richter.EventHandler;
+import com.koolie.bot.richter.commands.Interfaces.TextCommand;
 import com.koolie.bot.richter.objects.Ignored;
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;

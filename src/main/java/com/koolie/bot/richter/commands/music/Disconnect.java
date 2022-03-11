@@ -1,6 +1,6 @@
 package com.koolie.bot.richter.commands.music;
 
-import com.koolie.bot.richter.commands.TextCommand;
+import com.koolie.bot.richter.commands.Interfaces.TextCommand;
 import com.koolie.bot.richter.util.MusicUtil;
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;

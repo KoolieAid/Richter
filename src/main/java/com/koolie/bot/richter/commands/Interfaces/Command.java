@@ -1,4 +1,4 @@
-package com.koolie.bot.richter.commands;
+package com.koolie.bot.richter.commands.Interfaces;
 
 import com.koolie.bot.richter.objects.Ignored;
 

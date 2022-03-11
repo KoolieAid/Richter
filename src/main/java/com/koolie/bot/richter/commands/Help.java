@@ -1,6 +1,7 @@
 package com.koolie.bot.richter.commands;
 
 import com.koolie.bot.richter.EventHandler;
+import com.koolie.bot.richter.commands.Interfaces.TextCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -45,7 +46,7 @@ public class Help implements TextCommand {
 
         embedBuilder.setTitle("Help Menu");
         embedBuilder.setDescription("Bot made by Chad Thundercock, originally made for a private server\n**Need more help? Join the support server [here](https://discord.gg/Z2kB8GRBag)**");
-        embedBuilder.setFooter("Try to find the easter egg \uD83D\uDE09. Richter v3.6.0");
+        embedBuilder.setFooter("Try to find the easter egg \uD83D\uDE09. Richter v3.6.1");
 
         embedBuilder.addField("General", getHelpString(CommandType.General), false);
         embedBuilder.addField("Music", getHelpString(CommandType.Music), false);
