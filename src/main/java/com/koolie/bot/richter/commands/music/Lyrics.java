@@ -3,7 +3,7 @@ package com.koolie.bot.richter.commands.music;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.koolie.bot.richter.MusicUtil.MusicManager;
-import com.koolie.bot.richter.commands.TextCommand;
+import com.koolie.bot.richter.commands.Interfaces.TextCommand;
 import com.koolie.bot.richter.objects.Ignored;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import io.sentry.Sentry;

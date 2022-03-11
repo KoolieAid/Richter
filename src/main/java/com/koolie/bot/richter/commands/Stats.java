@@ -1,6 +1,7 @@
 package com.koolie.bot.richter.commands;
 
 import com.koolie.bot.richter.MusicUtil.MusicManager;
+import com.koolie.bot.richter.commands.Interfaces.TextCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDAInfo;
 import net.dv8tion.jda.api.entities.Message;

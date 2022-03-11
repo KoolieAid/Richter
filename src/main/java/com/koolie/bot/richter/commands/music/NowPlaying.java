@@ -1,7 +1,7 @@
 package com.koolie.bot.richter.commands.music;
 
 import com.koolie.bot.richter.MusicUtil.MusicManager;
-import com.koolie.bot.richter.commands.TextCommand;
+import com.koolie.bot.richter.commands.Interfaces.TextCommand;
 import com.koolie.bot.richter.util.MusicUtil;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -10,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
-import java.time.Duration;
 
 public class NowPlaying implements TextCommand {
     private final String line = "▬";

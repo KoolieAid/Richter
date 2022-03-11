@@ -1,5 +1,6 @@
 package com.koolie.bot.richter.commands;
 
+import com.koolie.bot.richter.commands.Interfaces.SlashCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.StageChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;

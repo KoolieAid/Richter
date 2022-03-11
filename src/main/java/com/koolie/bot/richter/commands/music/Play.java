@@ -1,9 +1,9 @@
 package com.koolie.bot.richter.commands.music;
 
 import com.koolie.bot.richter.MusicUtil.MusicManager;
-import com.koolie.bot.richter.commands.AutoSlashCommand;
-import com.koolie.bot.richter.commands.ContextCommand;
-import com.koolie.bot.richter.commands.TextCommand;
+import com.koolie.bot.richter.commands.Interfaces.AutoSlashCommand;
+import com.koolie.bot.richter.commands.Interfaces.ContextCommand;
+import com.koolie.bot.richter.commands.Interfaces.TextCommand;
 import com.koolie.bot.richter.objects.Context;
 import com.koolie.bot.richter.util.MusicUtil;
 import net.dv8tion.jda.api.entities.AudioChannel;

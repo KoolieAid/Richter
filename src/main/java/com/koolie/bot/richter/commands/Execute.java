@@ -1,6 +1,8 @@
 package com.koolie.bot.richter.commands;
 
 import com.koolie.bot.richter.EventHandler;
+import com.koolie.bot.richter.commands.Interfaces.ContextCommand;
+import com.koolie.bot.richter.commands.Interfaces.TextCommand;
 import com.koolie.bot.richter.util.BotConfigManager;
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;

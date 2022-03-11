@@ -1,4 +1,4 @@
-package com.koolie.bot.richter.commands;
+package com.koolie.bot.richter.commands.Interfaces;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
