@@ -69,7 +69,8 @@ public class Volume implements TextCommand {
             return;
         }
 
-        if (newVol > 75) newVol = 75;
+        if (newVol > 100) newVol = 100;
+        if (newVol < 0) newVol = 0;
         gManager.audioPlayer.setVolume(newVol);
 
         message.reply("Player internal volume has been set to: **" + newVol + "**").queue();

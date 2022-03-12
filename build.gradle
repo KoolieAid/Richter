@@ -25,7 +25,7 @@ dependencies {
         exclude group: 'club.minnced', module: 'opus-java'
     }
     //Logger
-    implementation('ch.qos.logback:logback-classic:1.2.10')
+    implementation('ch.qos.logback:logback-classic:1.2.11')
     //Spotify Web API
     implementation 'se.michaelthelin.spotify:spotify-web-api-java:7.0.0'
     //Fork of LavaPlayer since original LavaPlayer is unmaintained
@@ -37,11 +37,14 @@ dependencies {
     //Music Filters
     implementation 'com.github.natanbc:lavadsp:0.7.7'
     //Eval
-    implementation 'org.codehaus.groovy:groovy-jsr223:3.0.9'
+    implementation 'org.codehaus.groovy:groovy-jsr223:3.0.10'
     //Class graph
     implementation 'io.github.classgraph:classgraph:4.8.140'
     //Database
     implementation 'org.postgresql:postgresql:42.3.3'
+    //Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
 }
 
 shadowJar.setProperty("archiveFileName", "Richter.jar")
