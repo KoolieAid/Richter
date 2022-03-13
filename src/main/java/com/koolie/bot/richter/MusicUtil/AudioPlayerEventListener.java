@@ -1,14 +1,10 @@
 package com.koolie.bot.richter.MusicUtil;
 
-import com.koolie.bot.richter.SourceManagers.SpotifySourceManager;
 import com.koolie.bot.richter.commands.music.RepeatMode;
-import com.koolie.bot.richter.objects.spotify.SpotifyTrack;
 import com.koolie.bot.richter.threading.ThreadUtil;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
-import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
-import com.sedmelluq.discord.lavaplayer.track.AudioReference;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -72,10 +68,7 @@ public class AudioPlayerEventListener extends AudioEventAdapter {
 
     public void queue(AudioTrack track) {
         if (queue.size() == 0) {
-            track = checkIfSpotifyTrack(track);
-
             if (!audioPlayer.startTrack(track, true)) {
-                track = checkIfSpotifyTrack(track);
                 queue.offer(track);
             }
         } else {
@@ -85,10 +78,7 @@ public class AudioPlayerEventListener extends AudioEventAdapter {
 
     public void queueFront(AudioTrack track) {
         if (queue.size() == 0) {
-            track = checkIfSpotifyTrack(track);
-
             if (!audioPlayer.startTrack(track, true)) {
-                track = checkIfSpotifyTrack(track);
                 queue.offerFirst(track);
             }
         } else {
@@ -98,8 +88,6 @@ public class AudioPlayerEventListener extends AudioEventAdapter {
 
     public void nextTrack() {
         AudioTrack track = queue.poll();
-        track = checkIfSpotifyTrack(track);
-
         if (track == null) {
             scheduleLeave();
         }
@@ -144,29 +132,6 @@ public class AudioPlayerEventListener extends AudioEventAdapter {
         if (endReason.mayStartNext && mode != RepeatMode.Single) {
             nextTrack();
         }
-    }
-
-    /**
-     * Checks if the track in parameter is a {@link com.koolie.bot.richter.objects.spotify.SpotifyTrack}
-     * If the parameter is, this converts it into a YouTube track
-     *
-     * @param track The track to be replaced
-     * @return The replaced track if parameter is a Spotify track instance, otherwise, nothing will change
-     * @author Erik Go
-     */
-    private AudioTrack checkIfSpotifyTrack(AudioTrack track) {
-        if (!(track instanceof SpotifyTrack)) return track;
-
-        String trackName = track.getInfo().title;
-        String firstArtistName = track.getInfo().author;
-
-        AudioPlaylist ytSearchList = (AudioPlaylist) SpotifySourceManager.ytSourceManager.loadItem(null,
-                new AudioReference("ytmsearch:" + trackName + " " + firstArtistName, null));
-
-        //Gets the first result, and replaces the spotify track into YouTube Music track
-        track = ytSearchList.getTracks().get(0);
-
-        return track;
     }
 
     public void setChannel(Long id) {

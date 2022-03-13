@@ -1,56 +1,32 @@
 package com.koolie.bot.richter.objects.spotify;
 
+import com.koolie.bot.richter.SourceManagers.SpotifySourceManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrackState;
-import com.sedmelluq.discord.lavaplayer.track.TrackMarker;
+import com.sedmelluq.discord.lavaplayer.track.*;
+import com.sedmelluq.discord.lavaplayer.track.playback.LocalAudioTrackExecutor;
 
-public class SpotifyTrack implements AudioTrack {
+public class SpotifyTrack extends DelegatedAudioTrack {
     private final AudioTrackInfo trackInfo;
+    private final SpotifySourceManager sourceManager;
 
-    public SpotifyTrack(String title, String author, long length) {
-        trackInfo = new AudioTrackInfo(title, author, length, null, false, null);
+    public SpotifyTrack(String title, String author, long length, SpotifySourceManager sourceManager) {
+        super(new AudioTrackInfo(title, author, length, null, false, null));
+        trackInfo = super.getInfo();
+        this.sourceManager = sourceManager;
     }
 
     @Override
-    public AudioTrackInfo getInfo() {
-        return trackInfo;
-    }
+    public void process(LocalAudioTrackExecutor executor) throws Exception {
+        String trackName = trackInfo.title;
+        String firstArtistName = trackInfo.author;
 
-    @Override
-    public String getIdentifier() {
-        return null;
-    }
+        AudioPlaylist ytSearchList = (AudioPlaylist) sourceManager.ytSourceManager.loadItem(null,
+                new AudioReference("ytmsearch:" + trackName + " " + firstArtistName, null));
 
-    @Override
-    public AudioTrackState getState() {
-        return null;
-    }
+        //Gets the first result, and replaces the spotify track into YouTube Music track
+        InternalAudioTrack track = (InternalAudioTrack) ytSearchList.getTracks().get(0);
 
-    @Override
-    public void stop() {
-
-    }
-
-    @Override
-    public boolean isSeekable() {
-        return false;
-    }
-
-    @Override
-    public long getPosition() {
-        return 0;
-    }
-
-    @Override
-    public void setPosition(long position) {
-
-    }
-
-    @Override
-    public void setMarker(TrackMarker marker) {
-
+        super.processDelegate(track, executor);
     }
 
     @Override
@@ -60,17 +36,12 @@ public class SpotifyTrack implements AudioTrack {
 
     @Override
     public AudioTrack makeClone() {
-        return null;
+        return new SpotifyTrack(trackInfo.title, trackInfo.author, trackInfo.length, sourceManager);
     }
 
     @Override
     public AudioSourceManager getSourceManager() {
-        return null;
-    }
-
-    @Override
-    public Object getUserData() {
-        return null;
+        return sourceManager;
     }
 
     @Override
@@ -78,8 +49,4 @@ public class SpotifyTrack implements AudioTrack {
 
     }
 
-    @Override
-    public <T> T getUserData(Class<T> klass) {
-        return null;
-    }
 }
