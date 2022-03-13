@@ -7,7 +7,10 @@ import com.neovisionaries.i18n.CountryCode;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
-import com.sedmelluq.discord.lavaplayer.track.*;
+import com.sedmelluq.discord.lavaplayer.track.AudioItem;
+import com.sedmelluq.discord.lavaplayer.track.AudioReference;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import io.sentry.ITransaction;
 import io.sentry.Sentry;
 import org.apache.hc.core5.http.ParseException;
@@ -42,11 +45,11 @@ import java.util.regex.Pattern;
  * @author Erik Go
  */
 public class SpotifySourceManager implements AudioSourceManager {
+    private static final Logger log = LoggerFactory.getLogger(SpotifySourceManager.class);
     //Needs to be static, so I can access it in track scheduler.
     //track scheduler is unique to every server, so I need it static to not waste memory
     //Not used in this class, used only in track schedulers
-    public static final YoutubeAudioSourceManager ytSourceManager = new YoutubeAudioSourceManager();
-    private static final Logger log = LoggerFactory.getLogger(SpotifySourceManager.class);
+    public final YoutubeAudioSourceManager ytSourceManager = new YoutubeAudioSourceManager();
     private final SpotifyApi api;
     private final Pattern playlistPattern = Pattern.compile("^https?:\\/\\/(?:open|play)\\.spotify\\.com\\/playlist\\/([\\w\\d]+)(\\?si=(.+))?$", Pattern.CASE_INSENSITIVE);
     private final Pattern trackPattern = Pattern.compile("^https?:\\/\\/(?:open|play)\\.spotify\\.com\\/track\\/([\\w\\d]+)(\\?si=(.+))?$", Pattern.CASE_INSENSITIVE);
@@ -68,12 +71,6 @@ public class SpotifySourceManager implements AudioSourceManager {
                 .build();
 
         timeSinceLastRefresh = System.currentTimeMillis();
-    }
-
-    public static AudioTrack convertToYoutube(SpotifyTrack track) {
-        AudioPlaylist searchList = (AudioPlaylist) ytSourceManager.loadItem(null, new AudioReference("ytmsearch:" + track.getInfo().title + " " + track.getInfo().author, null));
-
-        return searchList.getTracks().get(0);
     }
 
     @Override
@@ -134,7 +131,7 @@ public class SpotifySourceManager implements AudioSourceManager {
             String trackName = track.getTrack().getName();
             String firstArtistName = ((Track) track.getTrack()).getArtists()[0].getName();
 
-            playlist.addTrack(new SpotifyTrack(trackName, firstArtistName, track.getTrack().getDurationMs()));
+            playlist.addTrack(new SpotifyTrack(trackName, firstArtistName, track.getTrack().getDurationMs(), this));
         }
 
         int total = page.getTotal();
@@ -158,7 +155,7 @@ public class SpotifySourceManager implements AudioSourceManager {
                 String trackName = track.getTrack().getName();
                 String firstArtistName = ((Track) track.getTrack()).getArtists()[0].getName();
 
-                playlist.addTrack(new SpotifyTrack(trackName, firstArtistName, track.getTrack().getDurationMs()));
+                playlist.addTrack(new SpotifyTrack(trackName, firstArtistName, track.getTrack().getDurationMs(), this));
             }
         }
 
@@ -201,7 +198,7 @@ public class SpotifySourceManager implements AudioSourceManager {
             return null;
         }
 
-        return new SpotifyTrack(track.getName(), track.getArtists()[0].getName(), track.getDurationMs());
+        return new SpotifyTrack(track.getName(), track.getArtists()[0].getName(), track.getDurationMs(), this);
     }
 
     private SpotifyPlaylist getSpotifyAlbum(String albumId) {
@@ -221,7 +218,7 @@ public class SpotifySourceManager implements AudioSourceManager {
 
         for (TrackSimplified track : tracks.getItems()) {
             if (track == null) continue;
-            playlist.addTrack(new SpotifyTrack(track.getName(), track.getArtists()[0].getName(), track.getDurationMs()));
+            playlist.addTrack(new SpotifyTrack(track.getName(), track.getArtists()[0].getName(), track.getDurationMs(), this));
         }
 
         int total = tracks.getTotal();
@@ -240,7 +237,7 @@ public class SpotifySourceManager implements AudioSourceManager {
             tracks = future.join();
             for (TrackSimplified track : tracks.getItems()) {
                 if (track == null) continue;
-                playlist.addTrack(new SpotifyTrack(track.getName(), track.getArtists()[0].getName(), track.getDurationMs()));
+                playlist.addTrack(new SpotifyTrack(track.getName(), track.getArtists()[0].getName(), track.getDurationMs(), this));
             }
         }
 
@@ -263,7 +260,7 @@ public class SpotifySourceManager implements AudioSourceManager {
         }
 
         for (Track track : tracks) {
-            playlist.addTrack(new SpotifyTrack(track.getName(), track.getArtists()[0].getName(), track.getDurationMs()));
+            playlist.addTrack(new SpotifyTrack(track.getName(), track.getArtists()[0].getName(), track.getDurationMs(), this));
         }
 
         playlist.name = artistFuture.join().getName();
