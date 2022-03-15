@@ -40,7 +40,6 @@ public class Disconnect implements TextCommand {
 
     @Override
     public void execute(Message message) {
-        //TODO: prevent other users from using this command when they are not in the channel
         if (!message.getGuild().getAudioManager().isConnected()) {
             message.reply("Seems like I already disconnected").queue();
             return;

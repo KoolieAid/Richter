@@ -37,7 +37,6 @@ public class Karaoke implements TextCommand {
         return "karaoke";
     }
 
-    //TODO: Check if member is in a channel
     @Override
     public void execute(Message message) {
         if (!MusicManager.isPresent(message.getGuild())) {

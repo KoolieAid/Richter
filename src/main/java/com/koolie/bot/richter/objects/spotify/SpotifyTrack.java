@@ -8,6 +8,7 @@ import com.sedmelluq.discord.lavaplayer.track.playback.LocalAudioTrackExecutor;
 public class SpotifyTrack extends DelegatedAudioTrack {
     private final AudioTrackInfo trackInfo;
     private final SpotifySourceManager sourceManager;
+    private String identifier = null;
 
     public SpotifyTrack(String title, String author, long length, SpotifySourceManager sourceManager) {
         super(new AudioTrackInfo(title, author, length, null, false, null));
@@ -25,6 +26,7 @@ public class SpotifyTrack extends DelegatedAudioTrack {
 
         //Gets the first result, and replaces the spotify track into YouTube Music track
         InternalAudioTrack track = (InternalAudioTrack) ytSearchList.getTracks().get(0);
+        identifier = track.getIdentifier();
 
         super.processDelegate(track, executor);
     }
@@ -49,4 +51,8 @@ public class SpotifyTrack extends DelegatedAudioTrack {
 
     }
 
+    @Override
+    public String getIdentifier() {
+        return identifier;
+    }
 }
