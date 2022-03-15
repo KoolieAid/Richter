@@ -91,7 +91,6 @@ public class Queue implements TextCommand {
                 .queue(m -> queueMessage.setMessageId(m.getId()));
     }
 
-    //TODO: free memory of when bot disconnects from channel and clears in the hashmap of players
     @Ignored
     private class QueueMessage extends ListenerAdapter {
         private final Deque<AudioTrack> queueReference;
