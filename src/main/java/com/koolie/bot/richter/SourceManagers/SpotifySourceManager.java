@@ -46,9 +46,6 @@ import java.util.regex.Pattern;
  */
 public class SpotifySourceManager implements AudioSourceManager {
     private static final Logger log = LoggerFactory.getLogger(SpotifySourceManager.class);
-    //Needs to be static, so I can access it in track scheduler.
-    //track scheduler is unique to every server, so I need it static to not waste memory
-    //Not used in this class, used only in track schedulers
     public final YoutubeAudioSourceManager ytSourceManager = new YoutubeAudioSourceManager();
     private final SpotifyApi api;
     private final Pattern playlistPattern = Pattern.compile("^https?:\\/\\/(?:open|play)\\.spotify\\.com\\/playlist\\/([\\w\\d]+)(\\?si=(.+))?$", Pattern.CASE_INSENSITIVE);
@@ -70,7 +67,7 @@ public class SpotifySourceManager implements AudioSourceManager {
                 .setClientSecret(clientSecret)
                 .build();
 
-        timeSinceLastRefresh = System.currentTimeMillis();
+        refreshAccess();
     }
 
     @Override
@@ -103,21 +100,15 @@ public class SpotifySourceManager implements AudioSourceManager {
         SpotifyPlaylist playlist = new SpotifyPlaylist();
 
         //Playlist Object - to get name
-        GetPlaylistRequest playlistRequest = api
-                .getPlaylist(playlistId)
-                .build();
+        GetPlaylistRequest playlistRequest = api.getPlaylist(playlistId).build();
 
         //Playlist Items - to get items (weird that the wrapper separated this)
-        GetPlaylistsItemsRequest playlistItemsRequest = api
-                .getPlaylistsItems(playlistId)
-                .build();
+        GetPlaylistsItemsRequest playlistItemsRequest = api.getPlaylistsItems(playlistId).build();
 
         //Requests in the Spotify API
         Paging<PlaylistTrack> page;
 
         CompletableFuture<Playlist> playlistObject = playlistRequest.executeAsync();
-
-        //New algorithm that does every request async
 
         //First page, required to be blocking, so I can get total items
         try {
@@ -172,7 +163,7 @@ public class SpotifySourceManager implements AudioSourceManager {
     private void refreshAccess() {
         //Checks if it expired or not, better this way instead of using a thread
         //3600000ms == 1 hour
-//        if (System.currentTimeMillis() - timeSinceLastRefresh > 3600000) return;
+        if (System.currentTimeMillis() - timeSinceLastRefresh < 3600000) return;
 
         ClientCredentialsRequest clientCredentialsRequest = api.clientCredentials().build();
 

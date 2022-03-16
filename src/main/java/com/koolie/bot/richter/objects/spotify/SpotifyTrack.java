@@ -6,13 +6,11 @@ import com.sedmelluq.discord.lavaplayer.track.*;
 import com.sedmelluq.discord.lavaplayer.track.playback.LocalAudioTrackExecutor;
 
 public class SpotifyTrack extends DelegatedAudioTrack {
-    private final AudioTrackInfo trackInfo;
     private final SpotifySourceManager sourceManager;
     private String identifier = null;
 
     public SpotifyTrack(String title, String author, long length, SpotifySourceManager sourceManager) {
         super(new AudioTrackInfo(title, author, length, null, false, null));
-        trackInfo = super.getInfo();
         this.sourceManager = sourceManager;
     }
 
@@ -44,11 +42,6 @@ public class SpotifyTrack extends DelegatedAudioTrack {
     @Override
     public AudioSourceManager getSourceManager() {
         return sourceManager;
-    }
-
-    @Override
-    public void setUserData(Object userData) {
-
     }
 
     @Override

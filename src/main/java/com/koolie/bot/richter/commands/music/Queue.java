@@ -186,7 +186,8 @@ public class Queue implements TextCommand {
             for (int i = 0; i < page.size(); i++) {
                 String durationString = MusicUtil.getReadableMusicTime(page.get(i).getDuration());
 
-                stringBuilder.append(i + 1 + (currentPage * 10) + ". " + page.get(i).getInfo().title + " **[" + durationString + "]**" + "\n");
+                stringBuilder.append(i + 1 + (currentPage * 10) + ". " + page.get(i).getInfo().title + " **[" + durationString + "]**")
+                        .append(" ").append(page.get(i).getUserData()).append("\n");
             }
 
             embedBuilder.addField("Songs Queued: ", stringBuilder.toString(), false)

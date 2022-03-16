@@ -88,6 +88,7 @@ public class MusicManager {
             @Override
             public void trackLoaded(AudioTrack track) {
                 gManager.eventListener.setChannel(message.getChannel().getIdLong());
+                track.setUserData(message.getUser().getAsMention());
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setDescription("Queued: `" + track.getInfo().title + "`")
                         .setFooter(message.getAuthor().getName(), message.getAuthor().getEffectiveAvatarUrl())
@@ -109,6 +110,7 @@ public class MusicManager {
                 gManager.eventListener.setChannel(message.getChannel().getIdLong());
                 if (playlist.isSearchResult()) {
                     AudioTrack track = playlist.getTracks().get(0);
+                    track.setUserData(message.getUser().getAsMention());
 
                     eb.setDescription("Queued: `" + track.getInfo().title + "`")
                             .setFooter(message.getAuthor().getName(), message.getAuthor().getEffectiveAvatarUrl())
@@ -130,6 +132,7 @@ public class MusicManager {
                 message.replyEmbeds(eb.build()).queue();
 
                 for (AudioTrack track : playlist.getTracks()) {
+                    track.setUserData(message.getUser().getAsMention());
                     gManager.eventListener.queue(track);
                 }
             }
