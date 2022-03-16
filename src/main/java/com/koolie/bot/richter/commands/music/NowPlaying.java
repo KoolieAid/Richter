@@ -12,9 +12,9 @@ import org.jetbrains.annotations.Nullable;
 import java.awt.*;
 
 public class NowPlaying implements TextCommand {
-    private final String line = "▬";
-    private final String now = ":radio_button:";
-    private final int totalSize = 20;
+    private static final String line = "▬";
+    private static final String now = ":radio_button:";
+    private static final int totalSize = 20;
 
     public NowPlaying() {
     }

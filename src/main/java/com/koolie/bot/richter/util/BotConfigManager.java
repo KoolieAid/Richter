@@ -14,6 +14,9 @@ public class BotConfigManager {
     private @Getter static String sentryDsn;
     private @Getter static String prefix;
     private @Getter static String musixmatchApiKey;
+    private @Getter static String DB_URL;
+    private @Getter static String DB_USER;
+    private @Getter static String DB_PASS;
     private BotConfigManager() {}
 
     public static void loadJSON() throws FileNotFoundException {
@@ -24,6 +27,9 @@ public class BotConfigManager {
         sentryDsn = jsonObject.get("sentry_dsn").getAsString();
         prefix = jsonObject.get("default_prefix").getAsString();
         musixmatchApiKey = jsonObject.get("musixmatch_api_key").getAsString();
+        DB_URL = jsonObject.get("database_address").getAsString();
+        DB_USER = jsonObject.get("database_user").getAsString();
+        DB_PASS = jsonObject.get("database_password").getAsString();
     }
 
 }

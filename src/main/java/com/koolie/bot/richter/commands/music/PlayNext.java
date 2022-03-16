@@ -88,18 +88,9 @@ public class PlayNext implements TextCommand {
         query = args[1];
 
         try {
-            URL url = new URL(query);
-            if (!url.getHost().equalsIgnoreCase("open.spotify.com")) throw new MalformedURLException();
-
+            new URL(query);
         } catch (MalformedURLException e) {
-            if (!query.matches("^((?:https?:)?\\/\\/)?((?:www|m)\\.)?((?:youtube\\.com|youtu.be))(\\/(?:[\\w\\-]+\\?v=|embed\\/|v\\/)?)([\\w\\-]+)(\\S+)?$")
-                    && !query.startsWith("direct:")) {
-                query = "ytsearch:" + query;
-            }
-        }
-
-        if (query.startsWith("direct:")) {
-            query = query.substring("direct:".length());
+            query = "ytsearch:" + query;
         }
 
         MusicManager.loadToGuild(new Context(message), query, true);

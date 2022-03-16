@@ -1,5 +1,7 @@
 package com.koolie.bot.richter.objects.guild;
 
+import com.koolie.bot.richter.util.BotConfigManager;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,12 +14,13 @@ public class GuildConfig {
     private static final Logger logger;
 
     private static final HashMap<Long, GuildConfig> guildConfigs = new HashMap<>();
-    private final Long guildId;
-    private String prefix;
-    private String concertModeChannelId;
-    private Long concertModeMCId;
-    private String lockChannelId;
-    private Long[] lockChannelMembers;
+    private @Getter final Long guildId;
+    private @Getter int playerVolume;
+    private @Getter String prefix;
+    private @Getter String concertModeChannelId;
+    private @Getter Long concertModeMCId;
+    private @Getter String lockChannelId;
+    private @Getter long[] lockChannelMembers;
 
     static {
         logger = LoggerFactory.getLogger("Guild Config");
@@ -28,7 +31,7 @@ public class GuildConfig {
     public static void loadDatabase() {
         try {
             Class.forName("org.postgresql.Driver");
-            connection = DriverManager.getConnection("jdbc:postgresql://localhost:6969/postgres", "postgres", "aintnoparty");
+            connection = DriverManager.getConnection(BotConfigManager.getDB_URL(), BotConfigManager.getDB_USER(), BotConfigManager.getDB_PASS());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -48,7 +51,6 @@ public class GuildConfig {
     public GuildConfig(Long id) {
         guildId = id;
 
-
     }
 
     public static GuildConfig of(Long guildId) {
@@ -59,10 +61,6 @@ public class GuildConfig {
         }
 
         return config;
-    }
-
-    public String getPrefix() {
-        return prefix;
     }
 
 }
