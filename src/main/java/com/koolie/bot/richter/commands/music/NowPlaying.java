@@ -16,7 +16,8 @@ public class NowPlaying implements TextCommand {
     private final String now = ":radio_button:";
     private final int totalSize = 20;
 
-    public NowPlaying() {}
+    public NowPlaying() {
+    }
 
     @NotNull
     @Override
@@ -75,9 +76,9 @@ public class NowPlaying implements TextCommand {
         progressBar.append(line);
 
         EmbedBuilder eb = new EmbedBuilder();
-        eb.setThumbnail("http://img.youtube.com/vi/" + track.getIdentifier() + "/maxresdefault.jpg");
-        eb.setTitle(track.getInfo().title, track.getInfo().uri).setColor(Color.RED);
-        eb.setDescription(progressBar + "\t**[" + positionString + "/" + durationString + "]**");
+        eb.setThumbnail("http://img.youtube.com/vi/" + track.getIdentifier() + "/maxresdefault.jpg")
+                .setTitle(track.getInfo().title, track.getInfo().uri).setColor(Color.RED)
+                .setDescription(progressBar + "\t**[" + positionString + "/" + durationString + "]**" + "\n" + track.getUserData());
         message.replyEmbeds(eb.build()).queue();
     }
 }

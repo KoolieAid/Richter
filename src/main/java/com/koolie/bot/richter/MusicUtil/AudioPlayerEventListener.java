@@ -56,9 +56,9 @@ public class AudioPlayerEventListener extends AudioEventAdapter {
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle("Now Playing");
-        embedBuilder.setDescription(track.getInfo().title);
-        embedBuilder.setColor(Color.BLUE);
+        embedBuilder.setTitle("Now Playing")
+                .setDescription(track.getInfo().title + " " + track.getUserData())
+                .setColor(Color.BLUE);
 
         sendMessageToChannel(embedBuilder.build(), true);
 

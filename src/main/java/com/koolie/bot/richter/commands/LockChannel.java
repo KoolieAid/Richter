@@ -1,6 +1,7 @@
 package com.koolie.bot.richter.commands;
 
 import com.koolie.bot.richter.commands.Interfaces.TextCommand;
+import com.koolie.bot.richter.objects.Ignored;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -13,6 +14,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+@Ignored
+@Deprecated
 public class LockChannel implements TextCommand {
     private final HashMap<Long, LockChannelAdapter> adapters;
 
