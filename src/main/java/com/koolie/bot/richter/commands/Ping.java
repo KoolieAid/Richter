@@ -31,10 +31,13 @@ public class Ping implements TextCommand {
 
     @Override
     public void execute(@NotNull Message message) {
-        long time = System.currentTimeMillis();
-        message.reply("Pong!").queue(m -> {
-            long ping = System.currentTimeMillis() - time;
-            m.editMessage("Pong! `" + ping + "`ms").queue();
+        long gatewayPing = message.getJDA().getGatewayPing();
+        message.getJDA().getRestPing().queue(rPing ->{
+            long time = System.currentTimeMillis();
+            message.reply("Pong!").queue(m -> {
+                long ping = System.currentTimeMillis() - time;
+                m.editMessage("Pong! `" + ping + "`ms" + "\nGateway Ping: `" + gatewayPing + "`ms\t" + "Rest Ping: `" + rPing + "`ms").queue();
+            });
         });
     }
 }
