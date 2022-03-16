@@ -9,8 +9,8 @@ public class SpotifyTrack extends DelegatedAudioTrack {
     private final SpotifySourceManager sourceManager;
     private String identifier = null;
 
-    public SpotifyTrack(String title, String author, long length, SpotifySourceManager sourceManager) {
-        super(new AudioTrackInfo(title, author, length, null, false, null));
+    public SpotifyTrack(String title, String author, long length, String uri, SpotifySourceManager sourceManager) {
+        super(new AudioTrackInfo(title, author, length, null, false, uri));
         this.sourceManager = sourceManager;
     }
 
@@ -36,7 +36,7 @@ public class SpotifyTrack extends DelegatedAudioTrack {
 
     @Override
     public AudioTrack makeClone() {
-        return new SpotifyTrack(trackInfo.title, trackInfo.author, trackInfo.length, sourceManager);
+        return new SpotifyTrack(trackInfo.title, trackInfo.author, trackInfo.length, trackInfo.uri, sourceManager);
     }
 
     @Override
