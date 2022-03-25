@@ -36,6 +36,8 @@ public class Richter {
             return;
         }
 
+        GuildConfig.loadDatabase();
+
         shardManager = DefaultShardManagerBuilder.createDefault(BotConfigManager.getToken())
                 .addEventListeners(new EventHandler())
                 .setAudioSendFactory(new NativeAudioSendFactory())
@@ -47,8 +49,6 @@ public class Richter {
     }
 
     public static void main(String[] args) throws LoginException {
-//        GuildConfig.loadDatabase();
-
         try {
             new Richter();
         } catch ( LoginException e ) {

@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -14,24 +15,33 @@ public class Help implements TextCommand {
     public Help() {}
 
     @Override
+    @NotNull
     public String getName() {
         return "Help";
     }
 
     @Override
+    @NotNull
     public String getDescription() {
         return "Gives you info";
     }
 
     @Override
+    @NotNull
     public CommandType getCommandType() {
         return CommandType.General;
     }
 
-    @NotNull
     @Override
+    @NotNull
     public String getOperator() {
         return "help";
+    }
+
+    @Nullable
+    @Override
+    public String[] getAliases() {
+        return new String[]{"info"};
     }
 
     @Override
@@ -46,7 +56,7 @@ public class Help implements TextCommand {
 
         embedBuilder.setTitle("Help Menu");
         embedBuilder.setDescription("Bot made by Chad Thundercock, originally made for a private server\n**Need more help? Join the support server [here](https://discord.gg/Z2kB8GRBag)**");
-        embedBuilder.setFooter("Try to find the easter egg \uD83D\uDE09. Richter v3.6.5");
+        embedBuilder.setFooter("Try to find the easter egg \uD83D\uDE09. Richter v3.7.1");
 
         embedBuilder.addField("General", getHelpString(CommandType.General), false);
         embedBuilder.addField("Music", getHelpString(CommandType.Music), false);

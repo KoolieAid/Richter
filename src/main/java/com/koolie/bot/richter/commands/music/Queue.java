@@ -88,7 +88,8 @@ public class Queue implements TextCommand {
 
         message.replyEmbeds(queueMessage.makeEmbed())
                 .setActionRows(queueMessage.getActionRow())
-                .queue(m -> queueMessage.setMessageId(m.getId()));
+                .queue(m -> queueMessage.setMessageId(m.getId()),
+                        e -> message.getJDA().removeEventListener(queueMessage));
     }
 
     @Ignored
@@ -117,7 +118,6 @@ public class Queue implements TextCommand {
                     Button.primary("previous", Emoji.fromUnicode("\u25C0")),
                     Button.primary("next", Emoji.fromUnicode("\u25B6")),
                     Button.danger("invalidate", Emoji.fromUnicode("\u2716"))
-                    //Button.danger("clear", Emoji.fromUnicode("\uD83D\uDDD1\uFE0F"))
             );
 
             scheduleInvalidation(10, TimeUnit.SECONDS);
@@ -138,14 +138,6 @@ public class Queue implements TextCommand {
                 invalidate();
                 cancelInvalidation();
                 return;
-            } else if (event.getComponentId().equals("clear")) {
-                queueReference.clear();
-                event.replyEmbeds(new EmbedBuilder()
-                                .setTitle("Queue cleared")
-                                .setColor(Color.RED)
-                                .build())
-                        .setEphemeral(true)
-                        .queue();
             }
 
             scheduleInvalidation(10, TimeUnit.SECONDS);

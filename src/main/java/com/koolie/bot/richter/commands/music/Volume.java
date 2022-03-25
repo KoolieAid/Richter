@@ -2,6 +2,7 @@ package com.koolie.bot.richter.commands.music;
 
 import com.koolie.bot.richter.MusicUtil.MusicManager;
 import com.koolie.bot.richter.commands.Interfaces.TextCommand;
+import com.koolie.bot.richter.objects.guild.GuildConfig;
 import com.koolie.bot.richter.util.MusicUtil;
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
@@ -70,8 +71,11 @@ public class Volume implements TextCommand {
         }
 
         if (newVol > 100) newVol = 100;
-        if (newVol < 0) newVol = 0;
+        if (newVol < 1) newVol = 1;
         gManager.audioPlayer.setVolume(newVol);
+
+        GuildConfig config = GuildConfig.of(message.getGuild().getIdLong());
+        config.setPlayerVolume(newVol);
 
         message.reply("Player internal volume has been set to: **" + newVol + "**").queue();
     }
