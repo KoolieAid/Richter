@@ -5,9 +5,7 @@ import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.HashMap;
 
 public class GuildConfig {
@@ -17,16 +15,12 @@ public class GuildConfig {
     private @Getter final Long guildId;
     private @Getter int playerVolume;
     private @Getter String prefix;
-    private @Getter String concertModeChannelId;
-    private @Getter Long concertModeMCId;
-    private @Getter String lockChannelId;
-    private @Getter long[] lockChannelMembers;
 
     static {
         logger = LoggerFactory.getLogger("Guild Config");
     }
 
-    private static Connection connection = null;
+    private @Getter static Connection connection = null;
 
     public static void loadDatabase() {
         try {
@@ -47,10 +41,52 @@ public class GuildConfig {
         }
     }
 
-    //put static methods use database, abstract it so I don't have to deal with shit later on
-    public GuildConfig(Long id) {
+    private GuildConfig(Long id) {
         guildId = id;
 
+        try {
+            Statement statement = connection.createStatement();
+
+            String query = " SELECT * FROM servers WHERE server_id = " + id + ";";
+
+            ResultSet result = statement.executeQuery(query);
+
+            if (!result.next()){
+                statement.execute("INSERT INTO servers (server_id) VALUES (" + id + ");");
+
+                prefix = BotConfigManager.getPrefix();
+                playerVolume = 20;
+
+                result.close();
+                statement.close();
+                return;
+            }
+
+            long l = result.getLong("server_id");
+            System.out.println("LONG ID " + l);
+
+            int playerVol = result.getInt("player_volume");
+            if (playerVol == 0) {
+                this.playerVolume = 20;
+            } else {
+                this.playerVolume = playerVol;
+            }
+
+
+            String prefix = result.getString("prefix");
+            if (prefix == null) {
+                this.prefix = BotConfigManager.getPrefix();
+            } else {
+                this.prefix = prefix;
+            }
+
+            result.close();
+            statement.close();
+        } catch (SQLException e) {
+            logger.error("Error creating statement", e);
+            playerVolume = 20;
+            prefix = BotConfigManager.getPrefix();
+        }
     }
 
     public static GuildConfig of(Long guildId) {
@@ -61,6 +97,21 @@ public class GuildConfig {
         }
 
         return config;
+    }
+
+    public void setPlayerVolume(int volume) {
+        playerVolume = volume;
+
+        try {
+            Statement statement = connection.createStatement();
+
+            String query = "UPDATE servers SET player_volume = " + volume + " WHERE server_id = " + guildId + ";";
+
+            statement.execute(query);
+            statement.close();
+        } catch (SQLException e) {
+            logger.error("Error creating statement", e);
+        }
     }
 
 }

@@ -2,6 +2,7 @@ package com.koolie.bot.richter.MusicUtil;
 
 import com.koolie.bot.richter.SourceManagers.SpotifySourceManager;
 import com.koolie.bot.richter.objects.Context;
+import com.koolie.bot.richter.objects.guild.GuildConfig;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
@@ -36,14 +37,15 @@ public class MusicManager {
      *
      * @param playerManager AudioPlayerManager to create a player and link a new scheduler for it
      */
-    public MusicManager(AudioPlayerManager playerManager) {
+    public MusicManager(AudioPlayerManager playerManager, long guildId) {
         audioPlayer = playerManager.createPlayer();
 
         // Links the two, inside them has a variable of the opposite
         eventListener = new AudioPlayerEventListener(audioPlayer);
         audioPlayer.addListener(eventListener);
 
-        audioPlayer.setVolume(20);
+        GuildConfig config = GuildConfig.of(guildId);
+        audioPlayer.setVolume(config.getPlayerVolume());
     }
 
     /**
@@ -54,7 +56,7 @@ public class MusicManager {
         MusicManager musicManager = guildManagerMap.get(guild.getIdLong());
 
         if (musicManager == null) {
-            musicManager = new MusicManager(audioPlayerManager);
+            musicManager = new MusicManager(audioPlayerManager, guild.getIdLong());
             musicManager.eventListener.setJda(guild.getJDA());
             guildManagerMap.put(guild.getIdLong(), musicManager);
         }

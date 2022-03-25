@@ -39,7 +39,7 @@ dependencies {
     //Eval
     implementation 'org.codehaus.groovy:groovy-jsr223:3.0.10'
     //Class graph
-    implementation 'io.github.classgraph:classgraph:4.8.140'
+    implementation 'io.github.classgraph:classgraph:4.8.141'
     //Database
     implementation 'org.postgresql:postgresql:42.3.3'
     //Lombok
