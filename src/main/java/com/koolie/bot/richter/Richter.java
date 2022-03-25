@@ -71,9 +71,6 @@ public class Richter {
                 Activity.playing("Push the P"),
         };
 
-//        ThreadUtil.getScheduler().scheduleAtFixedRate(() -> jda.getPresence().setActivity(activities[new Random().nextInt(activities.length)]),
-//                0, 30, TimeUnit.MINUTES);
-
         ThreadUtil.getScheduler().scheduleAtFixedRate(() -> shardManager.setPresence(OnlineStatus.ONLINE, activities[new Random().nextInt(activities.length)]),
                 0, 30, TimeUnit.MINUTES);
 

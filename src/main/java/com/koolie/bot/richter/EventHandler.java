@@ -138,7 +138,7 @@ public class EventHandler extends ListenerAdapter {
         String[] args = message.getContentRaw().split(" ");
 
         if (!args[0].startsWith(prefix)) return;
-        String cmd = args[0].replaceFirst(prefix, "");
+        String cmd = args[0].replaceFirst(prefix, "").toLowerCase();
 
         if (textCommands.get(cmd) == null && aliases.get(cmd) == null) {
             Sentry.captureMessage("Suggestion: " + cmd + " by: " + event.getAuthor().getName(), SentryLevel.INFO);

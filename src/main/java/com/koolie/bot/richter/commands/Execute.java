@@ -59,7 +59,7 @@ public class Execute implements ContextCommand {
             event.getInteraction().reply("Message is not a command").setEphemeral(true).queue();
             return;
         }
-        String command = args[0].replaceFirst(BotConfigManager.getPrefix(), "");
+        String command = args[0].replaceFirst(BotConfigManager.getPrefix(), "").toLowerCase();
 
         if (!map.containsKey(command) && !alias.containsKey(command)) {
             event.getInteraction().reply("Command not found").setEphemeral(true).queue();
