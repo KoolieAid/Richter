@@ -71,7 +71,7 @@ public class Volume implements TextCommand {
         }
 
         if (newVol > 100) newVol = 100;
-        if (newVol < 1) newVol = 1;
+        if (newVol < 0) newVol = 0;
         gManager.audioPlayer.setVolume(newVol);
 
         GuildConfig config = GuildConfig.of(message.getGuild().getIdLong());

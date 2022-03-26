@@ -2,6 +2,9 @@ package com.koolie.bot.richter.commands.music;
 
 import com.koolie.bot.richter.MusicUtil.MusicManager;
 import com.koolie.bot.richter.commands.Interfaces.TextCommand;
+import com.koolie.bot.richter.objects.guild.GuildConfig;
+import com.koolie.bot.richter.objects.sponsorblock.Segment;
+import com.koolie.bot.richter.objects.sponsorblock.SponsorblockClient;
 import com.koolie.bot.richter.util.MusicUtil;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -9,7 +12,8 @@ import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
+import java.awt.Color;
+import java.util.List;
 
 public class NowPlaying implements TextCommand {
     private static final String line = "▬";
@@ -65,6 +69,23 @@ public class NowPlaying implements TextCommand {
         String durationString = MusicUtil.getReadableMusicTime(track.getDuration());
         String positionString = MusicUtil.getReadableMusicTime(track.getPosition());
 
+        String outString = "\t**[" + positionString + "/" + durationString + "]**";
+
+        GuildConfig config = GuildConfig.of(message.getGuild().getIdLong());
+
+        if (config.isSegmentSkippingEnabled()) {
+            List<Segment> segments = SponsorblockClient.getSegments(track, message.getGuild().getIdLong());
+            if (segments != null) {
+                long sum = 0;
+                for (Segment segment : segments) {
+                    sum += segment.length();
+                }
+
+                String skippedString = MusicUtil.getReadableMusicTime(track.getDuration() - sum);
+                outString += " *[" + skippedString + "] without segments*";
+            }
+        }
+
         /*
         Builds progress bar
         made by: cane from Spidey and JDA discord
@@ -78,7 +99,7 @@ public class NowPlaying implements TextCommand {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setThumbnail("http://img.youtube.com/vi/" + track.getIdentifier() + "/maxresdefault.jpg")
                 .setTitle(track.getInfo().title, track.getInfo().uri).setColor(Color.RED)
-                .setDescription(progressBar + "\t**[" + positionString + "/" + durationString + "]**" + "\n" + track.getUserData());
+                .setDescription(progressBar + outString + "\n" + track.getUserData());
         message.replyEmbeds(eb.build()).queue();
     }
 }
