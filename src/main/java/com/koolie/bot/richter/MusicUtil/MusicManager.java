@@ -41,7 +41,7 @@ public class MusicManager {
         audioPlayer = playerManager.createPlayer();
 
         // Links the two, inside them has a variable of the opposite
-        eventListener = new AudioPlayerEventListener(audioPlayer);
+        eventListener = new AudioPlayerEventListener(audioPlayer, guildId);
         audioPlayer.addListener(eventListener);
 
         GuildConfig config = GuildConfig.of(guildId);
@@ -77,6 +77,11 @@ public class MusicManager {
         AudioSourceManagers.registerLocalSource(audioPlayerManager);
 
         audioPlayerManager.getConfiguration().setFilterHotSwapEnabled(true);
+        audioPlayerManager.setTrackStuckThreshold(30000L);
+    }
+
+    public static void shutdown() {
+        audioPlayerManager.shutdown();
     }
 
     public static void loadToGuild(Context message, String trackIdentifier) {

@@ -1,5 +1,6 @@
 package com.koolie.bot.richter.commands;
 
+import com.koolie.bot.richter.MusicUtil.MusicManager;
 import com.koolie.bot.richter.commands.Interfaces.TextCommand;
 import com.koolie.bot.richter.objects.guild.GuildConfig;
 import net.dv8tion.jda.api.entities.Message;
@@ -43,6 +44,7 @@ public class Shutdown implements TextCommand {
                 return;
             }
             message.reply("Shutting down...").queue();
+            MusicManager.shutdown();
             shardManager.shutdown();
             GuildConfig.closeDatabase();
         });
