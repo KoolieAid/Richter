@@ -2,7 +2,6 @@ package com.koolie.bot.richter.commands.music;
 
 import com.koolie.bot.richter.MusicUtil.MusicManager;
 import com.koolie.bot.richter.commands.Interfaces.TextCommand;
-import com.koolie.bot.richter.objects.guild.GuildConfig;
 import com.koolie.bot.richter.objects.sponsorblock.Segment;
 import com.koolie.bot.richter.objects.sponsorblock.SponsorblockClient;
 import com.koolie.bot.richter.util.MusicUtil;
@@ -70,8 +69,6 @@ public class NowPlaying implements TextCommand {
         String positionString = MusicUtil.getReadableMusicTime(track.getPosition());
 
         String outString = "\t**[" + positionString + "/" + durationString + "]**";
-
-        GuildConfig config = GuildConfig.of(message.getGuild().getIdLong());
 
         List<Segment> segments = SponsorblockClient.getSegments(track, message.getGuild().getIdLong());
         if (!segments.isEmpty()) {

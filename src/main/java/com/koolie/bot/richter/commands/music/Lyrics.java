@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 import com.koolie.bot.richter.MusicUtil.MusicManager;
 import com.koolie.bot.richter.commands.Interfaces.TextCommand;
 import com.koolie.bot.richter.objects.Ignored;
+import com.koolie.bot.richter.util.BotConfigManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import io.sentry.Sentry;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -18,8 +19,8 @@ import org.jetbrains.annotations.Nullable;
 import java.awt.*;
 import java.io.IOException;
 
-//@Ignored
 public class Lyrics implements TextCommand {
+    private static final String apiKey = BotConfigManager.getRapidApiKey();
     private final OkHttpClient client;
 
     public Lyrics() {
@@ -53,34 +54,30 @@ public class Lyrics implements TextCommand {
     @Nullable
     @Override
     public String[] getAliases() {
-        return new String[] {"lyric", "ly"};
+        return new String[]{"lyric", "ly"};
     }
 
     @Override
     public void execute(@NotNull Message message) {
-        if (!MusicManager.isPresent(message.getGuild())) {
-            message.reply("There is no music playing").queue();
-            return;
-        }
-
-        MusicManager manager = MusicManager.of(message.getGuild());
-        AudioTrack track = manager.audioPlayer.getPlayingTrack();
         message.getChannel().sendTyping().queue();
         String[] args = message.getContentRaw().split(" ", 2);
 
-//        if (track == null && args.length < 2) {
-//            message.reply("There is no music playing").queue();
-//            return;
-//        }
-
         String query;
-        if (args.length > 1) {
-            query = args[1];
-        } else {
+        if (args.length < 2) {
+            if (!MusicManager.isPresent(message.getGuild())) {
+                message.reply("There is no music playing").queue();
+                return;
+            }
+
+            MusicManager manager = MusicManager.of(message.getGuild());
+            AudioTrack track = manager.audioPlayer.getPlayingTrack();
+
             query = track.getInfo().title;
+        } else {
+            query = args[1];
         }
 
-        Lyric lyric = null;
+        Lyric lyric;
         try {
             lyric = getLyrics(getSongId(query));
         } catch (IOException e) {
@@ -88,6 +85,7 @@ public class Lyrics implements TextCommand {
             message.replyEmbeds(new EmbedBuilder()
                     .setColor(Color.RED)
                     .setTitle("Something went wrong while getting the lyrics")
+                    .setDescription("Error: `" + e.getMessage() + "`")
                     .build()).queue();
             return;
         } catch (IndexOutOfBoundsException e) {
@@ -116,60 +114,54 @@ public class Lyrics implements TextCommand {
                 .get()
                 .url("https://genius-song-lyrics1.p.rapidapi.com/songs/" + songId + "/lyrics")
                 .addHeader("x-rapidapi-host", "genius-song-lyrics1.p.rapidapi.com")
-                .addHeader("x-rapidapi-key", "094a1d91b7mshe28788dd3c1f8dep15b53ejsn0c2b63918b62")
+                .addHeader("x-rapidapi-key", apiKey)
                 .build();
 
-        Response response = null;
-        JsonObject jsonObject = null;
+        Response response = client.newCall(request).execute();
+        if (!response.isSuccessful()) {
+            response.close();
+            throw new IOException("Unexpected code: " + response.code());
+        }
 
-        response = client.newCall(request).execute();
-        jsonObject = JsonParser.parseString(response.body().string()).getAsJsonObject();
+        JsonObject jsonObject = JsonParser.parseString(response.body().string()).getAsJsonObject();
 
-        String body = jsonObject.get("response")
-                .getAsJsonObject()
-                .getAsJsonObject("lyrics")
-                .getAsJsonObject("lyrics")
-                .getAsJsonObject("body")
-                .getAsJsonPrimitive("plain")
-                .getAsString();
+        int statusCode = jsonObject.getAsJsonObject("meta").getAsJsonPrimitive("status").getAsInt();
 
-        int id = jsonObject.get("response")
-                .getAsJsonObject()
-                .getAsJsonObject("lyrics")
-                .getAsJsonPrimitive("song_id")
-                .getAsInt();
+        if (statusCode == 404) {
+            response.close();
+            throw new IndexOutOfBoundsException();
+        } else if (statusCode != 200) {
+            response.close();
+            throw new IOException(statusCode + ": " + jsonObject.getAsJsonObject("meta").getAsJsonPrimitive("message").getAsString());
+        }
 
-        String artist = jsonObject.get("response")
-                .getAsJsonObject()
-                .getAsJsonObject("lyrics")
-                .getAsJsonObject("trackingData")
-                .getAsJsonPrimitive("Primary Artist")
-                .getAsString();
+        JsonObject lyricsJsonObject = jsonObject.getAsJsonObject("response").getAsJsonObject("lyrics");
 
-        String title = jsonObject.get("response")
-                .getAsJsonObject()
-                .getAsJsonObject("lyrics")
-                .getAsJsonObject("trackingData")
-                .getAsJsonPrimitive("Title")
-                .getAsString();
+        JsonObject trackingData = lyricsJsonObject.getAsJsonObject("trackingData");
 
-        return new Lyric(artist, title, body, id);
+        String artist = trackingData.getAsJsonPrimitive("Primary Artist").getAsString();
+        String title = trackingData.getAsJsonPrimitive("Title").getAsString();
+
+        int id = lyricsJsonObject.get("song_id").getAsInt();
+
+        String lyricsBody = lyricsJsonObject.getAsJsonObject("lyrics").getAsJsonObject("body").get("plain").getAsString();
+
+        response.close();
+        return new Lyric(artist, title, lyricsBody, id);
     }
 
-    private int getSongId(String songName) throws IOException, IndexOutOfBoundsException{
+    private int getSongId(String songName) throws IOException, IndexOutOfBoundsException {
         Request request = new Request.Builder()
                 .get()
                 .url("https://genius-song-lyrics1.p.rapidapi.com/search?q=" + songName + "&per_page=1")
                 .addHeader("x-rapidapi-host", "genius-song-lyrics1.p.rapidapi.com")
-                .addHeader("x-rapidapi-key", "094a1d91b7mshe28788dd3c1f8dep15b53ejsn0c2b63918b62")
+                .addHeader("x-rapidapi-key", apiKey)
                 .build();
 
-        Response response = null;
-        JsonObject jsonObject = null;
+        Response response = client.newCall(request).execute();
+        JsonObject jsonObject = JsonParser.parseString(response.body().string()).getAsJsonObject();
 
-        response = client.newCall(request).execute();
-        jsonObject = JsonParser.parseString(response.body().string()).getAsJsonObject();
-
+        response.close();
         return jsonObject.getAsJsonObject("response")
                 .getAsJsonArray("hits")
                 .get(0).getAsJsonObject()
