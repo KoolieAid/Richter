@@ -62,8 +62,8 @@ public class SponsorblockClient {
 
                 JsonArray positionsInSeconds = segmentObject.get("segment").getAsJsonArray();
 
-                long start = (long)(positionsInSeconds.get(0).getAsFloat() * 1000);
-                long end = (long)(positionsInSeconds.get(1).getAsFloat() * 1000);
+                long start = (long) (positionsInSeconds.get(0).getAsFloat() * 1000);
+                long end = (long) (positionsInSeconds.get(1).getAsFloat() * 1000);
 
                 segments.add(new Segment(start, end));
             }

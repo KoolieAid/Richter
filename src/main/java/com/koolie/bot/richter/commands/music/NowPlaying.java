@@ -73,17 +73,15 @@ public class NowPlaying implements TextCommand {
 
         GuildConfig config = GuildConfig.of(message.getGuild().getIdLong());
 
-        if (config.isSegmentSkippingEnabled()) {
-            List<Segment> segments = SponsorblockClient.getSegments(track, message.getGuild().getIdLong());
-            if (segments != null) {
-                long sum = 0;
-                for (Segment segment : segments) {
-                    sum += segment.length();
-                }
-
-                String skippedString = MusicUtil.getReadableMusicTime(track.getDuration() - sum);
-                outString += " *[" + skippedString + "] without segments*";
+        List<Segment> segments = SponsorblockClient.getSegments(track, message.getGuild().getIdLong());
+        if (!segments.isEmpty()) {
+            long sum = 0;
+            for (Segment segment : segments) {
+                sum += segment.length();
             }
+
+            String skippedString = MusicUtil.getReadableMusicTime(track.getDuration() - sum);
+            outString += " *[" + skippedString + "] without segments*";
         }
 
         /*
