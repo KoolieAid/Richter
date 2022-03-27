@@ -11,6 +11,7 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import com.sedmelluq.discord.lavaplayer.track.TrackMarker;
+import io.sentry.Sentry;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -110,6 +111,11 @@ public class AudioPlayerEventListener extends AudioEventAdapter {
     @Override
     public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
         LoggerFactory.getLogger(this.getClass()).error("Exception Occurred while playing track", exception);
+        Sentry.captureException(exception, "Exception Occurred while playing track");
+        EmbedBuilder builder = new EmbedBuilder()
+                .setColor(Color.RED)
+                .setTitle("Error Occurred while playing track");
+        sendMessageToChannel(builder.build(), false);
     }
 
     @Override

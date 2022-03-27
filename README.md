@@ -20,4 +20,4 @@
 - To play music use `=play <url>` or `=play <query>`
 
 
-##[Join the Support Server](https://discord.gg/Z2kB8GRBag)
+## [Join the Support Server](https://discord.gg/Z2kB8GRBag)
