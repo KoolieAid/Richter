@@ -17,6 +17,7 @@ public class BotConfigManager {
     private @Getter static String DB_URL;
     private @Getter static String DB_USER;
     private @Getter static String DB_PASS;
+    private @Getter static String rapidApiKey;
     private BotConfigManager() {}
 
     public static void loadJSON() throws FileNotFoundException {
@@ -30,6 +31,7 @@ public class BotConfigManager {
         DB_URL = jsonObject.get("database_address").getAsString();
         DB_USER = jsonObject.get("database_user").getAsString();
         DB_PASS = jsonObject.get("database_password").getAsString();
+        rapidApiKey = jsonObject.get("rapid_api_key").getAsString();
     }
 
 }
