@@ -51,7 +51,10 @@ public class SponsorblockClient {
 
         try {
             Response response = client.newCall(request).execute();
-            if (!response.isSuccessful()) return Collections.emptyList();
+            if (!response.isSuccessful()) {
+                response.close();
+                return Collections.emptyList();
+            }
 
             List<Segment> segments = new ArrayList<>();
 
