@@ -37,7 +37,7 @@ public class SkipSegment implements TextCommand {
     @Nullable
     @Override
     public String[] getAliases() {
-        return new String[]{"skipsegment", "segmentskipping", "segmentskip", "sponsorblock", "blocksponsors"};
+        return new String[]{"skipsegment", "segmentskipping", "segmentskip", "sponsorblock", "blocksponsors", "segments", "segment"};
     }
 
     @Override
