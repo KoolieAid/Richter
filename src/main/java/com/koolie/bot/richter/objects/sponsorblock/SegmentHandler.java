@@ -24,7 +24,9 @@ public class SegmentHandler implements TrackMarkerHandler {
         if (!(state == MarkerState.REACHED || state == MarkerState.LATE)) return;
 
         Segment segment = segments.get(segmentIndex);
-        track.setPosition(segment.getEnd());
+
+        if (segment.getEnd() > track.getPosition())
+            track.setPosition(segment.getEnd());
 
         segmentIndex++;
 
