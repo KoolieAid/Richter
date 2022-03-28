@@ -71,6 +71,23 @@ public class SponsorblockClient {
                 segments.add(new Segment(start, end));
             }
 
+            // Unused code because I found a better way to fix the issue
+//            // Merge segments that are colliding with each other
+//            for (int i = 0; i < segments.size(); i++) {
+//                for (int j = i + 1; j < segments.size(); j++) {
+//                    if (Math.max(segments.get(i).getStart(), segments.get(j).getStart()) <
+//                            Math.min(segments.get(i).getEnd(), segments.get(j).getEnd())) {
+//
+//                        // Merge the two segments
+//                        segments.get(i).setStart(Math.min(segments.get(i).getStart(), segments.get(j).getStart()));
+//                        segments.get(i).setEnd(Math.max(segments.get(i).getEnd(), segments.get(j).getEnd()));
+//
+//                        // Remove the second segment
+//                        segments.remove(j);
+//                    }
+//                }
+//            }
+
             response.body().close();
             return segments;
         } catch (IOException e) {

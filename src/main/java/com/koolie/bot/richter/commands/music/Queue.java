@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -195,12 +196,12 @@ public class Queue implements TextCommand {
 
         private void invalidate() {
             if (hook == null) {
-                jda.getTextChannelById(channelId).editMessageComponentsById(messageId, actionRow.asDisabled()).queue();
+                jda.getTextChannelById(channelId).editMessageComponentsById(messageId, Collections.emptyList()).queue();
                 jda.removeEventListener(this);
                 return;
             }
             hook.editOriginalComponents()
-                    .setActionRows(actionRow.asDisabled())
+                    .setActionRows()
                     .queue();
 
             hook.getJDA().removeEventListener(this);

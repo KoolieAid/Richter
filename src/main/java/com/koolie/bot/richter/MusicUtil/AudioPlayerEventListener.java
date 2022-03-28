@@ -114,7 +114,7 @@ public class AudioPlayerEventListener extends AudioEventAdapter {
         Sentry.captureException(exception, "Exception Occurred while playing track");
         EmbedBuilder builder = new EmbedBuilder()
                 .setColor(Color.RED)
-                .setTitle("Error Occurred while playing track");
+                .setTitle("Error Occurred while playing track: " + exception.getMessage());
         sendMessageToChannel(builder.build(), false);
     }
 
