@@ -8,7 +8,6 @@ import com.koolie.bot.richter.util.BotConfigManager;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ScanResult;
 import io.sentry.Sentry;
-import io.sentry.SentryLevel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
@@ -140,8 +139,10 @@ public class EventHandler extends ListenerAdapter {
         if (!args[0].startsWith(prefix)) return;
         String cmd = args[0].replaceFirst(prefix, "").toLowerCase();
 
+        if (!textCommands.containsKey(cmd) && !aliases.containsKey(cmd)) return;
+
         try {
-            if (textCommands.get(cmd) != null && aliases.get(cmd) == null) {
+            if (textCommands.containsKey(cmd) && !aliases.containsKey(cmd)) {
                 textCommands.get(cmd).execute(event.getMessage());
                 return;
             }
@@ -172,6 +173,8 @@ public class EventHandler extends ListenerAdapter {
                                                 
                         I'm usually just used for my music, but some people also use my `team` feature, where I randomly assign people into a team.
                         I also support Discord Game activities, just type /activity on a channel to activate it.
+                        The most useful feature I have is the segment skipping feature, which is activated by typing `=skipsegments` on a channel.
+                        It automatically skips the non-music parts of a music video, or intermission/credits of a song.
                                                 
                         My prefix is `=`. To get started, just type `=help`.
                                                 
