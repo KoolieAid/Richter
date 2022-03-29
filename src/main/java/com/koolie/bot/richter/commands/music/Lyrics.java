@@ -151,6 +151,7 @@ public class Lyrics implements TextCommand {
     }
 
     private int getSongId(String songName) throws IOException, IndexOutOfBoundsException {
+        songName = songName.replaceAll(" ", "%20");
         Request request = new Request.Builder()
                 .get()
                 .url("https://genius-song-lyrics1.p.rapidapi.com/search?q=" + songName + "&per_page=1")
