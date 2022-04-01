@@ -12,12 +12,12 @@ public class InteractionContext implements Context{
     }
 
     @Override
-    public RestAction reply(String message) {
+    public RestAction<?> reply(String message) {
         return interaction.reply(message);
     }
 
     @Override
-    public RestAction replyEmbeds(MessageEmbed embed) {
+    public RestAction<?> replyEmbeds(MessageEmbed embed) {
         return interaction.replyEmbeds(embed);
     }
 

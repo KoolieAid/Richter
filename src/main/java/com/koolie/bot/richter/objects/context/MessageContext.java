@@ -11,12 +11,12 @@ public class MessageContext implements Context{
     }
 
     @Override
-    public RestAction reply(String message) {
+    public RestAction<?> reply(String message) {
         return this.message.reply(message);
     }
 
     @Override
-    public RestAction replyEmbeds(MessageEmbed embed) {
+    public RestAction<?> replyEmbeds(MessageEmbed embed) {
         return this.message.replyEmbeds(embed);
     }
 
