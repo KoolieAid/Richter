@@ -3,7 +3,7 @@ package com.koolie.bot.richter.commands.music;
 import com.koolie.bot.richter.MusicUtil.MusicManager;
 import com.koolie.bot.richter.commands.Interfaces.Command;
 import com.koolie.bot.richter.commands.Interfaces.TextCommand;
-import com.koolie.bot.richter.objects.Context;
+import com.koolie.bot.richter.objects.context.MessageContext;
 import com.koolie.bot.richter.util.MusicUtil;
 import net.dv8tion.jda.api.entities.AudioChannel;
 import net.dv8tion.jda.api.entities.Message;
@@ -93,7 +93,7 @@ public class PlayNext implements TextCommand {
             query = "ytsearch:" + query;
         }
 
-        MusicManager.loadToGuild(new Context(message), query, true);
+        MusicManager.loadToGuild(new MessageContext(message), query, true);
 
         MusicManager musicManager = MusicManager.of(message.getGuild());
         if (musicManager.audioPlayer.isPaused()) {

@@ -4,7 +4,9 @@ import com.koolie.bot.richter.MusicUtil.MusicManager;
 import com.koolie.bot.richter.commands.Interfaces.AutoSlashCommand;
 import com.koolie.bot.richter.commands.Interfaces.ContextCommand;
 import com.koolie.bot.richter.commands.Interfaces.TextCommand;
-import com.koolie.bot.richter.objects.Context;
+import com.koolie.bot.richter.objects.context.Context;
+import com.koolie.bot.richter.objects.context.InteractionContext;
+import com.koolie.bot.richter.objects.context.MessageContext;
 import com.koolie.bot.richter.util.MusicUtil;
 import net.dv8tion.jda.api.entities.AudioChannel;
 import net.dv8tion.jda.api.entities.Message;
@@ -57,19 +59,19 @@ public class Play implements TextCommand, ContextCommand, AutoSlashCommand {
         return "play";
     }
 
-    @Override //TODO: Test this
+    @Override
     public void execute(@NotNull Message message) {
-        load(new Context(message), message.getContentRaw());
+        load(new MessageContext(message), message.getContentRaw());
     }
 
     @Override
     public void onContext(MessageContextInteractionEvent event) {
-        load(new Context(event), "dummy " + event.getInteraction().getTarget().getContentRaw());
+        load(new InteractionContext(event), "ignored " + event.getInteraction().getTarget().getContentRaw());
     }
 
     @Override
     public void onSlash(SlashCommandInteractionEvent event) {
-        load(new Context(event), "dummy " + event.getInteraction().getOption("query").getAsString());
+        load(new InteractionContext(event), "ignored " + event.getInteraction().getOption("query").getAsString());
     }
 
     @Override
