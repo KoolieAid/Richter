@@ -1,7 +1,7 @@
 package com.koolie.bot.richter.MusicUtil;
 
 import com.koolie.bot.richter.SourceManagers.SpotifySourceManager;
-import com.koolie.bot.richter.objects.Context;
+import com.koolie.bot.richter.objects.context.Context;
 import com.koolie.bot.richter.objects.guild.GuildConfig;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
