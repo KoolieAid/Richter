@@ -57,24 +57,43 @@ public class Play implements TextCommand, ContextCommand, AutoSlashCommand {
         return "play";
     }
 
+    @Override //TODO: Test this
+    public void execute(@NotNull Message message) {
+        load(new Context(message), message.getContentRaw());
+    }
+
     @Override
-    public void execute(Message message) {
-        AudioChannel vChannel = message.getMember().getVoiceState().getChannel();
+    public void onContext(MessageContextInteractionEvent event) {
+        load(new Context(event), "dummy " + event.getInteraction().getTarget().getContentRaw());
+    }
+
+    @Override
+    public void onSlash(SlashCommandInteractionEvent event) {
+        load(new Context(event), "dummy " + event.getInteraction().getOption("query").getAsString());
+    }
+
+    @Override
+    public void completeOption(CommandAutoCompleteInteraction interaction) {
+        MusicManager.autoComplete(interaction.getFocusedOption().getValue(), interaction);
+    }
+
+    private void load(Context context, String rawText) {
+        AudioChannel vChannel = context.getMember().getVoiceState().getChannel();
         if (vChannel == null) {
-            message.reply("Bro. You are not in a voice channel").queue();
+            context.reply("Bro. You are not in a voice channel").queue();
             return;
         }
 
-        if (!MusicUtil.isInSameChannel(vChannel, message.getMember(), message.getGuild().getSelfMember()) &&
-            MusicManager.isPresent(message.getGuild())) {
-            message.reply("Hey! Have some manners. Other people are using me.\nYou have to join the same voice channel to be able to use this command").queue();
+        if (!MusicUtil.isInSameChannel(vChannel, context.getMember(), context.getGuild().getSelfMember()) &&
+                MusicManager.isPresent(context.getGuild())) {
+            context.reply("Hey! Have some manners. Other people are using me.\nYou have to join the same voice channel to be able to use this command").queue();
             return;
         }
 
-        message.getChannel().sendTyping().queue();
-        String[] args = message.getContentRaw().split(" ", 2);
+        context.getChannel().sendTyping().queue();
+        String[] args = rawText.split(" ", 2);
         if (args.length == 1) {
-            message.reply("""
+            context.reply("""
                     ———————————No query?———————————
                     ⠀⣞⢽⢪⢣⢣⢣⢫⡺⡵⣝⡮⣗⢷⢽⢽⢽⣮⡷⡽⣜⣜⢮⢺⣜⢷⢽⢝⡽⣝
                     ⠸⡸⠜⠕⠕⠁⢁⢇⢏⢽⢺⣪⡳⡝⣎⣏⢯⢞⡿⣟⣷⣳⢯⡷⣽⢽⢯⣳⣫⠇
@@ -102,108 +121,19 @@ public class Play implements TextCommand, ContextCommand, AutoSlashCommand {
             query = "ytsearch:" + query;
         }
 
-        MusicManager.loadToGuild(new Context(message), query);
+        MusicManager.loadToGuild(context, query);
 
-        MusicManager musicManager = MusicManager.of(message.getGuild());
+        MusicManager musicManager = MusicManager.of(context.getGuild());
         if (musicManager.audioPlayer.isPaused()) {
             musicManager.audioPlayer.setPaused(false);
         }
         try {
-            message.getGuild().getAudioManager().openAudioConnection(vChannel);
+            context.getGuild().getAudioManager().openAudioConnection(vChannel);
         } catch (InsufficientPermissionException e) {
-            message.reply("I can't seem to connect to that channel").queue();
+            context.reply("I can't seem to connect to that channel").queue();
             musicManager.eventListener.queue.clear();
             musicManager.eventListener.nextTrack();
         }
-        message.getGuild().getAudioManager().setSelfDeafened(true);
-    }
-
-    @Override
-    public void onContext(MessageContextInteractionEvent event) {
-        AudioChannel vChannel = event.getMember().getVoiceState().getChannel();
-        if (vChannel == null) {
-            event.getInteraction().reply("Bro. You are not in a voice channel").setEphemeral(true).queue();
-            return;
-        }
-
-        if (!MusicUtil.isInSameChannel(vChannel, event.getMember(), event.getGuild().getSelfMember()) &&
-                MusicManager.isPresent(event.getGuild())) {
-            event.reply("Hey! Have some manners. Other people are using me.\nYou have to join the same voice channel to be able to use this command")
-                    .setEphemeral(true)
-                    .queue();
-            return;
-        }
-
-        event.getChannel().sendTyping().queue();
-
-        String query = event.getInteraction().getTarget().getContentRaw();
-
-        try {
-            new URL(query);
-        } catch (MalformedURLException e) {
-            query = "ytsearch:" + query;
-        }
-
-        MusicManager.loadToGuild(new Context(event.getInteraction()), query);
-
-        MusicManager musicManager = MusicManager.of(event.getGuild());
-        if (musicManager.audioPlayer.isPaused()) {
-            musicManager.audioPlayer.setPaused(false);
-        }
-        try {
-            event.getGuild().getAudioManager().openAudioConnection(vChannel);
-        } catch (InsufficientPermissionException e) {
-            event.getInteraction().getTarget().reply("I can't seem to connect to that channel").queue();
-            musicManager.eventListener.queue.clear();
-            musicManager.eventListener.nextTrack();
-        }
-        event.getGuild().getAudioManager().setSelfDeafened(true);
-    }
-
-    @Override
-    public void onSlash(SlashCommandInteractionEvent event) {
-        AudioChannel vChannel = event.getMember().getVoiceState().getChannel();
-        if (vChannel == null) {
-            event.reply("Bro. You are not in a voice channel").setEphemeral(true).queue();
-            return;
-        }
-
-        if (!MusicUtil.isInSameChannel(vChannel, event.getMember(), event.getGuild().getSelfMember()) &&
-                MusicManager.isPresent(event.getGuild())) {
-            event.reply("Hey! Have some manners. Other people are using me.\nYou have to join the same voice channel to be able to use this command")
-                    .setEphemeral(true)
-                    .queue();
-            return;
-        }
-
-        event.getChannel().sendTyping().queue();
-        String query = event.getInteraction().getOption("query").getAsString();
-
-        try {
-            new URL(query);
-
-        } catch (MalformedURLException e) {
-            query = "ytsearch:" + query;
-        }
-
-        MusicManager.loadToGuild(new Context(event), query);
-
-        MusicManager musicManager = MusicManager.of(event.getGuild());
-        if (musicManager.audioPlayer.isPaused()) {
-            musicManager.audioPlayer.setPaused(false);
-        }
-        try {
-            event.getGuild().getAudioManager().openAudioConnection(vChannel);
-        } catch (InsufficientPermissionException e) {
-            event.reply("I can't seem to connect to that channel").setEphemeral(true).queue();
-            musicManager.eventListener.queue.clear();
-            musicManager.eventListener.nextTrack();
-        }
-        event.getGuild().getAudioManager().setSelfDeafened(true);
-    }
-
-    @Override
-    public void completeOption(CommandAutoCompleteInteraction interaction) {
-        MusicManager.autoComplete(interaction.getFocusedOption().getValue(), interaction);
+        context.getGuild().getAudioManager().setSelfDeafened(true);
     }
 }

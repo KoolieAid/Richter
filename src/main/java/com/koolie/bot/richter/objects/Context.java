@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.requests.RestAction;
 
+//TODO: Make this an interface
 public class Context {
     Message message;
     IReplyCallback interaction;
@@ -53,5 +54,12 @@ public class Context {
 
     public User getUser() {
         return getAuthor();
+    }
+
+    public Member getMember() {
+        if (this.message != null) {
+            return this.message.getMember();
+        }
+        return this.interaction.getMember();
     }
 }
