@@ -20,6 +20,7 @@ public class Eval implements TextCommand {
             import java.util.*;
             import java.math.*;
             import net.dv8tion.jda.api.entities.*;
+            import com.koolie.bot.richter.MusicUtil.*;
             """;
     private final ScriptEngine engine;
 

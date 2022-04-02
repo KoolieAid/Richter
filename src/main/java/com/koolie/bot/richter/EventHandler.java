@@ -16,6 +16,7 @@ import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -105,21 +106,35 @@ public class EventHandler extends ListenerAdapter {
 
     @Override
     public void onGuildVoiceLeave(@NotNull GuildVoiceLeaveEvent event) {
-        //Triggers when the bot leaves a voice channel
+        // Triggers when the bot leaves a voice channel
         if (event.getMember().getIdLong() == event.getJDA().getSelfUser().getIdLong()) {
             MusicManager.onLeave(event.getGuild());
         }
 
-        //TODO: Figure out what to do when it plays another track since trackStart() cancels the leave
-        //Triggers when someone leaves the bot alone in a channel
+        // onTrackStart event has a connection to this code.
+        // Triggers when someone leaves the bot alone in a channel
         if (event.getChannelLeft().getMembers().size() == 1) {
             if (event.getChannelLeft().getMembers().get(0).getIdLong() == event.getJDA().getSelfUser().getIdLong()) {
-//                MusicManagerFactory.timerLeave(event.getGuild());
-                event.getGuild().getAudioManager().closeAudioConnection();
-                MusicManager manager = MusicManager.of(event.getGuild());
-                EmbedBuilder embedBuilder = new EmbedBuilder();
-                embedBuilder.setDescription("I've left the channel due to inactivity");
-                manager.eventListener.sendMessageToChannel(embedBuilder.build());
+                MusicManager.timerLeave(event.getGuild());
+            }
+        }
+    }
+
+    @Override
+    public void onGuildVoiceMove(@NotNull GuildVoiceMoveEvent event) {
+        // Checker when bot is moved to a lone channel
+        if (event.getMember().equals(event.getGuild().getSelfMember())) {
+            if (event.getChannelJoined().getMembers().size() == 1) {
+                if (event.getChannelJoined().getMembers().size() == 1) {
+                    MusicManager.timerLeave(event.getGuild());
+                }
+            }
+        }
+
+        // Checker when user leaves bot alone in channel
+        if (event.getChannelLeft().getMembers().size() == 1) {
+            if (event.getChannelLeft().getMembers().get(0).equals(event.getGuild().getSelfMember())) {
+                MusicManager.timerLeave(event.getGuild());
             }
         }
     }
