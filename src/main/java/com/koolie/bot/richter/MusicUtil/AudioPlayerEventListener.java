@@ -69,6 +69,7 @@ public class AudioPlayerEventListener extends AudioEventAdapter {
         sendMessageToChannel(embedBuilder.build(), true);
 
         //if leave is scheduled, cancel it
+        if (jda.getTextChannelById(channelId).getGuild().getAudioManager().getConnectedChannel().getMembers().size() == 1) return;
         cancelLeave();
     }
 
@@ -182,6 +183,7 @@ public class AudioPlayerEventListener extends AudioEventAdapter {
         if (leaveSchedule == null) return;
         leaveSchedule.cancel(true);
         leaveSchedule = null;
+        LoggerFactory.getLogger("Leave Scheduler").info("Cancelled Leave Schedule");
     }
 
     public void scheduleLeave() {
@@ -191,7 +193,7 @@ public class AudioPlayerEventListener extends AudioEventAdapter {
     public void scheduleLeave(int delay, TimeUnit unit) {
         if (leaveSchedule != null) return;
         leaveSchedule = ThreadUtil.getScheduler().schedule(new LeaveChannel(channelId), delay, unit);
-        LoggerFactory.getLogger("Schedule Leave").debug("Leave scheduled");
+        LoggerFactory.getLogger("Leave Scheduler").info("Leave scheduled");
     }
 
     public boolean isLeaving() {
@@ -211,6 +213,9 @@ public class AudioPlayerEventListener extends AudioEventAdapter {
             Queue<AudioTrack> q = MusicManager.of(jda.getTextChannelById(channelId).getGuild()).eventListener.queue;
             q.clear();
             jda.getTextChannelById(channelId).getGuild().getAudioManager().closeAudioConnection();
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.setDescription("I've left the channel due to inactivity");
+            sendMessageToChannel(embedBuilder.build(), false);
         }
     }
 }
