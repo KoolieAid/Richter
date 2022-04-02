@@ -5,7 +5,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.koolie.bot.richter.objects.guild.GuildConfig;
+import com.koolie.bot.richter.threading.ThreadUtil;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.TrackMarker;
 import io.sentry.Sentry;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -18,12 +20,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class SponsorblockClient {
     public static final OkHttpClient client = new OkHttpClient();
     private static final Logger logger = LoggerFactory.getLogger(SponsorblockClient.class);
 
     private static final HashMap<String, List<Segment>> segmentCache = new HashMap<>();
+
+    public static void putSegmentsAsync(AudioTrack track, long guildId) {
+        CompletableFuture.runAsync(() -> {
+            List<Segment> segments = getSegments(track, guildId);
+            if (segments.isEmpty()) return;
+            track.setMarker(new TrackMarker(segments.get(0).getStart(), new SegmentHandler(track, segments)));
+        }, ThreadUtil.getThreadExecutor());
+    }
 
     public static List<Segment> getSegments(AudioTrack track, long guildId) {
         GuildConfig config = GuildConfig.of(guildId);

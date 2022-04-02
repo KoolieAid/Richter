@@ -1,8 +1,6 @@
 package com.koolie.bot.richter.MusicUtil;
 
 import com.koolie.bot.richter.commands.music.RepeatMode;
-import com.koolie.bot.richter.objects.sponsorblock.Segment;
-import com.koolie.bot.richter.objects.sponsorblock.SegmentHandler;
 import com.koolie.bot.richter.objects.sponsorblock.SponsorblockClient;
 import com.koolie.bot.richter.threading.ThreadUtil;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
@@ -10,7 +8,6 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
-import com.sedmelluq.discord.lavaplayer.track.TrackMarker;
 import io.sentry.Sentry;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -20,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import java.awt.Color;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -63,10 +59,7 @@ public class AudioPlayerEventListener extends AudioEventAdapter {
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
-        List<Segment> segments = SponsorblockClient.getSegments(track, guildId);
-        if (!segments.isEmpty()) {
-            track.setMarker(new TrackMarker(segments.get(0).getStart(), new SegmentHandler(track, segments)));
-        }
+        SponsorblockClient.putSegmentsAsync(track, guildId);
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Now Playing")
