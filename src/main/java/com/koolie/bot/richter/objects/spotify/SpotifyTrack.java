@@ -13,16 +13,14 @@ import se.michaelthelin.spotify.exceptions.detailed.NotFoundException;
 import java.util.concurrent.CompletableFuture;
 
 public class SpotifyTrack extends DelegatedAudioTrack {
-    private final SpotifySourceManager sourceManager;
-    @Setter private String identifier = null;
+    private String identifier = null;
 
-    public SpotifyTrack(String title, String author, long length, String uri, SpotifySourceManager sourceManager) {
-        this(new AudioTrackInfo(title, author, length, null, false, uri), sourceManager);
+    public SpotifyTrack(String title, String author, long length, String uri) {
+        this(new AudioTrackInfo(title, author, length, null, false, uri));
     }
 
-    public SpotifyTrack(AudioTrackInfo trackInfo, SpotifySourceManager sourceManager) {
+    public SpotifyTrack(AudioTrackInfo trackInfo) {
         super(trackInfo);
-        this.sourceManager = sourceManager;
     }
 
     @Override
@@ -35,22 +33,18 @@ public class SpotifyTrack extends DelegatedAudioTrack {
         MusicManager.getAudioPlayerManager().loadItem("ytmsearch:" + trackName + " " + firstArtistName, new FunctionalResultHandler(null,
                 playlist -> {
                     AudioTrack track = playlist.getTracks().get(0);
-                    setIdentifier(track.getIdentifier());
                     future.complete(track);
                 }, () -> future.completeExceptionally(new FriendlyException("Could not find an equivalent track in the database.", FriendlyException.Severity.COMMON, new NotFoundException())),
                 future::completeExceptionally));
 
-        super.processDelegate((InternalAudioTrack) future.join(), executor);
+        AudioTrack track = future.join();
+        identifier = track.getInfo().identifier;
+        super.processDelegate((InternalAudioTrack) track, executor);
     }
 
     @Override
     public AudioTrack makeClone() {
-        return new SpotifyTrack(trackInfo, sourceManager);
-    }
-
-    @Override
-    public AudioSourceManager getSourceManager() {
-        return sourceManager;
+        return new SpotifyTrack(trackInfo);
     }
 
     @Override

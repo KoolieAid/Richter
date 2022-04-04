@@ -14,6 +14,8 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
+import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
+import net.dv8tion.jda.api.events.guild.UnavailableGuildLeaveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
@@ -137,6 +139,16 @@ public class EventHandler extends ListenerAdapter {
                 MusicManager.timerLeave(event.getGuild());
             }
         }
+    }
+
+    @Override
+    public void onGuildLeave(@NotNull GuildLeaveEvent event) {
+        MusicManager.guildManagerMap.remove(event.getGuild().getIdLong());
+    }
+
+    @Override
+    public void onUnavailableGuildLeave(@NotNull UnavailableGuildLeaveEvent event) {
+        MusicManager.guildManagerMap.remove(event.getGuildIdLong());
     }
 
     @Override
