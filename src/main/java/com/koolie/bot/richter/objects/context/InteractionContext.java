@@ -13,12 +13,12 @@ public class InteractionContext implements Context{
 
     @Override
     public RestAction<?> reply(String message) {
-        return interaction.reply(message);
+        return interaction.reply(message).setEphemeral(true);
     }
 
     @Override
     public RestAction<?> replyEmbeds(MessageEmbed embed) {
-        return interaction.replyEmbeds(embed);
+        return interaction.replyEmbeds(embed).setEphemeral(true);
     }
 
     @Override

@@ -33,13 +33,13 @@ dependencies {
     //Uses Native audio system
     implementation 'com.sedmelluq:jda-nas:1.1.0'
     //Sentry
-    implementation 'io.sentry:sentry:5.7.0'
+    implementation 'io.sentry:sentry:5.7.1'
     //Music Filters
     implementation 'com.github.natanbc:lavadsp:0.7.7'
     //Eval
     implementation 'org.codehaus.groovy:groovy-jsr223:3.0.10'
     //Class graph
-    implementation 'io.github.classgraph:classgraph:4.8.141'
+    implementation 'io.github.classgraph:classgraph:4.8.143'
     //Database
     implementation 'org.postgresql:postgresql:42.3.3'
     //Lombok
