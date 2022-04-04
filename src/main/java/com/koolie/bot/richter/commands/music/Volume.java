@@ -43,7 +43,7 @@ public class Volume implements TextCommand {
     }
 
     @Override
-    public void execute(Message message) {
+    public void execute(@NotNull Message message) {
         if (!MusicManager.isPresent(message.getGuild())) {
             message.getChannel().sendMessage("No music is currently playing").queue();
             return;

@@ -38,7 +38,7 @@ public class Upgrade implements TextCommand, SlashCommand {
     }
 
     @Override
-    public String getOperator() {
+    public @NotNull String getOperator() {
         return "upgrade";
     }
 
@@ -54,7 +54,7 @@ public class Upgrade implements TextCommand, SlashCommand {
     }
 
     @Override
-    public void execute(Message event) {
+    public void execute(@NotNull Message event) {
         if (!event.getGuild().getId().equals("759999287270047745")) {
             event.reply("This command is only for a private server").queue();
             return;

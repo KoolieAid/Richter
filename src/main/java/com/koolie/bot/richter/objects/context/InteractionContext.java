@@ -4,10 +4,10 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.requests.RestAction;
 
-public class InteractionContext implements Context{
+public class InteractionContext implements Context {
     private final IReplyCallback interaction;
 
-    public InteractionContext(IReplyCallback interaction){
+    public InteractionContext(IReplyCallback interaction) {
         this.interaction = interaction;
     }
 

@@ -35,7 +35,7 @@ public class Invite implements TextCommand {
     }
 
     @Override
-    public void execute(Message message) {
+    public void execute(@NotNull Message message) {
         EmbedBuilder ebuilder = new EmbedBuilder()
                 .setDescription("""
                         How to invite me:

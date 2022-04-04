@@ -41,7 +41,7 @@ public class Repeat implements TextCommand {
     }
 
     @Override
-    public void execute(Message message) {
+    public void execute(@NotNull Message message) {
         if (!MusicManager.isPresent(message.getGuild())) {
             message.reply("I'm not playing anything right now!").queue();
             return;

@@ -3,10 +3,10 @@ package com.koolie.bot.richter.objects.context;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.requests.RestAction;
 
-public class MessageContext implements Context{
+public class MessageContext implements Context {
     private final Message message;
 
-    public MessageContext(Message message){
+    public MessageContext(Message message) {
         this.message = message;
     }
 

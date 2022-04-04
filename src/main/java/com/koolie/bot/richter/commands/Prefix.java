@@ -37,7 +37,7 @@ public class Prefix implements TextCommand {
 
     //who the fuck used threads
     @Override
-    public void execute(Message event) {
+    public void execute(@NotNull Message event) {
         event.getChannel().sendTyping().queue();
         new Thread(() -> {
             String[] args = event.getContentRaw().split(" ");

@@ -12,17 +12,17 @@ public class Resume implements TextCommand {
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "Pause";
     }
 
     @Override
-    public String getDescription() {
+    public @NotNull String getDescription() {
         return "Pauses the music duh";
     }
 
     @Override
-    public CommandType getCommandType() {
+    public @NotNull CommandType getCommandType() {
         return CommandType.Music;
     }
 
@@ -33,7 +33,7 @@ public class Resume implements TextCommand {
     }
 
     @Override
-    public void execute(Message message) {
+    public void execute(@NotNull Message message) {
         if (!message.getGuild().getAudioManager().isConnected()) {
             message.reply("I'm not in a channel bro").queue();
             return;

@@ -65,7 +65,7 @@ public class Queue implements TextCommand {
     }
 
     @Override
-    public void execute(Message message) {
+    public void execute(@NotNull Message message) {
         if (!MusicManager.isPresent(message.getGuild())) {
             message.getChannel().sendMessage("I'm not playing music in the server right now. Play something with `=p`.").queue();
             return;

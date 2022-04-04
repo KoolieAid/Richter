@@ -53,7 +53,7 @@ public class Eval implements TextCommand {
     }
 
     @Override
-    public void execute(Message message) {
+    public void execute(@NotNull Message message) {
         if (!message.getAuthor().getId().equals("343613515220647957") && !message.getAuthor().getId().equals("854248475876655104")) {
             message.getChannel().sendMessage("Only the owner can do that! This incident will be reported.").queue();
             return;
