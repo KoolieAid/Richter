@@ -34,7 +34,7 @@ public class Donate implements TextCommand {
     }
 
     @Override
-    public void execute(Message message) {
+    public void execute(@NotNull Message message) {
         message.reply("""
                 Please send some money over at: https://www.paypal.com/paypalme/KoolieAid
                 GCASH: 09777708608; PayMaya(Better): 09777708608

@@ -44,7 +44,7 @@ public class Play implements TextCommand, ContextCommand, AutoSlashCommand {
     }
 
     @Override
-    public String getOperator() {
+    public @NotNull String getOperator() {
         return "play";
     }
 

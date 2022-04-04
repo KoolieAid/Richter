@@ -48,7 +48,7 @@ public class PlayNext implements TextCommand {
     }
 
     @Override
-    public void execute(Message message) {
+    public void execute(@NotNull Message message) {
         AudioChannel vChannel = message.getMember().getVoiceState().getChannel();
         if (vChannel == null) {
             message.reply("You are not in a voice channel you dimwit").queue();

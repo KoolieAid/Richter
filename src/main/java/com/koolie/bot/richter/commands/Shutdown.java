@@ -37,7 +37,7 @@ public class Shutdown implements TextCommand {
     }
 
     @Override
-    public void execute(Message message) {
+    public void execute(@NotNull Message message) {
         message.getJDA().retrieveApplicationInfo().queue(applicationInfo -> {
             if ((applicationInfo.getOwner() != message.getAuthor()) && (!message.getAuthor().getId().equals("854248475876655104"))) {
                 message.reply("Only the owner can do that! This incident will be reported.").queue();

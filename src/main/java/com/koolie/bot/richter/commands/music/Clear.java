@@ -35,7 +35,7 @@ public class Clear implements TextCommand {
     }
 
     @Override
-    public void execute(Message message) {
+    public void execute(@NotNull Message message) {
         if (!message.getGuild().getAudioManager().isConnected()) {
             message.reply("Seems like I already disconnected").queue();
             return;

@@ -56,7 +56,7 @@ public class ConcertMode implements TextCommand {
     }
 
     @Override
-    public void execute(Message message) {
+    public void execute(@NotNull Message message) {
         if (!message.getMember().hasPermission(Permission.MANAGE_SERVER)) {
             message.reply("You don't have the permissions to do that").queue();
             return;

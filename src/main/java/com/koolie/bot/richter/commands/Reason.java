@@ -75,7 +75,7 @@ public class Reason implements TextCommand {
     }
 
     @Override
-    public void execute(Message message) {
+    public void execute(@NotNull Message message) {
         message.reply(intro[random.nextInt(intro.length)] + " " +
                 scapeGoat[random.nextInt(intro.length)] + " " +
                 delay[random.nextInt(delay.length)]).queue();

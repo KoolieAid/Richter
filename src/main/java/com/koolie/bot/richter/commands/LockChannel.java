@@ -54,7 +54,7 @@ public class LockChannel implements TextCommand {
     }
 
     @Override
-    public void execute(Message event) {
+    public void execute(@NotNull Message event) {
         if (!event.getMember().hasPermission(Permission.MANAGE_SERVER)) {
             event.reply("You don't have the permissions to do that").queue();
             return;

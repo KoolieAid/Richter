@@ -40,7 +40,7 @@ public class Stats implements TextCommand {
     }
 
     @Override
-    public void execute(Message message) {
+    public void execute(@NotNull Message message) {
         Runtime runtime = Runtime.getRuntime();
         long usedMem = runtime.totalMemory() - runtime.freeMemory();
         long maxMem = runtime.maxMemory();

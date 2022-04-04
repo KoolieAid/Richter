@@ -17,7 +17,7 @@ public class Nick implements TextCommand {
     }
 
     @Override
-    public void execute(Message event) {
+    public void execute(@NotNull Message event) {
         String[] args = event.getContentRaw().split(" ", 3);
 
         if (event.getMentionedMembers().size() == 0) {

@@ -36,7 +36,7 @@ public class RemoveQueue implements TextCommand {
     }
 
     @Override
-    public String getOperator() {
+    public @NotNull String getOperator() {
         return "removequeue";
     }
 
@@ -46,7 +46,7 @@ public class RemoveQueue implements TextCommand {
     }
 
     @Override
-    public void execute(Message message) {
+    public void execute(@NotNull Message message) {
         if (!MusicManager.isPresent(message.getGuild())) {
             message.getChannel().sendMessage("No music is currently playing").queue();
             return;

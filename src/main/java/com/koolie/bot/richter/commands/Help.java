@@ -45,7 +45,7 @@ public class Help implements TextCommand {
     }
 
     @Override
-    public void execute(Message message) {
+    public void execute(@NotNull Message message) {
         if (message.getContentRaw().split(" ").length > 1) {
             message.replyEmbeds(getSpecific(message.getContentRaw().split(" ")[1])).queue();
             return;

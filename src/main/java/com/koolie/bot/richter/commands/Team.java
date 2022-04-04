@@ -24,7 +24,7 @@ public class Team implements TextCommand {
     }
 
     @Override
-    public void execute(Message message) {
+    public void execute(@NotNull Message message) {
         LinkedList<Member> mentionedMembers = new LinkedList<>(message.getMentionedMembers());
 
         if (mentionedMembers.size() < 2) {
