@@ -69,7 +69,7 @@ public class AudioPlayerEventListener extends AudioEventAdapter {
         sendMessageToChannel(embedBuilder.build(), true);
 
         //if leave is scheduled, cancel it
-        if (jda.getTextChannelById(channelId).getGuild().getAudioManager().getConnectedChannel().getMembers().size() == 1) return;
+        if (jda.getGuildById(guildId).getAudioManager().getConnectedChannel().getMembers().size() == 1) return;
         cancelLeave();
     }
 
@@ -110,6 +110,7 @@ public class AudioPlayerEventListener extends AudioEventAdapter {
                 .setColor(Color.RED)
                 .setTitle("Error Occurred while playing track: " + exception.getMessage());
         sendMessageToChannel(builder.build(), false);
+        nextTrack();
     }
 
     @Override
