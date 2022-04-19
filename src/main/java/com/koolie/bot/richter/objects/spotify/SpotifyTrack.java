@@ -7,6 +7,7 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.*;
 import com.sedmelluq.discord.lavaplayer.track.playback.LocalAudioTrackExecutor;
+import io.sentry.Sentry;
 import lombok.Setter;
 import se.michaelthelin.spotify.exceptions.detailed.NotFoundException;
 
@@ -37,7 +38,13 @@ public class SpotifyTrack extends DelegatedAudioTrack {
                 }, () -> future.completeExceptionally(new FriendlyException("Could not find an equivalent track in the database.", FriendlyException.Severity.COMMON, new NotFoundException())),
                 future::completeExceptionally));
 
-        AudioTrack track = future.join();
+        AudioTrack track;
+        try {
+            track = future.join();
+        } catch (Exception e) {
+            Sentry.captureException(e, "Error loading track: " + trackName + " by " + firstArtistName);
+            throw e;
+        }
         identifier = track.getInfo().identifier;
         super.processDelegate((InternalAudioTrack) track, executor);
     }
