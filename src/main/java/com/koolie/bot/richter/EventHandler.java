@@ -27,6 +27,7 @@ import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -229,6 +230,15 @@ public class EventHandler extends ListenerAdapter {
 //          Commands.slash("play", "Plays music")
 //                  .addOption(OptionType.STRING, "query", "The song that you're looking for", true, true)
 //        ).queue();
+
+//        // Queue Command
+//        var q = Commands.slash("queue", "Shows the current queue");
+//
+//        OptionData data = new OptionData(OptionType.INTEGER, "page", "The page you want to see", false, false)
+//                .setRequiredRange(Integer.MIN_VALUE, Integer.MAX_VALUE);
+//
+//        q.addOptions(data);
+
     }
 
     @Override
