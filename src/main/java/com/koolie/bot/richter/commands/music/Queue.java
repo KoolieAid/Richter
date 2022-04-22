@@ -1,6 +1,7 @@
 package com.koolie.bot.richter.commands.music;
 
 import com.koolie.bot.richter.MusicUtil.MusicManager;
+import com.koolie.bot.richter.commands.Interfaces.SlashCommand;
 import com.koolie.bot.richter.commands.Interfaces.TextCommand;
 import com.koolie.bot.richter.objects.Ignored;
 import com.koolie.bot.richter.threading.ThreadUtil;
@@ -12,6 +13,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.InteractionHook;
@@ -30,7 +32,7 @@ import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class Queue implements TextCommand {
+public class Queue implements TextCommand, SlashCommand {
     public Queue() {
     }
 
@@ -64,10 +66,16 @@ public class Queue implements TextCommand {
         return new String[]{"q"};
     }
 
+    @NotNull
+    @Override
+    public String getEffectiveCommand() {
+        return "queue";
+    }
+
     @Override
     public void execute(@NotNull Message message) {
         if (!MusicManager.isPresent(message.getGuild())) {
-            message.getChannel().sendMessage("I'm not playing music in the server right now. Play something with `=p`.").queue();
+            message.reply("I'm not playing music in the server right now. Play something with `=p`.").queue();
             return;
         }
 
@@ -91,6 +99,35 @@ public class Queue implements TextCommand {
                 .setActionRows(queueMessage.getActionRow())
                 .queue(m -> queueMessage.setMessageId(m.getId()),
                         e -> message.getJDA().removeEventListener(queueMessage));
+    }
+
+    @Override
+    public void onSlash(SlashCommandInteractionEvent event) {
+        if (!MusicManager.isPresent(event.getGuild())) {
+            event.reply("I'm not playing music in the server right now. Play something with `=p`.").setEphemeral(true).queue();
+            return;
+        }
+
+        MusicManager manager = MusicManager.of(event.getGuild());
+
+        if (manager.eventListener.queue.size() == 0 && manager.audioPlayer.getPlayingTrack() == null) {
+            event.reply("There are no tracks queued").setEphemeral(true).queue();
+            return;
+        }
+
+        int page = 0;
+        if (event.getOption("page") != null) {
+            page = event.getOption("page").getAsInt() - 1;
+        }
+
+        QueueMessage queueMessage = new QueueMessage(event.getJDA(), event.getChannel().getIdLong(), manager.audioPlayer, manager.eventListener.queue, page);
+        event.getJDA().addEventListener(queueMessage);
+
+        event.replyEmbeds(queueMessage.makeEmbed())
+                .addActionRows(queueMessage.getActionRow())
+                .flatMap(InteractionHook::retrieveOriginal)
+                .queue(m -> queueMessage.setMessageId(m.getId()),
+                        e -> event.getJDA().removeEventListener(queueMessage));
     }
 
     @Ignored
@@ -192,6 +229,7 @@ public class Queue implements TextCommand {
 
         public void setMessageId(String messageId) {
             this.messageId = messageId;
+            LoggerFactory.getLogger(getClass()).info("Set message id to " + messageId);
         }
 
         private void invalidate() {
