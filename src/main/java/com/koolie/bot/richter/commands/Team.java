@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.User;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,39 +26,39 @@ public class Team implements TextCommand {
 
     @Override
     public void execute(@NotNull Message message) {
-        LinkedList<Member> mentionedMembers = new LinkedList<>(message.getMentionedMembers());
+        LinkedList<User> mentionedUsers = new LinkedList<>(message.getMentionedUsers());
 
-        if (mentionedMembers.size() < 2) {
+        if (mentionedUsers.size() < 2) {
             message.getChannel().sendMessage("You need at least 2 people to make a team!").queue();
             return;
         }
 
-        ArrayList<Member> team1 = new ArrayList<>();
-        ArrayList<Member> team2 = new ArrayList<>();
+        ArrayList<User> team1 = new ArrayList<>();
+        ArrayList<User> team2 = new ArrayList<>();
 
-        int cap = message.getMentionedMembers().size();
+        int cap = mentionedUsers.size();
 
-        Member extra = null;
+        User extra = null;
 
-        if (mentionedMembers.size() % 2 != 0) {
-            int index = random.nextInt(mentionedMembers.size());
-            extra = mentionedMembers.get(index);
+        if (mentionedUsers.size() % 2 != 0) {
+            int index = random.nextInt(mentionedUsers.size());
+            extra = mentionedUsers.get(index);
             cap--;
-            mentionedMembers.remove(index);
+            mentionedUsers.remove(index);
         }
 
         // Team 1
         for (int i = 0; i < cap / 2; i++) {
-            Member temp = mentionedMembers.get(random.nextInt(mentionedMembers.size()));
+            User temp = mentionedUsers.get(random.nextInt(mentionedUsers.size()));
             team1.add(temp);
-            mentionedMembers.remove(temp);
+            mentionedUsers.remove(temp);
         }
 
         // Team 2
         for (int i = 0; i < cap / 2; i++) {
-            Member temp = mentionedMembers.get(random.nextInt(mentionedMembers.size()));
+            User temp = mentionedUsers.get(random.nextInt(mentionedUsers.size()));
             team2.add(temp);
-            mentionedMembers.remove(temp);
+            mentionedUsers.remove(temp);
         }
 
         // String Builders of teams
