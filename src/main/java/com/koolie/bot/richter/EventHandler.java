@@ -239,6 +239,12 @@ public class EventHandler extends ListenerAdapter {
 //
 //        q.addOptions(data);
 
+        // Feedback Command
+
+//        var f = Commands.slash("feedback", "Send feedback to the developers. Suggestions are also welcome!");
+//
+//        event.getJDA().getGuildById("931181353507123242").upsertCommand(f).queue();
+
     }
 
     @Override
