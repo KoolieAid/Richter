@@ -8,7 +8,7 @@ mainClassName = 'com.koolie.bot.richter.Richter'
 
 group 'com.koolie.bot'
 version '1.0'
-def jdaVersion = '5.0.0-alpha.10'
+def jdaVersion = '5.0.0-alpha.11'
 
 sourceCompatibility = targetCompatibility = 15
 
@@ -33,18 +33,18 @@ dependencies {
     //Uses Native audio system
     implementation 'com.sedmelluq:jda-nas:1.1.0'
     //Sentry
-    implementation 'io.sentry:sentry:5.7.2'
+    implementation 'io.sentry:sentry:5.7.3'
     //Music Filters
     implementation 'com.github.natanbc:lavadsp:0.7.7'
     //Eval
     implementation 'org.codehaus.groovy:groovy-jsr223:3.0.10'
     //Class graph
-    implementation 'io.github.classgraph:classgraph:4.8.143'
+    implementation 'io.github.classgraph:classgraph:4.8.146'
     //Database
-    implementation 'org.postgresql:postgresql:42.3.3'
+    implementation 'org.postgresql:postgresql:42.3.4'
     //Lombok
-    compileOnly 'org.projectlombok:lombok:1.18.22'
-    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
 }
 
 shadowJar.setProperty("archiveFileName", "Richter.jar")
