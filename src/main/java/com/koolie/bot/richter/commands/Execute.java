@@ -85,7 +85,7 @@ public class Execute implements ContextCommand {
             for (int i = 0; i < 5; i++) {
                 stringBuilder.append(e.getStackTrace()[i]).append("\n");
             }
-            event.getInteraction().reply("```" + stringBuilder + "```").queue();
+            event.getInteraction().reply("```" + stringBuilder + "```" + "This is automatically reported to the developer.").queue();
         }
     }
 }

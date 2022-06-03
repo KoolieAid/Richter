@@ -18,6 +18,9 @@ public class BotConfigManager {
     private @Getter static String DB_USER;
     private @Getter static String DB_PASS;
     private @Getter static String rapidApiKey;
+
+    private @Getter static String PAPISID;
+    private @Getter static String PSID;
     private BotConfigManager() {}
 
     public static void loadJSON() throws FileNotFoundException {
@@ -32,6 +35,9 @@ public class BotConfigManager {
         DB_USER = jsonObject.get("database_user").getAsString();
         DB_PASS = jsonObject.get("database_password").getAsString();
         rapidApiKey = jsonObject.get("rapid_api_key").getAsString();
+
+        PAPISID = jsonObject.get("youtube_PAPISid").getAsString();
+        PSID = jsonObject.get("youtube_PSid").getAsString();
     }
 
 }

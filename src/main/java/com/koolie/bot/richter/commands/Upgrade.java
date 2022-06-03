@@ -61,7 +61,7 @@ public class Upgrade implements TextCommand, SlashCommand {
         }
         Guild guild = event.getGuild();
 
-        if (event.getMentionedMembers().size() == 0) {
+        if (event.getMentions().getMembers().size() == 0) {
             event.reply("No user specified").queue();
             return;
         }
@@ -71,14 +71,9 @@ public class Upgrade implements TextCommand, SlashCommand {
             return;
         }
 
-        Iterator iterator = event.getMentionedMembers().iterator();
-
         Role roleObj = guild.getRoleById(roleId);
 
-        while (iterator.hasNext()) {
-            Member member = (Member) iterator.next();
-            guild.addRoleToMember(member, roleObj).queue();
-        }
+        event.getMentions().getMembers().forEach(member -> guild.addRoleToMember(member, roleObj).queue());
 
         event.reply("User(s) have been upgraded").queue();
     }

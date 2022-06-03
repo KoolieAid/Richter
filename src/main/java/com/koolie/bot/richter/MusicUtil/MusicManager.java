@@ -3,11 +3,13 @@ package com.koolie.bot.richter.MusicUtil;
 import com.koolie.bot.richter.SourceManagers.SpotifySourceManager;
 import com.koolie.bot.richter.objects.context.Context;
 import com.koolie.bot.richter.objects.guild.GuildConfig;
+import com.koolie.bot.richter.util.BotConfigManager;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.FunctionalResultHandler;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeHttpContextFilter;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.interactions.commands.CommandAutoCompleteInteraction;
@@ -74,6 +76,9 @@ public class MusicManager {
 
         audioPlayerManager.getConfiguration().setFilterHotSwapEnabled(true);
         audioPlayerManager.setTrackStuckThreshold(30000L);
+
+        YoutubeHttpContextFilter.setPAPISID(BotConfigManager.getPAPISID());
+        YoutubeHttpContextFilter.setPSID(BotConfigManager.getPSID());
     }
 
     public static void shutdown() {

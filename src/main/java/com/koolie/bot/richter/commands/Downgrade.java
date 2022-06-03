@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 
@@ -56,7 +57,7 @@ public class Downgrade implements TextCommand, SlashCommand {
         }
         Guild guild = event.getGuild();
 
-        if (event.getMentionedMembers().size() == 0) {
+        if (event.getMentions().getMembers().size() == 0) {
             event.reply("No user specified").queue();
             return;
         }
@@ -66,14 +67,13 @@ public class Downgrade implements TextCommand, SlashCommand {
             return;
         }
 
-        Iterator iterator = event.getMentionedMembers().iterator();
-
         Role roleObj = guild.getRoleById(roleId);
-
-        while (iterator.hasNext()) {
-            Member member = (Member) iterator.next();
-            guild.removeRoleFromMember(member, roleObj).queue();
+        if (roleObj == null) {
+            LoggerFactory.getLogger(this.getClass()).error("Role ID is incorrect");
+            return;
         }
+
+        event.getMentions().getMembers().forEach(member -> guild.removeRoleFromMember(member, roleObj).queue());
 
         event.reply("User(s) have been downgraded").queue();
     }
