@@ -26,7 +26,7 @@ public class Team implements TextCommand {
 
     @Override
     public void execute(@NotNull Message message) {
-        LinkedList<User> mentionedUsers = new LinkedList<>(message.getMentionedUsers());
+        LinkedList<User> mentionedUsers = new LinkedList<>(message.getMentions().getUsers());
 
         if (mentionedUsers.size() < 2) {
             message.getChannel().sendMessage("You need at least 2 people to make a team!").queue();

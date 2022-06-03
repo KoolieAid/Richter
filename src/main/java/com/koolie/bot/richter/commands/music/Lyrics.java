@@ -81,7 +81,8 @@ public class Lyrics implements TextCommand {
         try {
             lyric = getLyrics(getSongId(query));
         } catch (IOException e) {
-            Sentry.captureException(e, args[1]);
+            if (args.length > 1)
+                Sentry.captureException(e, args[1]);
             message.replyEmbeds(new EmbedBuilder()
                     .setColor(Color.RED)
                     .setTitle("Something went wrong while getting the lyrics")
@@ -137,10 +138,10 @@ public class Lyrics implements TextCommand {
 
         JsonObject lyricsJsonObject = jsonObject.getAsJsonObject("response").getAsJsonObject("lyrics");
 
-        JsonObject trackingData = lyricsJsonObject.getAsJsonObject("trackingData");
+        JsonObject trackingData = lyricsJsonObject.getAsJsonObject("tracking_data");
 
-        String artist = trackingData.getAsJsonPrimitive("Primary Artist").getAsString();
-        String title = trackingData.getAsJsonPrimitive("Title").getAsString();
+        String artist = trackingData.getAsJsonPrimitive("primary_artist").getAsString();
+        String title = trackingData.getAsJsonPrimitive("title").getAsString();
 
         int id = lyricsJsonObject.get("song_id").getAsInt();
 

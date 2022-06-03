@@ -20,18 +20,18 @@ public class Nick implements TextCommand {
     public void execute(@NotNull Message event) {
         String[] args = event.getContentRaw().split(" ", 3);
 
-        if (event.getMentionedMembers().size() == 0) {
+        if (event.getMentions().getMembers().size() == 0) {
             event.reply("Please include a user").queue();
             return;
         }
 
-        if (event.getMentionedMembers().get(0).isOwner()) {
+        if (event.getMentions().getMembers().get(0).isOwner()) {
             event.reply("The mentioned user is the owner of the server, means I can't change their nickname").queue();
             return;
         }
 
-        Member mentionedMember = event.getMentionedMembers().get(0);
-        String oldNick = event.getMentionedMembers().get(0).getEffectiveName();
+        Member mentionedMember = event.getMentions().getMembers().get(0);
+        String oldNick = event.getMentions().getMembers().get(0).getEffectiveName();
 
         if (!event.getGuild().getMember(event.getJDA().getSelfUser()).canInteract(mentionedMember)) {
             event.reply("I can't modify their nickname, because of role positions").queue();

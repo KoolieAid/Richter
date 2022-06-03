@@ -88,7 +88,7 @@ public class EventHandler extends ListenerAdapter {
             for (int i = 0; i < 5; i++) {
                 stringBuilder.append(e.getStackTrace()[i]).append("\n");
             }
-            event.reply("```" + stringBuilder + "```").setEphemeral(true).queue();
+            event.reply("```" + stringBuilder + "```" + "This is automatically reported to the developer.").setEphemeral(true).queue();
 
 //            event.getGuild().deleteCommandById(event.getCommandIdLong()).queue();
         }
@@ -186,7 +186,7 @@ public class EventHandler extends ListenerAdapter {
             for (int i = 0; i < 5; i++) {
                 stringBuilder.append(e.getStackTrace()[i]).append("\n");
             }
-            message.reply("```" + stringBuilder + "```").queue();
+            message.reply("```" + stringBuilder + "```" + "This is automatically reported to the developer.").queue();
         }
     }
 
