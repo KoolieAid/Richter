@@ -3,7 +3,7 @@ plugins {
     //Shading the jar file
     id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
-//Required for Shading of jar file
+// Required for Shading of jar file
 mainClassName = 'com.koolie.bot.richter.Richter'
 
 group 'com.koolie.bot'
@@ -20,29 +20,29 @@ repositories {
 }
 
 dependencies {
-    //JDA Library
+    // JDA Library
     implementation("net.dv8tion:JDA:$jdaVersion"){
         exclude group: 'club.minnced', module: 'opus-java'
     }
-    //Logger
+    // Logger
     implementation('ch.qos.logback:logback-classic:1.2.11')
-    //Spotify Web API
+    // Spotify Web API
     implementation 'se.michaelthelin.spotify:spotify-web-api-java:7.1.0'
-    //Fork of LavaPlayer since original LavaPlayer is unmaintained
-    implementation 'com.github.walkyst:lavaplayer-fork:1.3.97'
-    //Uses Native audio system
+    // Fork of LavaPlayer since original LavaPlayer is unmaintained
+    implementation 'com.github.walkyst:lavaplayer-fork:1.3.97.1'
+    // Uses Native audio system
     implementation 'com.sedmelluq:jda-nas:1.1.0'
-    //Sentry
+    // Sentry
     implementation 'io.sentry:sentry:5.7.4'
-    //Music Filters
+    // Music Filters
     implementation 'com.github.natanbc:lavadsp:0.7.7'
-    //Eval
+    // Eval
     implementation 'org.codehaus.groovy:groovy-jsr223:3.0.10'
-    //Class graph
+    // Class graph
     implementation 'io.github.classgraph:classgraph:4.8.146'
-    //Database
+    // Database
     implementation 'org.postgresql:postgresql:42.3.4'
-    //Lombok
+    // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
 }
