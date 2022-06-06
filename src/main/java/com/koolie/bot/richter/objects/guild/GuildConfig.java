@@ -138,4 +138,19 @@ public class GuildConfig {
 
         return this;
     }
+
+    public static boolean updateDatabase(String column, Object data, long guildId) {
+        try {
+            Statement statement = connection.createStatement();
+
+            String query = "UPDATE servers SET " + column + " = " + data.toString() + " WHERE server_id = " + guildId + ";";
+
+            statement.executeUpdate(query);
+            statement.close();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
