@@ -6,12 +6,14 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.hooks.EventListener;
 import org.jetbrains.annotations.NotNull;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.awt.*;
+import java.util.HashMap;
 
 public class Eval implements TextCommand {
     static String imports = """
@@ -24,8 +26,11 @@ public class Eval implements TextCommand {
             """;
     private final ScriptEngine engine;
 
+    private final HashMap<String, EventListener> customListeners;
+
     public Eval() {
         engine = new ScriptEngineManager().getEngineByName("groovy");
+        customListeners = new HashMap<>();
     }
 
     @NotNull
