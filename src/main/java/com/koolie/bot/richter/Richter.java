@@ -25,17 +25,9 @@ import java.util.concurrent.TimeUnit;
 public class Richter {
     public static ShardManager shardManager;
 
-    public Richter() throws LoginException{
-        try {
-            BotConfigManager.loadJSON();
-        } catch (FileNotFoundException e) {
-            System.out.println("No config file found. Please create one.");
-
-            System.out.println("Stacktrace: ");
-            e.printStackTrace();
-            return;
-        }
-
+    public Richter() throws LoginException, FileNotFoundException {
+        
+        BotConfigManager.loadJSON();
         GuildConfig.loadDatabase();
 
         shardManager = DefaultShardManagerBuilder.createDefault(BotConfigManager.getToken())
@@ -48,11 +40,22 @@ public class Richter {
         MusicManager.loadSources();
     }
 
-    public static void main(String[] args) throws LoginException {
+    public static void main(String[] args) {
+
         try {
             new Richter();
-        } catch ( LoginException e ) {
+
+        } catch (LoginException e) {
+
             System.out.println("Login failed. Please check your token.");
+
+        } catch (FileNotFoundException e) {
+
+            System.out.println("No config file found. Please create one.");
+
+            System.out.println("Stacktrace: ");
+            e.printStackTrace();
+            return;
         }
     }
 
