@@ -17,7 +17,7 @@ import java.time.Duration;
 
 public class ChatAI implements TextCommand {
     public ChatAI() {
-        service = new OpenAiService("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", Duration.ofSeconds(10));
+        service = new OpenAiService("redacted", Duration.ofSeconds(10));
     }
 
     @NotNull
