@@ -36,6 +36,7 @@ import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 public class EventHandler extends ListenerAdapter {
     private static final Logger log = LoggerFactory.getLogger("Main Event Handler");
@@ -154,6 +155,8 @@ public class EventHandler extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
+        CompletableFuture.runAsync(() -> {
+
         if (event.getAuthor().isBot()) return;
         if (!event.getMessage().isFromGuild()) return;
         if (!jdaReady) {
@@ -188,6 +191,9 @@ public class EventHandler extends ListenerAdapter {
             }
             message.reply("```" + stringBuilder + "```" + "This is automatically reported to the developer.").queue();
         }
+
+
+        });
     }
 
     @Override
