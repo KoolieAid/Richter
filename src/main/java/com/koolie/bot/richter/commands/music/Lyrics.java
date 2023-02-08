@@ -18,7 +18,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
 
 public class Lyrics implements TextCommand {
     private static final String apiKey = BotConfigManager.getRapidApiKey();
@@ -78,39 +77,37 @@ public class Lyrics implements TextCommand {
             query = args[1];
         }
 
-        CompletableFuture.runAsync(() -> {
-            Lyric lyric;
-            try {
-                lyric = getLyrics(getSongId(query));
-            } catch (IOException e) {
-                if (args.length > 1)
-                    Sentry.captureException(e, args[1]);
-                message.replyEmbeds(new EmbedBuilder()
-                        .setColor(Color.RED)
-                        .setTitle("Something went wrong while getting the lyrics")
-                        .setDescription("Error: `" + e.getMessage() + "`")
-                        .build()).queue();
-                return;
-            } catch (IndexOutOfBoundsException e) {
-                message.replyEmbeds(new EmbedBuilder()
-                        .setColor(Color.RED)
-                        .setTitle("No lyrics found for: " + query)
-                        .build()).queue();
-                return;
-            }
+        Lyric lyric;
+        try {
+            lyric = getLyrics(getSongId(query));
+        } catch (IOException e) {
+            if (args.length > 1)
+                Sentry.captureException(e, args[1]);
+            message.replyEmbeds(new EmbedBuilder()
+                    .setColor(Color.RED)
+                    .setTitle("Something went wrong while getting the lyrics")
+                    .setDescription("Error: `" + e.getMessage() + "`")
+                    .build()).queue();
+            return;
+        } catch (IndexOutOfBoundsException e) {
+            message.replyEmbeds(new EmbedBuilder()
+                    .setColor(Color.RED)
+                    .setTitle("No lyrics found for: " + query)
+                    .build()).queue();
+            return;
+        }
 
-            EmbedBuilder embedBuilder = new EmbedBuilder();
+        EmbedBuilder embedBuilder = new EmbedBuilder();
 
-            embedBuilder.setTitle(lyric.getTitle())
-                    .setDescription(lyric.getArtist())
-                    .appendDescription("\n\n")
-                    .appendDescription(lyric.getBody())
-                    .setFooter("Lyrics provided by Genius with the help of RapidAPI. Client made by me.", null)
-                    .setColor(Color.RED);
+        embedBuilder.setTitle(lyric.getTitle())
+                .setDescription(lyric.getArtist())
+                .appendDescription("\n\n")
+                .appendDescription(lyric.getBody())
+                .setFooter("Lyrics provided by Genius with the help of RapidAPI. Client made by me.", null)
+                .setColor(Color.RED);
 
-            message.replyEmbeds(embedBuilder.build()).queue();
+        message.replyEmbeds(embedBuilder.build()).queue();
 
-        });
     }
 
     private Lyric getLyrics(int songId) throws IOException {
