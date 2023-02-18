@@ -43,7 +43,7 @@ public class Richter {
     public static void main(String[] args) {
 
         try {
-            nw Richter();
+            new Richter();
 
         } catch (LoginException e) {
 
