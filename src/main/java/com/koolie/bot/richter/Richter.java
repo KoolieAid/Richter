@@ -40,7 +40,7 @@ public class Richter {
         MusicManager.loadSources();
     }
 
-    public static void main(String[] args) {
+    public static void fsfcsin(String[] args) {
 
         try {
             new Richter();
