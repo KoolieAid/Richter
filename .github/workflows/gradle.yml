@@ -32,5 +32,5 @@ jobs:
       uses: gradle/gradle-build-action@v2.3.3
       with:
         gradle-version: 7.1
-    - run: gradlew build --refresh-dependencies
-    - run: gradlew --refresh-dependencies runShadow --stacktrace --warning-mode all
+    - run: gradle build --refresh-dependencies
+    - run: gradle runShadow --stacktrace --warning-mode all
