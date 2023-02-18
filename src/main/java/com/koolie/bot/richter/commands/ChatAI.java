@@ -3,8 +3,10 @@ package com.koolie.bot.richter.commands;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.koolie.bot.richter.commands.Interfaces.TextCommand;
+import com.koolie.bot.richter.util.BotConfigManager;
 import com.theokanning.openai.OpenAiService;
 import com.theokanning.openai.completion.CompletionRequest;
+import io.sentry.Sentry;
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,7 +19,7 @@ import java.time.Duration;
 
 public class ChatAI implements TextCommand {
     public ChatAI() {
-        service = new OpenAiService("redacted", Duration.ofSeconds(10));
+        service = new OpenAiService(BotConfigManager.getOpenAIKey(), Duration.ofSeconds(10));
     }
 
     @NotNull
@@ -29,7 +31,7 @@ public class ChatAI implements TextCommand {
     @NotNull
     @Override
     public String getDescription() {
-        return "Automated Response from OpenAi";
+        return "Automated Response from OpenAI ***BETA FEATURE***";
     }
 
     @NotNull
@@ -41,7 +43,7 @@ public class ChatAI implements TextCommand {
     @NotNull
     @Override
     public String getOperator() {
-        return "chat";
+        return "ask";
     }
 
     @Nullable
@@ -72,12 +74,13 @@ public class ChatAI implements TextCommand {
 //            e.printStackTrace();
 //
 //        }
-
+        message.getChannel().sendTyping().queue();
+        
         try {
             HttpURLConnection con = (HttpURLConnection) new URL("https://api.openai.com/v1/completions").openConnection();
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/json");
-            con.setRequestProperty("Authorization", "Bearer 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");
+            con.setRequestProperty("Authorization", "Bearer " + BotConfigManager.getOpenAIKey());
 
             JsonObject data = new JsonObject();
 
@@ -100,7 +103,8 @@ public class ChatAI implements TextCommand {
 
             message.reply(o).queue();
         } catch (Exception e){
-            e.printStackTrace();
+            message.reply("It appears that the command malfunctioned. As this is just a beta feature, don't expect perfect outputs").queue();
+            Sentry.captureException(e);
         }
 
     }

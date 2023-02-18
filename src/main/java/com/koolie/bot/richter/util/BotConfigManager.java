@@ -21,6 +21,8 @@ public class BotConfigManager {
 
     private @Getter static String PAPISID;
     private @Getter static String PSID;
+
+    private @Getter static String openAIKey;
     private BotConfigManager() {}
 
     public static void loadJSON() throws FileNotFoundException {
@@ -38,6 +40,8 @@ public class BotConfigManager {
 
         PAPISID = jsonObject.get("youtube_PAPISid").getAsString();
         PSID = jsonObject.get("youtube_PSid").getAsString();
+
+        openAIKey = jsonObject.get("open_ai_key").getAsString();
     }
 
 }
