@@ -10,7 +10,7 @@ group 'com.koolie.bot'
 version '1.0'
 def jdaVersion = '5.0.0-alpha.12'
 
-sourceCompatibility = targetCompatibility = 15
+sourceCompatibility = targetCompatibility = 17
 
 repositories {
     mavenCentral()
