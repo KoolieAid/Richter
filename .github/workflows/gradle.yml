@@ -31,5 +31,5 @@ jobs:
     - name: Gradle Build Action
       uses: gradle/gradle-build-action@v2.3.3
       with:
-        gradle-version: current
+        gradle-version: 5
     - run: gradle --refresh-dependencies shadowJar --stacktrace --warning-mode all
