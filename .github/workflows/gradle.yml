@@ -38,5 +38,5 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
-        name: Richter $(git rev-parse --short "$GITHUB_SHA")
+        name: Richter ${sha_short}
         path: build/libs
