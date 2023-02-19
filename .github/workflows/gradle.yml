@@ -7,6 +7,9 @@
 
 name: Java CI with Gradle
 
+env:
+  SHORT_SHA: 
+
 on:
   push:
     branches: [ "main" ]
@@ -38,5 +41,5 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
-        name: Richter@${sha_short}
+        name: Richter@$GITHUB_OUTPUT
         path: build/libs
