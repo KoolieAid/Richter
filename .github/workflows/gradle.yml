@@ -33,3 +33,7 @@ jobs:
       with:
         gradle-version: 7.3
     - run: gradle shadowJar --stacktrace --warning-mode all
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3.1.2
+      with:
+        path: build/libs
