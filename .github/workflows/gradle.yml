@@ -33,8 +33,10 @@ jobs:
       with:
         gradle-version: 7.3
     - run: gradle shadowJar --stacktrace --warning-mode all
+    - name: Set up name variable
+      run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
-        name: Richter
+        name: Richter@${sha_short}
         path: build/libs
