@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -102,7 +103,11 @@ public class ChatAI implements TextCommand {
                     .get("text").getAsString();
 
             message.reply(o).queue();
-        } catch (Exception e){
+        } catch (IOException e){
+            if (e.getMessage().contains("500")) {
+                message.reply("Seems like the server is overloaded. Check back later!").queue();
+                return;
+            }
             message.reply("It appears that the command malfunctioned. As this is just a beta feature, don't expect perfect outputs").queue();
             Sentry.captureException(e);
         }
