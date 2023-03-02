@@ -18,6 +18,7 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.ItemComponent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.apache.commons.collections4.ListUtils;
 import org.jetbrains.annotations.NotNull;
@@ -96,7 +97,7 @@ public class Queue implements TextCommand, SlashCommand {
         message.getJDA().addEventListener(queueMessage);
 
         message.replyEmbeds(queueMessage.makeEmbed())
-                .setActionRows(queueMessage.getActionRow())
+                .addActionRow((ItemComponent)queueMessage.getActionRow())
                 .queue(m -> queueMessage.setMessageId(m.getId()),
                         e -> message.getJDA().removeEventListener(queueMessage));
     }
@@ -124,7 +125,7 @@ public class Queue implements TextCommand, SlashCommand {
         event.getJDA().addEventListener(queueMessage);
 
         event.replyEmbeds(queueMessage.makeEmbed())
-                .addActionRows(queueMessage.getActionRow())
+                .addActionRow((ItemComponent)queueMessage.getActionRow())
                 .flatMap(InteractionHook::retrieveOriginal)
                 .queue(m -> queueMessage.setMessageId(m.getId()),
                         e -> event.getJDA().removeEventListener(queueMessage));
@@ -239,7 +240,7 @@ public class Queue implements TextCommand, SlashCommand {
                 return;
             }
             hook.editOriginalComponents()
-                    .setActionRows()
+                    .setComponents()
                     .queue();
 
             hook.getJDA().removeEventListener(this);

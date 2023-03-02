@@ -119,7 +119,6 @@ public class EventHandler extends ListenerAdapter {
         }
     }
 
-    @Override
     public void onGuildVoiceLeave(@NotNull GuildVoiceUpdateEvent event) {
         // Triggers when the bot leaves a voice channel
         if (event.getMember().getIdLong() == event.getJDA().getSelfUser().getIdLong()) {
@@ -225,7 +224,7 @@ public class EventHandler extends ListenerAdapter {
                         If you know **Chad Thundercock**, say hi to him for me. (he's like my creator)
                         Don't forget to use `=donate`
                         """);
-        Objects.requireNonNull(event.getGuild().getDefaultChannel()).sendMessageEmbeds(ebuilder.build()).queue();
+        Objects.requireNonNull(event.getGuild().getDefaultChannel()).asTextChannel().sendMessageEmbeds(ebuilder.build()).queue();
     }
 
     @Override

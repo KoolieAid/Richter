@@ -88,7 +88,7 @@ public class Eval implements TextCommand {
 
         User author = message.getAuthor();
         JDA jda = message.getJDA();
-        TextChannel channel = message.getTextChannel();
+        TextChannel channel = message.getChannel().asTextChannel();
         engine.put("guild", channel.getGuild());
         engine.put("author", author);
         engine.put("member", message.getMember());
