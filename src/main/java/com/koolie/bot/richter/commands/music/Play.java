@@ -8,7 +8,7 @@ import com.koolie.bot.richter.objects.context.Context;
 import com.koolie.bot.richter.objects.context.InteractionContext;
 import com.koolie.bot.richter.objects.context.MessageContext;
 import com.koolie.bot.richter.util.MusicUtil;
-import net.dv8tion.jda.api.entities.AudioChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

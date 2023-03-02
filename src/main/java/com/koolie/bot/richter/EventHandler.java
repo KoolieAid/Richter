@@ -11,14 +11,12 @@ import io.sentry.Sentry;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.ReadyEvent;
-import net.dv8tion.jda.api.events.ShutdownEvent;
+import net.dv8tion.jda.api.events.session.ReadyEvent;
+import net.dv8tion.jda.api.events.session.ShutdownEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.events.guild.UnavailableGuildLeaveEvent;
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -97,7 +95,20 @@ public class EventHandler extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildVoiceJoin(@NotNull GuildVoiceJoinEvent event) {
+    public void onGuildVoiceUpdate(@NotNull GuildVoiceUpdateEvent event) {
+        if (event.getChannelJoined() == null)
+        {
+            onGuildVoiceLeave(event);
+            return;
+        }
+
+        if (event.getChannelLeft() == null)
+            onGuildVoiceJoin(event);
+        else
+            onGuildVoiceMove(event);
+    }
+
+    public void onGuildVoiceJoin(@NotNull GuildVoiceUpdateEvent event) {
         //Triggers when the bot is about to leave, but someone rejoins the channel
         if (event.getChannelJoined().getMembers().size() == 2) {
             if (event.getChannelJoined().getMembers().contains(event.getGuild().getSelfMember())) {
@@ -109,7 +120,7 @@ public class EventHandler extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildVoiceLeave(@NotNull GuildVoiceLeaveEvent event) {
+    public void onGuildVoiceLeave(@NotNull GuildVoiceUpdateEvent event) {
         // Triggers when the bot leaves a voice channel
         if (event.getMember().getIdLong() == event.getJDA().getSelfUser().getIdLong()) {
             MusicManager.onLeave(event.getGuild());
@@ -124,8 +135,7 @@ public class EventHandler extends ListenerAdapter {
         }
     }
 
-    @Override
-    public void onGuildVoiceMove(@NotNull GuildVoiceMoveEvent event) {
+    public void onGuildVoiceMove(@NotNull GuildVoiceUpdateEvent event) {
         // Checker when bot is moved to a lone channel
         if (event.getMember().equals(event.getGuild().getSelfMember())) {
             if (event.getChannelJoined().getMembers().size() == 1) {

@@ -1,6 +1,7 @@
 package com.koolie.bot.richter.objects.context;
 
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.requests.RestAction;
 
 public class MessageContext implements Context {
