@@ -4,6 +4,7 @@ import com.koolie.bot.richter.MusicUtil.MusicManager;
 import com.koolie.bot.richter.commands.Interfaces.TextCommand;
 import com.koolie.bot.richter.util.MusicUtil;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -76,6 +77,7 @@ public class Skip implements TextCommand {
         } else {
             gManager.eventListener.nextTrack();
         }
-        message.addReaction("\uD83D\uDC4C").queue();
+
+        message.addReaction(Emoji.fromUnicode("\uD83D\uDC4C")).queue();
     }
 }

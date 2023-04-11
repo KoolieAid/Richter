@@ -1,19 +1,18 @@
 package com.koolie.bot.richter.commands.Interfaces;
 
 import com.koolie.bot.richter.objects.Ignored;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 @Ignored
 public interface Command {
 
-    @Nonnull
+    @NotNull
     String getName();
 
-    @Nonnull
+    @NotNull
     String getDescription();
 
-    @Nonnull
+    @NotNull
     default CommandType getCommandType() {
         return CommandType.Other;
     }

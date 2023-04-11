@@ -13,9 +13,11 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import net.dv8tion.jda.api.utils.messages.MessageRequest;
 
 import javax.security.auth.login.LoginException;
 import java.io.FileNotFoundException;
@@ -33,6 +35,7 @@ public class Richter {
         shardManager = DefaultShardManagerBuilder.createDefault(BotConfigManager.getToken())
                 .addEventListeners(new EventHandler())
                 .setAudioSendFactory(new NativeAudioSendFactory())
+                .enableIntents(GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS)
                 .build();
 
         setOptions();
@@ -77,7 +80,7 @@ public class Richter {
         ThreadUtil.getScheduler().scheduleAtFixedRate(() -> shardManager.setPresence(OnlineStatus.ONLINE, activities[new Random().nextInt(activities.length)]),
                 0, 30, TimeUnit.MINUTES);
 
-        MessageAction.setDefaultMentionRepliedUser(false);
+        MessageRequest.setDefaultMentionRepliedUser(false);
 
         Sentry.init(options -> {
             options.setDsn(BotConfigManager.getSentryDsn());
