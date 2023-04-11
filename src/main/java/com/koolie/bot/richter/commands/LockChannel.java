@@ -5,8 +5,7 @@ import com.koolie.bot.richter.objects.Ignored;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -127,7 +126,15 @@ public class LockChannel implements TextCommand {
         }
 
         @Override
-        public void onGuildVoiceJoin(@NotNull GuildVoiceJoinEvent event) {
+        public void onGuildVoiceUpdate(@NotNull GuildVoiceUpdateEvent event) {
+            if (event.getChannelLeft() == null) {
+                onGuildVoiceJoin(event);
+                return;
+            }
+            onGuildVoiceMove(event);
+        }
+
+        public void onGuildVoiceJoin(@NotNull GuildVoiceUpdateEvent event) {
 
             if (!lockedMembers.contains(event.getMember().getIdLong()) &&
                     channelId.equals(event.getChannelJoined().getIdLong())) {
@@ -139,8 +146,7 @@ public class LockChannel implements TextCommand {
 
         }
 
-        @Override
-        public void onGuildVoiceMove(@NotNull GuildVoiceMoveEvent event) {
+        public void onGuildVoiceMove(@NotNull GuildVoiceUpdateEvent event) {
 
             if (!lockedMembers.contains(event.getMember().getIdLong()) &&
                     channelId.equals(event.getChannelJoined().getIdLong())) {

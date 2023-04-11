@@ -3,14 +3,11 @@ package com.koolie.bot.richter.commands;
 import com.koolie.bot.richter.commands.Interfaces.SlashCommand;
 import com.koolie.bot.richter.commands.Interfaces.TextCommand;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.LoggerFactory;
-
-import java.util.Iterator;
 
 public class Downgrade implements TextCommand, SlashCommand {
 

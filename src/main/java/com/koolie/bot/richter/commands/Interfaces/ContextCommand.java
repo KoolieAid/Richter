@@ -1,11 +1,10 @@
 package com.koolie.bot.richter.commands.Interfaces;
 
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public interface ContextCommand extends Command {
-    @Nonnull
+    @NotNull
     String getEffectiveName();
 
     void onContext(MessageContextInteractionEvent event);

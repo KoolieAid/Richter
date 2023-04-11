@@ -10,7 +10,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Emoji;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -18,6 +18,7 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.ItemComponent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.apache.commons.collections4.ListUtils;
 import org.jetbrains.annotations.NotNull;
@@ -96,7 +97,7 @@ public class Queue implements TextCommand, SlashCommand {
         message.getJDA().addEventListener(queueMessage);
 
         message.replyEmbeds(queueMessage.makeEmbed())
-                .setActionRows(queueMessage.getActionRow())
+                .addComponents(queueMessage.getActionRow())
                 .queue(m -> queueMessage.setMessageId(m.getId()),
                         e -> message.getJDA().removeEventListener(queueMessage));
     }
@@ -124,7 +125,7 @@ public class Queue implements TextCommand, SlashCommand {
         event.getJDA().addEventListener(queueMessage);
 
         event.replyEmbeds(queueMessage.makeEmbed())
-                .addActionRows(queueMessage.getActionRow())
+                .addComponents(queueMessage.getActionRow())
                 .flatMap(InteractionHook::retrieveOriginal)
                 .queue(m -> queueMessage.setMessageId(m.getId()),
                         e -> event.getJDA().removeEventListener(queueMessage));
@@ -239,7 +240,7 @@ public class Queue implements TextCommand, SlashCommand {
                 return;
             }
             hook.editOriginalComponents()
-                    .setActionRows()
+                    .setComponents()
                     .queue();
 
             hook.getJDA().removeEventListener(this);
