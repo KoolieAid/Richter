@@ -97,7 +97,7 @@ public class Queue implements TextCommand, SlashCommand {
         message.getJDA().addEventListener(queueMessage);
 
         message.replyEmbeds(queueMessage.makeEmbed())
-                .addActionRow((ItemComponent)queueMessage.getActionRow())
+                .addComponents(queueMessage.getActionRow())
                 .queue(m -> queueMessage.setMessageId(m.getId()),
                         e -> message.getJDA().removeEventListener(queueMessage));
     }
@@ -125,7 +125,7 @@ public class Queue implements TextCommand, SlashCommand {
         event.getJDA().addEventListener(queueMessage);
 
         event.replyEmbeds(queueMessage.makeEmbed())
-                .addActionRow((ItemComponent)queueMessage.getActionRow())
+                .addComponents(queueMessage.getActionRow())
                 .flatMap(InteractionHook::retrieveOriginal)
                 .queue(m -> queueMessage.setMessageId(m.getId()),
                         e -> event.getJDA().removeEventListener(queueMessage));
