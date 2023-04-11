@@ -1,12 +1,11 @@
 package com.koolie.bot.richter.commands.Interfaces;
 
 import net.dv8tion.jda.api.entities.Message;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface TextCommand extends Command {
-    @Nonnull
+    @NotNull
     String getOperator();
 
     @Nullable
@@ -14,5 +13,5 @@ public interface TextCommand extends Command {
         return null;
     }
 
-    void execute(@Nonnull Message message);
+    void execute(@NotNull Message message);
 }
