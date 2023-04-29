@@ -77,8 +77,8 @@ public class MusicManager {
         audioPlayerManager.getConfiguration().setFilterHotSwapEnabled(true);
         audioPlayerManager.setTrackStuckThreshold(30000L);
 
-        YoutubeHttpContextFilter.setPAPISID(BotConfigManager.getPAPISID());
-        YoutubeHttpContextFilter.setPSID(BotConfigManager.getPSID());
+//        YoutubeHttpContextFilter.setPAPISID(BotConfigManager.getPAPISID());
+//        YoutubeHttpContextFilter.setPSID(BotConfigManager.getPSID());
     }
 
     public static void shutdown() {
