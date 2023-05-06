@@ -42,9 +42,6 @@ public class BotConfigManager {
         DB_PASS = jsonObject.get("database_password").getAsString();
         rapidApiKey = jsonObject.get("rapid_api_key").getAsString();
 
-//        PAPISID = jsonObject.get("youtube_PAPISid").getAsString();
-//        PSID = jsonObject.get("youtube_PSid").getAsString();
-
         youtubeEmail = jsonObject.get("youtube_email").getAsString();
         youtubePassword = jsonObject.get("youtube_password").getAsString();
     }
