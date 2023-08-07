@@ -29,7 +29,7 @@ dependencies {
     // Spotify Web API
     implementation 'se.michaelthelin.spotify:spotify-web-api-java:7.1.0'
     // Fork of LavaPlayer since original LavaPlayer is unmaintained
-    implementation 'com.github.Walkyst:lavaplayer-fork:1.4.1'
+    implementation 'com.github.walkyst:lavaplayer-fork:1.4.2'
     // Uses Native audio system
     implementation 'com.sedmelluq:jda-nas:1.1.0'
     // Sentry
