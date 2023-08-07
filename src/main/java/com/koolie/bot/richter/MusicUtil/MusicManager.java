@@ -4,11 +4,20 @@ import com.koolie.bot.richter.SourceManagers.SpotifySourceManager;
 import com.koolie.bot.richter.objects.context.Context;
 import com.koolie.bot.richter.objects.guild.GuildConfig;
 import com.koolie.bot.richter.util.BotConfigManager;
+import com.sedmelluq.discord.lavaplayer.container.MediaContainerRegistry;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.FunctionalResultHandler;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import com.sedmelluq.discord.lavaplayer.source.bandcamp.BandcampAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.beam.BeamAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.getyarn.GetyarnAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.http.HttpAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeHttpContextFilter;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Guild;
@@ -71,14 +80,20 @@ public class MusicManager {
 
     public static void loadSources() {
         audioPlayerManager.registerSourceManager(new SpotifySourceManager());
-        AudioSourceManagers.registerRemoteSources(audioPlayerManager);
+
+        audioPlayerManager.registerSourceManager(new YoutubeAudioSourceManager(true, BotConfigManager.getYoutubeEmail(), BotConfigManager.getYoutubePassword()));
+        audioPlayerManager.registerSourceManager(SoundCloudAudioSourceManager.createDefault());
+        audioPlayerManager.registerSourceManager(new BandcampAudioSourceManager());
+        audioPlayerManager.registerSourceManager(new VimeoAudioSourceManager());
+        audioPlayerManager.registerSourceManager(new TwitchStreamAudioSourceManager());
+        audioPlayerManager.registerSourceManager(new BeamAudioSourceManager());
+        audioPlayerManager.registerSourceManager(new GetyarnAudioSourceManager());
+        audioPlayerManager.registerSourceManager(new HttpAudioSourceManager(MediaContainerRegistry.DEFAULT_REGISTRY));
+
         AudioSourceManagers.registerLocalSource(audioPlayerManager);
 
         audioPlayerManager.getConfiguration().setFilterHotSwapEnabled(true);
         audioPlayerManager.setTrackStuckThreshold(30000L);
-
-        YoutubeHttpContextFilter.setPAPISID(BotConfigManager.getPAPISID());
-        YoutubeHttpContextFilter.setPSID(BotConfigManager.getPSID());
     }
 
     public static void shutdown() {
