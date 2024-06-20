@@ -20,8 +20,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class Play implements TextCommand, ContextCommand, AutoSlashCommand {
-    public Play() {
-    }
 
     @Override
     public @NotNull String getName() {
